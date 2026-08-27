@@ -1,0 +1,133 @@
+<!-- dashboard/products/components/detail/recent_orders.html -->
+{% load i18n localized_dates pricing %}
+
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+
+        <div>
+
+            <h2 class="text-lg font-semibold text-slate-900">
+                Recent Orders
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Latest orders containing this product.
+            </p>
+
+        </div>
+
+        <a
+            href="#"
+            class="text-sm font-medium text-slate-600 transition hover:text-slate-900"
+        >
+            View All
+        </a>
+
+    </div>
+
+    {% if recent_orders %}
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full divide-y divide-slate-200">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Order" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Customer" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Quantity" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Date" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-end text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Status" %}
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-100 bg-white">
+
+                    {% for item in recent_orders %}
+
+                        <tr class="hover:bg-slate-50 transition">
+
+                            <td class="px-6 py-4">
+
+                                <a
+                                    href="{% url 'dashboard:order_detail' item.order.pk %}"
+                                    class="font-medium text-slate-900 hover:text-indigo-600"
+                                >
+                                    #{{ item.order.order_number }}
+                                </a>
+
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-700">
+                                {{ item.order.user.get_full_name|default:item.order.user.username }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-700">
+                                {{ item.quantity|localized_number }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-500">
+                                {{ item.order.created_at|localized_date }}
+                            </td>
+
+                            <td class="px-6 py-4 text-end">
+
+                                {% include "dashboard/components/badges/status_badge.html" with status=item.order.status %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
+
+            <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+
+                <svg class="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 4h14M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
+                </svg>
+
+            </div>
+
+            <h3 class="text-sm font-semibold text-slate-900">
+                No Orders Yet
+            </h3>
+
+            <p class="mt-2 max-w-md text-sm text-slate-500">
+                This product has not been included in any completed orders.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>

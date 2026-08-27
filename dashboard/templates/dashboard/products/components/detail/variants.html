@@ -1,0 +1,123 @@
+<!-- dashboard/products/components/detail/variants.html -->
+{% load i18n pricing %}
+
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+
+        <div>
+
+            <h2 class="text-lg font-semibold text-slate-900">
+                {% trans "Variants" %}
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                {% blocktrans count counter=detail.statistics.variants with display_count=detail.statistics.variants|localized_number %}{{ display_count }} variant{% plural %}{{ display_count }} variants{% endblocktrans %}
+            </p>
+
+        </div>
+
+        <div class="flex gap-2">
+
+            <a
+                href="{% url 'dashboard:products:variants:create' product.pk %}"
+                class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+            >
+                + {% trans "Add Variant" %}
+            </a>
+
+            <a
+                href="{% url 'dashboard:products:variants:catalog' product.pk %}"
+                class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+                {% trans "Manage Variants" %}
+            </a>
+
+        </div>
+
+    </div>
+
+    {% if detail.variants %}
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full divide-y divide-slate-200">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Variant" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Specifications" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-end text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Price" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Stock" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Status" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Order" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-end text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Actions" %}
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-100 bg-white">
+
+                    {% for variant in detail.variants %}
+
+                        {% include "dashboard/products/components/detail/variant_row.html" %}
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
+
+            <div class="mb-3 text-5xl">
+                <i data-lucide="package" class="sf-icon h-5 w-5" aria-hidden="true"></i>
+            </div>
+
+            <h3 class="text-lg font-semibold text-slate-900">
+                {% trans "No Variants Yet" %}
+            </h3>
+
+            <p class="mt-2 max-w-md text-sm text-slate-500">
+                {% trans "This product does not have any variants. Create variants to manage different sizes, finishes, colors, pricing, and inventory." %}
+            </p>
+
+            <a
+                href="{% url 'dashboard:products:variants:create' product.pk %}"
+                class="mt-6 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+            >
+                {% trans "Add First Variant" %}
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>

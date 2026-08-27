@@ -1,0 +1,26 @@
+{% load i18n localized_content pricing %}
+<a href="{% if category.url %}{{ category.url }}{% else %}{% url 'products:category_list' category.slug %}{% endif %}"
+   class="category-discovery-card{% if card_variant == 'compact' %} category-discovery-card--compact{% endif %} group relative block h-full {% if card_variant == 'compact' %}min-h-48{% else %}min-h-72{% endif %} w-full overflow-hidden rounded-feature bg-surface-subtle"
+   aria-label="{% blocktrans with category_name=category|localized:'name' %}Explore {{ category_name }}{% endblocktrans %}">
+    <div class="absolute inset-0 h-full w-full" data-category-media>
+        {% if category.image_url %}
+            <img src="{{ category.image_url }}" alt="{{ category.image_alt }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]" loading="lazy">
+        {% else %}
+            <div class="home-media-fallback flex h-full w-full items-center justify-center" data-category-image-fallback>
+                <svg class="h-16 w-16 text-text-muted/35" aria-hidden="true" fill="none" viewBox="0 0 80 80" stroke="currentColor"><path stroke-width="1.75" d="M8 8h28v28H8zM44 8h28v28H44zM8 44h28v28H8zM44 44h28v28H44z"/></svg>
+            </div>
+        {% endif %}
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" aria-hidden="true"></div>
+    <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 text-white sm:p-6">
+        <div class="min-w-0">
+            <h3 class="text-xl font-semibold leading-tight">{{ category|localized:"name" }}</h3>
+            {% if category.product_count %}
+                <p class="mt-1 text-sm text-white/75">{% blocktrans count counter=category.product_count with display_count=category.product_count|localized_number %}{{ display_count }} product{% plural %}{{ display_count }} products{% endblocktrans %}</p>
+            {% endif %}
+        </div>
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-black/15 backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-text-primary" aria-hidden="true">
+            <svg class="directional-icon h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </span>
+    </div>
+</a>

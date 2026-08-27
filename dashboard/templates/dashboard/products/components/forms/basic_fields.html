@@ -1,0 +1,77 @@
+{% load i18n %}
+
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="border-b border-slate-200 px-6 py-4">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            {% trans "Basic Information" %}
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            {% trans "Core product identity and storefront information." %}
+        </p>
+
+    </div>
+
+    <div class="grid gap-6 p-6 md:grid-cols-2">
+
+        <div class="md:col-span-2">
+
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            {{ form.name.errors }}
+
+        </div>
+
+        <div class="md:col-span-2">
+
+            {{ form.name_fa.label_tag }}
+            {{ form.name_fa }}
+            {{ form.name_fa.errors }}
+
+        </div>
+
+        <div>
+
+            {{ form.slug.label_tag }}
+            {{ form.slug }}
+            {{ form.slug.errors }}
+
+        </div>
+
+        <div>
+
+            {{ form.sku.label_tag }}
+            {{ form.sku }}
+            {{ form.sku.errors }}
+
+        </div>
+
+        <div class="md:col-span-2">
+
+            {{ form.categories.label_tag }}
+            {{ form.categories }}
+            {{ form.categories.errors }}
+
+        </div>
+
+        <div class="md:col-span-2">
+
+            {{ form.description.label_tag }}
+            {{ form.description }}
+            {{ form.description.errors }}
+
+        </div>
+
+        <div class="md:col-span-2">
+
+            {{ form.description_fa.label_tag }}
+            {{ form.description_fa }}
+            {{ form.description_fa.errors }}
+
+        </div>
+
+    </div>
+
+</section>

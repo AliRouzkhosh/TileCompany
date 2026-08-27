@@ -1,0 +1,1 @@
+{% load i18n pricing %}{% blocktrans with display_count=page_obj.paginator.count|localized_number count counter=page_obj.paginator.count %}{{ display_count }} product{% plural %}{{ display_count }} products{% endblocktrans %}

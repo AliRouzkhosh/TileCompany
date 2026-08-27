@@ -1,0 +1,19 @@
+{% load i18n %}
+<aside class="border-b border-border bg-surface-subtle" role="status" aria-label="{% trans 'Payment required' %}" data-payment-attention>
+    <div class="store-container flex flex-col gap-3 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex min-w-0 items-start gap-3">
+            <i data-lucide="circle-alert" class="sf-icon mt-0.5 shrink-0 text-text-secondary" aria-hidden="true"></i>
+            <div class="min-w-0">
+                <p class="font-semibold text-text-primary">{% trans "Payment required" %}</p>
+                {% if payment_attention.count == 1 %}
+                    <p class="text-text-secondary">{% blocktrans with reference=payment_attention.order_number %}Order #{{ reference }} is awaiting payment.{% endblocktrans %}</p>
+                {% else %}
+                    <p class="text-text-secondary">{% blocktrans count count=payment_attention.count %}{{ count }} order is awaiting payment.{% plural %}{{ count }} orders are awaiting payment.{% endblocktrans %}</p>
+                {% endif %}
+            </div>
+        </div>
+        <a href="{{ payment_attention.action_url }}" class="sf-button sf-button--secondary min-h-11 shrink-0 px-4 text-sm">
+            {% if payment_attention.count == 1 %}{% trans "Review and pay" %}{% else %}{% trans "View orders" %}{% endif %}
+        </a>
+    </div>
+</aside>

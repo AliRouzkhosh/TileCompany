@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="rounded-feature border border-border bg-surface-subtle px-4 py-5 sm:px-7 sm:py-7 lg:px-8" data-trust-strip>
+    <h2 id="home-trust-title" class="sr-only">{% trans "Shopping with confidence" %}</h2>
+    <div class="grid gap-4 min-[360px]:grid-cols-2 min-[360px]:gap-x-3 sm:gap-5 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-border rtl:lg:divide-x-reverse">
+        <div class="flex gap-3 lg:px-6 first:lg:ps-0" data-trust-item>
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-brand-subtle text-brand-active lg:h-10 lg:w-10" aria-hidden="true"><i data-lucide="shield-check" class="sf-icon h-4 w-4 lg:h-5 lg:w-5"></i></span>
+            <div><h3 class="text-xs font-semibold leading-5 text-text-primary sm:text-sm">{% trans "Secure checkout" %}</h3><p class="mt-0.5 text-[0.6875rem] leading-4 text-text-secondary sm:mt-1 sm:text-xs sm:leading-5">{% trans "Protected online payment during checkout." %}</p></div>
+        </div>
+        <div class="flex gap-3 lg:px-6" data-trust-item>
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-brand-subtle text-brand-active lg:h-10 lg:w-10" aria-hidden="true"><i data-lucide="package-check" class="sf-icon h-4 w-4 lg:h-5 lg:w-5"></i></span>
+            <div><h3 class="text-xs font-semibold leading-5 text-text-primary sm:text-sm">{% trans "Order tracking" %}</h3><p class="mt-0.5 text-[0.6875rem] leading-4 text-text-secondary sm:mt-1 sm:text-xs sm:leading-5">{% trans "Follow your order status from your account." %}</p></div>
+        </div>
+        <div class="flex gap-3 lg:px-6" data-trust-item>
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-brand-subtle text-brand-active lg:h-10 lg:w-10" aria-hidden="true"><i data-lucide="messages-square" class="sf-icon h-4 w-4 lg:h-5 lg:w-5"></i></span>
+            <div><h3 class="text-xs font-semibold leading-5 text-text-primary sm:text-sm">{% trans "Customer support" %}</h3><p class="mt-0.5 text-[0.6875rem] leading-4 text-text-secondary sm:mt-1 sm:text-xs sm:leading-5">{% trans "Contact support when you need assistance." %}</p></div>
+        </div>
+        <div class="flex gap-3 lg:px-6 last:lg:pe-0" data-trust-item>
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-brand-subtle text-brand-active lg:h-10 lg:w-10" aria-hidden="true"><i data-lucide="truck" class="sf-icon h-4 w-4 lg:h-5 lg:w-5"></i></span>
+            <div><h3 class="text-xs font-semibold leading-5 text-text-primary sm:text-sm">{% trans "Delivery options" %}</h3><p class="mt-0.5 text-[0.6875rem] leading-4 text-text-secondary sm:mt-1 sm:text-xs sm:leading-5">{% trans "Review available delivery details at checkout." %}</p></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+{% load static i18n tailwind_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>{% block title %}TileStore{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="{% block meta_description %}{% trans 'Tiles, ceramics, installation materials, and practical support for every project.' %}{% endblock %}">
+
+    {% tailwind_css %}
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=4e-d2-jalali">
+    {% if LANGUAGE_CODE != "fa" %}
+    <link rel="preload" href="{% static 'fonts/inter/InterVariable.woff2' %}" as="font" type="font/woff2" crossorigin>
+    {% endif %}
+    <script src="{% static 'js/theme-init.js' %}"></script>
+
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%23FFF0E9/><path d=%22M5 6h10v9H5zM17 6h10v9H17zM5 17h10v10H5zM17 17h10v10H17z%22 fill=%23C76035/></svg>">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css">
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+<body class="min-h-screen bg-page font-storefront text-text-primary flex flex-col">
+
+    {% include "components/navbar/navbar.html" %}
+    {% if payment_attention and request.resolver_match.url_name != "order_result" and request.resolver_match.url_name != "payment_callback" %}
+        {% include "components/payment_attention.html" %}
+    {% endif %}
+
+    <main class="store-container flex-1 py-6 sm:py-8">
+
+        {% include "components/flash_messages.html" %}
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+    {% include "components/destructive_confirm_dialog.html" %}
+
+    {% include "components/footer.html" %}
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"></script>
+
+    <script src="{% static 'js/navbar.js' %}?v=2b1"></script>
+    <script src="{% static 'js/search.js' %}"></script>
+    <script src="{% static 'js/swiper.js' %}?v=4c1"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/drawer.js' %}?v=7.2c-catalog-stable"></script>
+    <script src="{% static 'js/product_action.js' %}?v=4b1a"></script>
+    <script src="{% static 'js/wishlist.js' %}?v=4b"></script>
+    <script src="{% static 'js/toast.js' %}"></script>
+    <script src="{% static 'js/theme-toggle.js' %}"></script>
+    <script src="{% static 'vendor/node_modules/htmx.org/dist/htmx.min.js' %}?v=2.0.4"></script>
+    <script src="{% static 'js/htmx-config.js' %}"></script>
+    <script src="{% static 'js/inline-comment-edit.js' %}?v=7.2"></script>
+    <script src="{% static 'js/destructive-confirm.js' %}?v=7.2"></script>
+    <script src="{% static 'js/article-comment-cooldown.js' %}?v=7.2"></script>
+<script src="{% static 'js/htmx-get-navigation.js' %}?v=7.2c-pagination-contract"></script>
+    <script src="{% static 'js/otp-resend.js' %}"></script>
+    <script src="{% static 'js/article-comment-reply.js' %}"></script>
+    <script src="{% static 'js/file-input-labels.js' %}"></script>
+    <script src="{% static 'js/form-submit-on-change.js' %}"></script>
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+    <script src="{% static 'js/lucide-init.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+<div
+    id="toastContainer"
+    class="fixed top-6 end-6 z-[9999] flex flex-col gap-3 pointer-events-none">
+</div>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+{% extends "dashboard/base.html" %}{% load i18n %}
+{% block dashboard_content %}
+<div class="mx-auto max-w-5xl space-y-6">
+  <div><a href="{% url 'dashboard:products:generic_variant_catalog' product.pk %}" class="text-sm text-slate-500">← {{ product.name }}</a><h1 class="text-2xl font-bold">{{ title }}</h1><p class="text-sm text-slate-600">{% trans "Publication state is managed by the dedicated publish controls." %}</p></div>
+  <form method="post" enctype="multipart/form-data" class="space-y-6">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="rounded-xl border border-red-200 bg-red-50 p-4">{{ form.non_field_errors }}</div>{% endif %}
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 text-lg font-semibold">{% trans "Variant Identity" %}</h2><div class="grid gap-5 md:grid-cols-2">{% include "components/form_field.html" with field=form.sku %}{% include "components/form_field.html" with field=form.price_unit %}{% include "components/form_field.html" with field=form.sort_order %}</div></section>
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 text-lg font-semibold">{% trans "Variant Dimensions" %}</h2><div class="grid gap-5 md:grid-cols-2">{% for field in form.dimension_bound_fields %}{% include "components/form_field.html" with field=field %}{% empty %}<p>{% trans "No Variant dimensions; the complete Variant uses the base identity." %}</p>{% endfor %}</div></section>
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 text-lg font-semibold">{% trans "Variant Specifications" %}</h2><div class="grid gap-5 md:grid-cols-2">{% for field in form.specification_bound_fields %}{% include "components/form_field.html" with field=field %}{% empty %}<p>{% trans "No Variant specifications are configured." %}</p>{% endfor %}</div></section>
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 text-lg font-semibold">{% trans "Inventory" %}</h2><div class="grid gap-5 md:grid-cols-2">{% include "components/form_field.html" with field=form.stock %}{% include "components/form_field.html" with field=form.low_stock_threshold %}</div></section>
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 text-lg font-semibold">{% trans "Pricing" %}</h2><div class="grid gap-5 md:grid-cols-2">{% include "components/form_field.html" with field=form.usd_amount %}{% include "components/form_field.html" with field=form.usd_compare_at_amount %}{% include "components/form_field.html" with field=form.irt_amount %}{% include "components/form_field.html" with field=form.irt_compare_at_amount %}</div></section>
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 text-lg font-semibold">{% trans "Variant Images" %}</h2><input name="gallery_images" type="file" multiple></section>
+    <div class="flex justify-end"><button class="rounded-xl bg-slate-900 px-6 py-3 text-white">{% trans "Save Variant" %}</button></div>
+  </form>
+  {% if variant %}<form method="post" action="{% if variant.is_active %}{% url 'dashboard:products:generic_variant_unpublish' product.pk variant.pk %}{% else %}{% url 'dashboard:products:generic_variant_publish' product.pk variant.pk %}{% endif %}">{% csrf_token %}<button class="rounded-xl border border-amber-600 px-5 py-2.5 text-amber-800">{% if variant.is_active %}{% trans "Unpublish Variant" %}{% else %}{% trans "Publish Variant" %}{% endif %}</button></form>{% endif %}
+</div>
+{% endblock %}

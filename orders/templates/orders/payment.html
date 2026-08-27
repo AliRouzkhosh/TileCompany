@@ -1,0 +1,30 @@
+{% extends "orders/checkout_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Payment" %}{% endblock %}
+
+{% block checkout_content %}
+<div class="space-y-6" data-checkout-step-panel="payment">
+    <header>
+        <h2 id="payment-step-title" class="text-2xl font-semibold tracking-[-0.02em] text-text-primary">{% trans "Payment" %}</h2>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-text-secondary">{% trans "Choose how you want to pay." %}</p>
+    </header>
+
+    {% if form.non_field_errors %}
+        <div class="checkout-error" role="alert" data-checkout-global-error>{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% include "orders/components/payment_method_card.html" %}
+
+    <div class="checkout-actions" data-checkout-actions>
+        <a href="{% url 'orders:checkout_shipping' %}" class="sf-button sf-button--secondary">
+            <i data-lucide="arrow-left" class="sf-icon directional-icon" aria-hidden="true"></i>
+            {% trans "Back to shipping" %}
+        </a>
+        <button type="submit" class="sf-button sf-button--primary">
+            {% trans "Continue to order review" %}
+            <i data-lucide="arrow-right" class="sf-icon directional-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}

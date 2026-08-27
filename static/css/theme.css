@@ -1,0 +1,312 @@
+/* TileStore night palette: warm charcoal, stone, and restrained bronze. */
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+/* Official Inter 4.1 variable font, self-hosted from rsms/inter. */
+@font-face {
+    font-family: "Inter";
+    src: url("../fonts/inter/InterVariable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Self-hosted Vazirmatn (OFL-1.1) is loaded only for Persian UI. */
+@font-face {
+    font-family: "Vazirmatn";
+    src: url("../fonts/Vazirmatn-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Vazirmatn";
+    src: url("../fonts/Vazirmatn-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Vazirmatn";
+    src: url("../fonts/Vazirmatn-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Vazirmatn";
+    src: url("../fonts/Vazirmatn-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+html[lang="fa"] body {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    line-height: 1.8;
+}
+
+html[lang="fa"] :is(h1, h2, h3, h4, h5, h6, button, label) {
+    line-height: 1.55;
+}
+
+@media (max-width: 39.999rem) {
+    html[lang="fa"] .home-hero h1 {
+        line-height: 1.18;
+    }
+}
+
+/* Identifiers and measurement tokens retain their natural LTR reading order. */
+html[lang="fa"] :is([dir="ltr"], bdi) {
+    unicode-bidi: isolate;
+}
+
+/* Inline-aware off-canvas motion has no Tailwind logical utility. */
+.is-inline-start-closed { translate: -100% 0; }
+.is-inline-end-closed { translate: 100% 0; }
+.toast-offscreen { translate: 5rem 0; }
+
+[dir="rtl"] .is-inline-start-closed { translate: 100% 0; }
+[dir="rtl"] .is-inline-end-closed { translate: -100% 0; }
+[dir="rtl"] .toast-offscreen { translate: -5rem 0; }
+[dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+[dir="rtl"] .group:hover .rtl-flip { translate: -0.25rem 0; }
+
+html.dark body {
+    background: #171615 !important;
+    color: #f3eee7 !important;
+}
+
+/* Main app canvas and raised surfaces. Never use pure black. */
+html.dark .bg-stone-50,
+html.dark .bg-gray-50,
+html.dark .bg-slate-50 { background-color: #1b1a18 !important; }
+
+html.dark .bg-stone-100,
+html.dark .bg-gray-100,
+html.dark .bg-slate-100 { background-color: #24221f !important; }
+
+html.dark .bg-white,
+html.dark .bg-white\/90 { background-color: #211f1c !important; }
+
+html.dark .bg-slate-900 { background-color: #e7d7bd !important; color: #241d15 !important; }
+/* Dark feature sections retain their intended contrast in night mode. */
+html.dark .bg-stone-900 { background-color: #2b2722 !important; color: #f3eee7 !important; }
+
+/* Typography retains contrast without glaring white. */
+html.dark .text-stone-900,
+html.dark .text-slate-900,
+html.dark .text-gray-900 { color: #f3eee7 !important; }
+
+html.dark .text-stone-700,
+html.dark .text-slate-700,
+html.dark .text-gray-700 { color: #ded6ca !important; }
+
+html.dark .text-stone-300,
+html.dark .text-slate-300,
+html.dark .text-gray-300 { color: #ded6ca !important; }
+
+html.dark .text-stone-600,
+html.dark .text-stone-500,
+html.dark .text-slate-600,
+html.dark .text-slate-500,
+html.dark .text-gray-600,
+html.dark .text-gray-500 { color: #b7aea2 !important; }
+
+/* Visible separators for cards, tables, filters, and form fields. */
+html.dark .border,
+html.dark [class*="border-stone-"],
+html.dark [class*="border-slate-"],
+html.dark [class*="border-gray-"] { border-color: #4d4943 !important; }
+
+html.dark tr,
+html.dark .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #403c37 !important; }
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+    background-color: #2a2723 !important;
+    color: #f3eee7 !important;
+    border-color: #5a544d !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder { color: #9c9287 !important; }
+
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus { border-color: #caa56b !important; outline-color: #caa56b !important; }
+
+/* Shared Persian/Jalali birthdate control. This block intentionally follows
+   the legacy input rules so one outer surface—not three raw widgets—wins in
+   both themes. */
+.jalali-birthdate-shell {
+    min-width: 0;
+}
+
+.jalali-birthdate {
+    display: grid !important;
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr) minmax(0, 1fr);
+    direction: rtl;
+    min-width: 0;
+    height: 3.75rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border-strong) !important;
+    border-radius: var(--radius-control);
+    background: var(--color-surface) !important;
+    box-shadow: var(--shadow-surface);
+    transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.jalali-birthdate:hover {
+    border-color: var(--color-brand-mid) !important;
+    background: var(--color-surface-subtle) !important;
+}
+
+.jalali-birthdate:focus-within {
+    border-color: var(--color-brand) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 22%, transparent);
+}
+
+.jalali-birthdate[aria-invalid="true"] {
+    border-color: var(--color-error) !important;
+}
+
+.jalali-birthdate__segment {
+    position: relative;
+    min-width: 0;
+    height: 100%;
+}
+
+.jalali-birthdate__segment + .jalali-birthdate__segment {
+    border-inline-start: 1px solid var(--color-border-strong);
+}
+
+.jalali-birthdate__label {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: .32rem;
+    inset-inline-start: .7rem;
+    color: var(--color-text-muted);
+    font-size: .6875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.jalali-birthdate .jalali-birthdate__control,
+html.dark .jalali-birthdate .jalali-birthdate__control {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 1.02rem .7rem .08rem !important;
+    color: var(--color-text-primary) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    font-size: .9375rem;
+    line-height: 1.25;
+}
+
+.jalali-birthdate__segment--day input,
+.jalali-birthdate__segment--year input {
+    text-align: center;
+}
+
+.jalali-birthdate__segment--month select {
+    padding-inline-end: 1.8rem !important;
+}
+
+.jalali-birthdate__preview {
+    margin-top: .375rem;
+    color: var(--color-text-secondary);
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+@media (max-width: 26.25rem) {
+    .jalali-birthdate {
+        grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
+        height: 7.5rem;
+    }
+
+    .jalali-birthdate__segment {
+        height: 3.75rem;
+    }
+
+    .jalali-birthdate__segment--year {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--color-border-strong);
+        border-inline-start: 0;
+    }
+}
+
+html.dark .hover\:bg-stone-50:hover,
+html.dark .hover\:bg-stone-100:hover,
+html.dark .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-gray-50:hover { background-color: #302d28 !important; }
+
+/* Status surfaces remain legible but are toned down for the luxury palette. */
+html.dark .bg-emerald-50 { background-color: #15352a !important; }
+html.dark .bg-amber-50 { background-color: #3b2b16 !important; }
+html.dark .bg-red-50 { background-color: #3d1e1d !important; }
+html.dark .bg-blue-50 { background-color: #1d2d3b !important; }
+html.dark .bg-amber-100 { background-color: #4a3518 !important; }
+html.dark .bg-emerald-100 { background-color: #1c4635 !important; }
+html.dark .bg-blue-100 { background-color: #243c52 !important; }
+
+/* Semantic copy must remain readable on the richer dark status surfaces. */
+html.dark .text-amber-500,
+html.dark .text-amber-600,
+html.dark .text-amber-700,
+html.dark .text-amber-800,
+html.dark .text-amber-900 { color: #f0c77e !important; }
+
+html.dark .text-emerald-600,
+html.dark .text-emerald-700,
+html.dark .text-emerald-800,
+html.dark .text-emerald-900 { color: #8ed6ae !important; }
+
+html.dark .text-red-500,
+html.dark .text-red-600,
+html.dark .text-red-700,
+html.dark .text-red-800 { color: #f5a4a0 !important; }
+
+html.dark .text-blue-600,
+html.dark .text-blue-700,
+html.dark .text-blue-800,
+html.dark .text-blue-900 { color: #a9ccef !important; }
+
+html.dark .text-yellow-600,
+html.dark .text-yellow-700,
+html.dark .text-yellow-800,
+html.dark .text-yellow-900 { color: #f5db8c !important; }
+
+html.dark .shadow-sm,
+html.dark .shadow { box-shadow: 0 10px 28px rgb(0 0 0 / 22%) !important; }
+
+/* Swiper's remote stylesheet follows this file.  Its navigation glyphs use
+   pseudo-content; the local SVG controls are the only visible control UI. */
+.swiper .swiper-button-prev::after,
+.swiper .swiper-button-next::after {
+    content: none !important;
+    display: none !important;
+}
+
+.swiper .discovery-swiper-button svg {
+    display: block;
+    width: 1.125rem;
+    height: 1.125rem;
+}

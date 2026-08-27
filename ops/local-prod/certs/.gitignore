@@ -1,0 +1,3 @@
+# Owner-generated local TLS material only. Keep the directory, never certificates or keys.
+*
+!.gitignore

@@ -1,0 +1,35 @@
+{% load i18n pricing %}
+<div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+    <span class="font-semibold text-text-primary {{ price_class|default:'text-lg sm:text-xl' }}">
+        {% if product.catalog_pricing_is_scoped %}
+            {% if product.catalog_min_price is None %}
+                {% trans "Price unavailable" %}
+            {% elif product.catalog_min_price != product.catalog_max_price %}
+                {% trans "From" %} {{ product.catalog_min_price|money:storefront_currency }}
+            {% else %}
+                {{ product.catalog_min_price|money:storefront_currency }}
+            {% endif %}
+        {% elif product.requested_currency_min_price is None %}
+            {% trans "Price unavailable" %}
+        {% elif product.requested_currency_min_price != product.requested_currency_max_price %}
+            {% trans "From" %} {{ product.requested_currency_min_price|money:storefront_currency }}
+        {% else %}
+            {{ product.requested_currency_min_price|money:storefront_currency }}
+        {% endif %}
+    </span>
+    {% if not product.catalog_pricing_is_scoped and product.card_commerce.compare_at_amount %}
+        <span class="text-xs text-text-muted line-through sm:text-sm">{{ product.card_commerce.compare_at_amount|money:storefront_currency }}</span>
+    {% endif %}
+</div>
+{% if product.card_commerce.selling_unit_label %}
+    <p class="mt-1 text-xs font-medium text-text-muted">{{ product.card_commerce.selling_unit_label }}</p>
+{% endif %}
+{% if product.card_commerce.low_stock_count %}
+    <p class="mt-1 text-xs font-medium text-warning" data-low-stock>
+        {% if product.card_commerce.low_stock_unit %}
+            {% blocktrans with stock=product.card_commerce.low_stock_count|localized_number unit=product.card_commerce.low_stock_unit %}Only {{ stock }} {{ unit }} left{% endblocktrans %}
+        {% else %}
+            {% blocktrans with stock=product.card_commerce.low_stock_count|localized_number %}Only {{ stock }} left{% endblocktrans %}
+        {% endif %}
+    </p>
+{% endif %}

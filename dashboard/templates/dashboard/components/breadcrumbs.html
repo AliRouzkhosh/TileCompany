@@ -1,0 +1,42 @@
+<!--dashboard/templates/dashboard/components/breadcrumbs.html-->
+{% load i18n %}
+<nav class="flex items-center gap-2 text-sm text-stone-500">
+
+    <a
+        href="{% url 'dashboard:home' %}"
+        class="hover:text-indigo-600"
+    >
+        {% trans "Dashboard" %}
+    </a>
+
+    {% if request.resolver_match.url_name != "home" %}
+
+        <span>/</span>
+
+        <span class="font-medium text-stone-900">
+
+            {% if request.resolver_match.url_name == "fulfillment_queue" %}
+                {% trans "Fulfillment" %}
+
+            {% elif request.resolver_match.url_name == "refund_queue" %}
+                {% trans "Refunds" %}
+
+            {% elif request.resolver_match.url_name == "attention_queue" %}
+                {% trans "Needs Attention" %}
+
+            {% elif request.resolver_match.url_name == "all_orders" %}
+                {% trans "All Orders" %}
+
+            {% elif request.resolver_match.url_name == "analytics" %}
+                {% trans "Analytics" %}
+
+            {% else %}
+                {% trans "Dashboard" %}
+
+            {% endif %}
+
+        </span>
+
+    {% endif %}
+
+</nav>

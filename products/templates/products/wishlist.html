@@ -1,0 +1,26 @@
+{% extends "accounts/base.html" %}
+{% load i18n localized_content pricing %}
+
+{% block title %}{% trans "Wishlist" context "wishlist page" %} | TileStore{% endblock %}
+
+{% block account_content %}
+<section class="account-wishlist" aria-labelledby="wishlist-heading">
+    <header class="border-b border-border pb-4">
+        <h1 id="wishlist-heading" class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">{% trans "Wishlist" context "wishlist page" %}</h1>
+        <p class="mt-1 text-sm text-text-secondary">{% blocktrans count counter=page_obj.paginator.count with display_count=page_obj.paginator.count|localized_number context "wishlist page" %}{{ display_count }} saved product{% plural %}{{ display_count }} saved products{% endblocktrans %}</p>
+    </header>
+
+    {% if items %}
+        <div class="account-wishlist__grid mt-5 grid gap-4 lg:grid-cols-2 lg:gap-5 xl:grid-cols-3" data-wishlist-grid>
+            {% for product in items %}
+                <div data-wishlist-card class="account-wishlist__item min-w-0 h-full">
+                    {% include "products/components/wishlist_product_card.html" with product=product %}
+                </div>
+            {% endfor %}
+        </div>
+        {% if page_obj.paginator.num_pages > 1 %}<nav class="account-wishlist__pagination mt-6 flex items-center justify-center gap-4 text-sm" aria-label="{% trans 'Wishlist pages' context 'wishlist page' %}">{% if page_obj.has_previous %}<a class="sf-button sf-button--quiet" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}<span dir="auto">{% blocktrans with current=page_obj.number|localized_number total=page_obj.paginator.num_pages|localized_number context "wishlist page" %}Page {{ current }} of {{ total }}{% endblocktrans %}</span>{% if page_obj.has_next %}<a class="sf-button sf-button--quiet" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
+    {% else %}
+        <div class="account-wishlist__empty mt-5 rounded-surface border border-dashed border-border bg-surface-subtle p-6 sm:p-8"><svg class="h-8 w-8 text-brand" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg><h2 class="mt-4 text-lg font-semibold text-text-primary">{% trans "No saved products yet" context "wishlist page" %}</h2><p class="mt-1 max-w-md text-sm leading-6 text-text-secondary">{% trans "Save products you love to compare current prices and availability later." context "wishlist page" %}</p><a href="{% url 'products:product_list' %}" class="sf-button sf-button--primary mt-5">{% trans "Browse products" context "wishlist page" %}</a></div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!-- dashboard/templates/dashboard/components/pagination.html !-->
+{% load i18n pricing %}
+{% if page_obj and page_obj.paginator.num_pages > 1 %}
+
+<nav class="dashboard-pagination mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="{% trans 'Pagination' %}">
+
+    {% if page_obj.has_previous %}
+
+        <a
+            href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.previous_page_number }}{% if not query_string %}&q={{ request.GET.q }}&status={{ request.GET.status }}&payment={{ request.GET.payment }}&refund={{ request.GET.refund }}&refund_state={{ request.GET.refund_state }}{% endif %}"
+            class="dashboard-pagination__link"
+        >
+            {% trans "Previous" %}
+        </a>
+
+    {% endif %}
+
+    <span class="dashboard-pagination__current" aria-current="page">
+
+        {% trans "Page" %} {{ page_obj.number|localized_number }} {% trans "of" %} {{ page_obj.paginator.num_pages|localized_number }}
+
+    </span>
+
+    {% if page_obj.has_next %}
+
+        <a
+            href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}{% if not query_string %}&q={{ request.GET.q }}&status={{ request.GET.status }}&payment={{ request.GET.payment }}&refund={{ request.GET.refund }}&refund_state={{ request.GET.refund_state }}{% endif %}"
+            class="dashboard-pagination__link"
+        >
+            {% trans "Next" %}
+        </a>
+
+    {% endif %}
+
+</nav>
+
+{% endif %}

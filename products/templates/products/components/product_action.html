@@ -1,0 +1,70 @@
+{% load i18n pricing %}
+<div class="space-y-3 sm:grid sm:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] sm:gap-3 sm:space-y-0" data-product-actions>
+    <form id="addToCartForm" action="{% url 'orders:cart_add_variant' %}" method="post">
+        {% csrf_token %}
+        <input
+            type="hidden"
+            name="variant_id"
+            id="cartVariantInput"
+            data-purchase-variant-input
+            value="{{ preselected_variant_id|default:'' }}">
+        <input
+            type="hidden"
+            name="quantity"
+            id="cartQuantityInput"
+            data-purchase-quantity-input
+            value="{% if selected_variant and selected_variant.stock > 0 %}1{% else %}0{% endif %}">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button
+            id="addToCartButton"
+            type="submit"
+            {% if not selected_variant or not initial_price or selected_variant.stock < 1 %}disabled{% endif %}
+            data-primary-purchase-action
+            class="sf-button sf-button--primary w-full py-3.5 text-base shadow-surface disabled:shadow-none">
+            <svg class="h-5 w-5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 3h2l1.8 10.2a2 2 0 0 0 2 1.7h7.9a2 2 0 0 0 2-1.6L20 7H6M9.5 20a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Zm8 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/></svg>
+            {% trans "Add to Cart" %}
+        </button>
+    </form>
+
+    <form id="buyNowForm" action="{% url 'orders:cart_add_variant' %}" method="post">
+        {% csrf_token %}
+        <input
+            type="hidden"
+            name="variant_id"
+            id="buyVariantInput"
+            data-purchase-variant-input
+            value="{{ preselected_variant_id|default:'' }}">
+        <input
+            type="hidden"
+            name="quantity"
+            id="buyQuantityInput"
+            data-purchase-quantity-input
+            value="{% if selected_variant and selected_variant.stock > 0 %}1{% else %}0{% endif %}">
+        <input type="hidden" name="buy_now" value="1">
+        <button
+            id="buyNowButton"
+            type="submit"
+            {% if not selected_variant or not initial_price or selected_variant.stock < 1 %}disabled{% endif %}
+            class="sf-button sf-button--secondary w-full py-3.5 text-base">
+            {% trans "Buy Now" %}
+        </button>
+    </form>
+</div>
+
+<aside
+    class="pointer-events-none fixed inset-x-0 bottom-0 z-40 translate-y-full border-t border-border bg-surface/95 px-4 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 opacity-0 shadow-raised backdrop-blur-md transition duration-200 lg:inset-x-auto lg:end-8 lg:bottom-6 lg:w-[26rem] lg:rounded-surface lg:border lg:px-3 lg:py-3"
+    data-purchase-affordance
+    data-mobile-purchase-bar
+    data-visible="false"
+    aria-hidden="true"
+    inert>
+    <div class="mx-auto flex max-w-md items-center gap-3">
+        <div class="min-w-0 flex-1">
+            <p class="truncate text-base font-semibold text-text-primary" data-mobile-purchase-price>{% if initial_price %}{{ initial_price.amount|money:storefront_currency }}{% else %}{% trans "Price unavailable" %}{% endif %}</p>
+            <p class="truncate text-xs text-text-muted" data-mobile-purchase-unit>{% if initial_price %}{{ initial_price_unit }}{% endif %}</p>
+        </div>
+        <button type="submit" form="addToCartForm" data-mobile-purchase-button {% if not selected_variant or not initial_price or selected_variant.stock < 1 %}disabled{% endif %} class="sf-button sf-button--primary min-w-[9.5rem] shrink-0 px-4 py-3">
+            {% trans "Add to Cart" %}
+        </button>
+    </div>
+</aside>

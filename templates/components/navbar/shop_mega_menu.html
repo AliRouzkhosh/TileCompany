@@ -1,0 +1,29 @@
+{% load i18n %}
+<div class="desktop-mega-surface sf-surface-raised mt-2 overflow-hidden" role="navigation" aria-label="{% trans 'Shop navigation' %}">
+    <div class="grid grid-cols-3 gap-10 p-8 xl:gap-12">
+        {% for section in storefront_navigation.sections %}
+        <section aria-labelledby="mega-section-{{ section.code }}">
+            <h2 id="mega-section-{{ section.code }}" class="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+                {{ section.label }}
+            </h2>
+            <ul class="space-y-0.5">
+                {% for item in section.items %}
+                <li>
+                    <a href="{{ item.url }}" class="mega-menu-link group">
+                        <span>{{ item.label }}</span>
+                        <i data-lucide="arrow-up-right" class="sf-icon directional-icon h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true"></i>
+                    </a>
+                    {% if item.children %}
+                    <ul class="border-s border-border ps-3">
+                        {% for child in item.children %}
+                        <li><a href="{{ child.url }}" class="mega-menu-child-link">{{ child.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endfor %}
+    </div>
+</div>

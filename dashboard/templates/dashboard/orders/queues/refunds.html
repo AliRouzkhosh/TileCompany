@@ -1,0 +1,37 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    <div>
+
+        <h1 class="text-3xl font-bold">
+            {% if queue_mode == "processing" %}{% trans "Approved Refunds Awaiting Processing" %}{% else %}{% trans "Refund Requests" %}{% endif %}
+        </h1>
+
+        <p class="text-stone-500">
+            {% if queue_mode == "processing" %}{% trans "Approved refunds waiting for the financial action." %}{% else %}{% trans "Orders waiting for refund review." %}{% endif %}
+        </p>
+
+    </div>
+
+    {% if queue_mode == "review" %}
+    <nav class="flex flex-wrap gap-2" aria-label="{% trans 'Refund review states' %}">
+        <a href="{% url 'dashboard:refund_queue' %}" class="rounded-full px-4 py-2 text-sm font-semibold {% if not refund_state %}bg-stone-900 text-white{% else %}bg-white text-stone-700 shadow-sm{% endif %}">{% trans "All active" %} ({{ refund_counts.all }})</a>
+        <a href="?refund_state=new" class="rounded-full px-4 py-2 text-sm font-semibold {% if refund_state == 'new' %}bg-stone-900 text-white{% else %}bg-white text-stone-700 shadow-sm{% endif %}">{% trans "New / needs review" %} ({{ refund_counts.new }})</a>
+        <a href="?refund_state=waiting_customer" class="rounded-full px-4 py-2 text-sm font-semibold {% if refund_state == 'waiting_customer' %}bg-amber-700 text-white{% else %}bg-white text-stone-700 shadow-sm{% endif %}">{% trans "Waiting for customer" %} ({{ refund_counts.waiting_customer }})</a>
+        <a href="?refund_state=customer_replied" class="rounded-full px-4 py-2 text-sm font-semibold {% if refund_state == 'customer_replied' %}bg-indigo-700 text-white{% else %}bg-white text-stone-700 shadow-sm{% endif %}">{% trans "Customer replied" %} ({{ refund_counts.customer_replied }})</a>
+    </nav>
+    {% endif %}
+
+    {% include "dashboard/components/filters.html" %}
+
+    {% include "dashboard/orders/components/queue_table.html" with orders=orders refund_queue_mode=queue_mode %}
+
+    {% include "dashboard/components/pagination.html" %}
+
+</div>
+
+{% endblock %}

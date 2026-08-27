@@ -1,0 +1,11 @@
+{% load i18n pricing %}
+<div class="relative" data-notification-menu>
+    <button type="button" data-notification-toggle aria-expanded="false" aria-haspopup="true" aria-label="{% trans 'Operational notifications' %}" title="{% trans 'Operational notifications' %}" class="relative rounded-xl border border-stone-200 bg-stone-50 p-2 text-text-primary transition hover:bg-stone-100">
+        <i data-lucide="bell" class="sf-icon" aria-hidden="true"></i>
+        {% if dashboard_notifications %}<span class="absolute -top-1 -end-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white">{% if dashboard_notifications|length > 99 %}{{ 99|localized_number }}+{% else %}{{ dashboard_notifications|length|localized_number }}{% endif %}</span>{% endif %}
+    </button>
+    <div data-notification-dropdown class="absolute end-0 z-[60] mt-2 hidden w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg">
+        <div class="flex items-center justify-between border-b border-stone-200 px-4 py-3"><p class="text-sm font-semibold text-text-primary">{% trans "Operational notifications" %}</p><span class="text-xs text-text-secondary">{{ dashboard_notifications|length|localized_number }}</span></div>
+        <div class="max-h-[60vh] divide-y divide-stone-200 overflow-y-auto">{% for notification in dashboard_notifications %}<a href="{{ notification.url }}" class="flex gap-3 px-4 py-3 text-start transition hover:bg-stone-50"><i data-lucide="{{ notification.icon }}" class="mt-0.5 sf-icon shrink-0" aria-hidden="true"></i><span><span class="block text-sm font-semibold text-text-primary">{{ notification.title }}</span><span class="mt-1 block text-xs text-text-secondary">{{ notification.message }}</span></span></a>{% empty %}<p class="px-4 py-8 text-center text-sm text-text-secondary">{% trans "No operational notifications." %}</p>{% endfor %}</div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+{% load pricing i18n localized_dates %}
+<section class="order-detail__items" aria-labelledby="order-items-title">
+    <div class="order-detail__section-header">
+        <div>
+            <h2 id="order-items-title">{% trans "Order items" context "order items" %}</h2>
+            <p>{% trans "Purchased items" %}</p>
+        </div>
+    </div>
+    <div class="order-detail__item-list">
+        {% for item in order.items.all %}
+        {% with purchase=item.purchase_presentation %}
+        <article class="order-detail__item" data-order-item>
+            {% if purchase.current_product_url %}
+            <a class="order-detail__item-image" href="{{ purchase.current_product_url }}" aria-label="{% blocktrans with title=purchase.product_name %}View current product: {{ title }}{% endblocktrans %}">
+                {% if item.order_history_thumbnail_url %}<img src="{{ item.order_history_thumbnail_url }}" alt="{{ purchase.product_name }}">{% else %}<i data-lucide="package" class="sf-icon" aria-hidden="true"></i>{% endif %}
+            </a>
+            {% else %}
+            <div class="order-detail__item-image">
+                {% if item.order_history_thumbnail_url %}<img src="{{ item.order_history_thumbnail_url }}" alt="{{ purchase.product_name }}">{% else %}<i data-lucide="package" class="sf-icon" aria-hidden="true"></i>{% endif %}
+            </div>
+            {% endif %}
+
+            <div class="order-detail__item-content">
+                <h3>{% if purchase.current_product_url %}<a class="order-detail__item-title-link" href="{{ purchase.current_product_url }}">{{ purchase.product_name }}</a>{% else %}{{ purchase.product_name }}{% endif %}</h3>
+
+                {% if purchase.specification_chips %}
+                <p class="order-detail__configuration">
+                    {% for chip in purchase.specification_chips %}{{ chip }}{% if not forloop.last %}<span aria-hidden="true"> · </span>{% endif %}{% endfor %}
+                </p>
+                {% endif %}
+
+                {% if purchase.product_attributes or purchase.variant_attributes or purchase.operational_facts %}
+                <dl class="order-detail__snapshot-facts">
+                    {% for attribute in purchase.product_attributes %}
+                        {% if not attribute.is_dimension %}<div><dt>{{ attribute.label }}</dt><dd>{% for value in attribute.values %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>{% endif %}
+                    {% endfor %}
+                    {% for attribute in purchase.variant_attributes %}
+                        {% if not attribute.is_dimension %}<div><dt>{{ attribute.label }}</dt><dd>{% for value in attribute.values %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>{% endif %}
+                    {% endfor %}
+                    {% for fact in purchase.operational_facts %}<div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>{% endfor %}
+                </dl>
+                {% endif %}
+
+                {% if purchase.variant_sku %}<p class="order-detail__technical">{% trans "SKU" %}: <bdi>{{ purchase.variant_sku }}</bdi></p>{% endif %}
+                {% if purchase.has_diagnostic %}<p class="order-detail__diagnostic">{{ purchase.customer_diagnostic }}</p>{% endif %}
+
+                <div class="order-detail__item-meta">
+                    <span>{% trans "Quantity" %}: {{ item.quantity|localized_number }}{% if purchase.quantity_noun %} {{ purchase.quantity_noun }}{% endif %}</span>
+                    {% if purchase.selling_unit %}<span>{{ purchase.selling_unit.price_label }}</span>{% endif %}
+                </div>
+                <div class="order-detail__item-pricing">
+                    <div>
+                        <span class="order-detail__unit-label">{% trans "Unit price" %}</span>
+                        <strong>{{ item.unit_price|money:order.currency }}</strong>
+                        {% if purchase.unit_reference_price %}<span class="order-detail__reference-price"><s>{{ purchase.unit_reference_price|money:order.currency }}</s>{% if purchase.discount_percent %}<bdi>{% blocktrans with percent=purchase.discount_percent|localized_number %}{{ percent }}% off{% endblocktrans %}</bdi>{% endif %}</span>{% endif %}
+                    </div>
+                    <div class="order-detail__line-total"><span>{% trans "Line total" %}</span><strong>{{ item.subtotal|money:order.currency }}</strong></div>
+                </div>
+            </div>
+        </article>
+        {% endwith %}
+        {% endfor %}
+    </div>
+</section>

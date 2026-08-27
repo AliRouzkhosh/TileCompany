@@ -1,0 +1,40 @@
+{% load i18n %}
+<nav aria-label="{% trans 'Checkout progress' %}" data-checkout-progress>
+    <div class="rounded-surface border border-border bg-surface px-4 py-4 shadow-surface lg:hidden">
+        <div class="flex items-end justify-between gap-4">
+            <div>
+                <p class="text-xs font-medium text-text-muted">
+                    {% if checkout_step == "shipping" %}{% trans "Step 1 of 3" %}
+                    {% elif checkout_step == "review" %}{% trans "Step 3 of 3" %}
+                    {% else %}{% trans "Step 2 of 3" %}{% endif %}
+                </p>
+                <p class="mt-1 text-base font-semibold text-text-primary" aria-current="step">
+                    {% if checkout_step == "shipping" %}{% trans "Shipping" %}
+                    {% elif checkout_step == "review" %}{% trans "Review" %}
+                    {% else %}{% trans "Payment" %}{% endif %}
+                </p>
+            </div>
+            <span class="text-xs text-text-muted">{% trans "Cart complete" %}</span>
+        </div>
+        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-strong" role="progressbar" aria-label="{% trans 'Checkout progress' %}" {% if checkout_step == "shipping" %}aria-valuenow="1"{% elif checkout_step == "review" %}aria-valuenow="3"{% else %}aria-valuenow="2"{% endif %} aria-valuemin="1" aria-valuemax="3">
+            <div class="h-full rounded-full bg-brand {% if checkout_step == 'shipping' %}w-1/3{% elif checkout_step == 'review' %}w-full{% else %}w-2/3{% endif %}"></div>
+        </div>
+    </div>
+
+    <ol class="hidden grid-cols-3 rounded-surface border border-border bg-surface px-6 py-5 shadow-surface lg:grid" data-checkout-progress-desktop>
+        <li class="relative flex items-center gap-3 {% if checkout_step == 'shipping' %}text-brand{% else %}text-success{% endif %}" {% if checkout_step == "shipping" %}aria-current="step"{% endif %}>
+            <span class="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full {% if checkout_step == 'shipping' %}border-2 border-brand bg-brand-subtle font-semibold{% else %}bg-success-subtle{% endif %}" aria-hidden="true">{% if checkout_step == "shipping" %}1{% else %}<i data-lucide="check" class="sf-icon h-4 w-4"></i>{% endif %}</span>
+            <span class="relative z-10 bg-surface pe-3"><span class="block text-xs text-text-muted">{% trans "Step 1" %}</span><span class="font-semibold text-text-primary">{% trans "Shipping" %}</span></span>
+            <span class="absolute start-9 top-1/2 h-px w-[calc(100%-2.25rem)] bg-border" aria-hidden="true"></span>
+        </li>
+        <li class="relative flex items-center gap-3 {% if checkout_step == 'payment' or not checkout_step %}text-brand{% elif checkout_step == 'review' %}text-success{% else %}text-text-muted{% endif %}" {% if checkout_step == "payment" or not checkout_step %}aria-current="step"{% endif %}>
+            <span class="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full {% if checkout_step == 'payment' or not checkout_step %}border-2 border-brand bg-brand-subtle font-semibold{% elif checkout_step == 'review' %}bg-success-subtle{% else %}border border-border-strong bg-surface-subtle font-medium{% endif %}" aria-hidden="true">{% if checkout_step == "review" %}<i data-lucide="check" class="sf-icon h-4 w-4"></i>{% else %}2{% endif %}</span>
+            <span class="relative z-10 bg-surface pe-3"><span class="block text-xs text-text-muted">{% trans "Step 2" %}</span><span class="font-semibold text-text-primary">{% trans "Payment" %}</span></span>
+            <span class="absolute start-9 top-1/2 h-px w-[calc(100%-2.25rem)] bg-border" aria-hidden="true"></span>
+        </li>
+        <li class="relative flex items-center gap-3 {% if checkout_step == 'review' %}text-brand{% else %}text-text-muted{% endif %}" {% if checkout_step == "review" %}aria-current="step"{% endif %}>
+            <span class="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full {% if checkout_step == 'review' %}border-2 border-brand bg-brand-subtle font-semibold{% else %}border border-border-strong bg-surface-subtle font-medium{% endif %}" aria-hidden="true">3</span>
+            <span><span class="block text-xs text-text-muted">{% trans "Step 3" %}</span><span class="font-semibold text-text-primary">{% trans "Review" %}</span></span>
+        </li>
+    </ol>
+</nav>

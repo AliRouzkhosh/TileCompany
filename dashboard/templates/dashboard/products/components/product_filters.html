@@ -1,0 +1,54 @@
+{% load i18n localized_content %}
+
+<form method="get" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="grid gap-4 lg:grid-cols-2">
+        <div>
+            <label for="search" class="mb-2 block text-sm font-medium text-slate-700">{% trans "Search" %}</label>
+            <input type="text" id="search" name="search" value="{{ filters.search }}" placeholder="{% trans 'Search by name, SKU, brand...' %}" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:border-slate-900 focus:outline-none">
+        </div>
+        <div>
+            <label for="sort" class="mb-2 block text-sm font-medium text-slate-700">{% trans "Sort" %}</label>
+            <select id="sort" name="sort" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:border-slate-900 focus:outline-none">
+                <option value="newest" {% if filters.sort == "newest" %}selected{% endif %}>{% trans "Newest" %}</option>
+                <option value="oldest" {% if filters.sort == "oldest" %}selected{% endif %}>{% trans "Oldest" %}</option>
+                <option value="name" {% if filters.sort == "name" %}selected{% endif %}>{% trans "Name (A–Z)" %}</option>
+                <option value="updated" {% if filters.sort == "updated" %}selected{% endif %}>{% trans "Recently Updated" %}</option>
+                <option value="stock" {% if filters.sort == "stock" %}selected{% endif %}>{% trans "Stock" %}</option>
+            </select>
+        </div>
+        <div>
+            <label for="category" class="mb-2 block text-sm font-medium text-slate-700">{% trans "Categories" %}</label>
+            <select id="category" name="category" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:border-slate-900 focus:outline-none">
+                <option value="">{% trans "All Categories" %}</option>
+                {% for category in categories %}<option value="{{ category.id }}" {% if filters.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category|localized:"name" }}</option>{% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="brand" class="mb-2 block text-sm font-medium text-slate-700">{% trans "Brand" %}</label>
+            <select id="brand" name="brand" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:border-slate-900 focus:outline-none">
+                <option value="">{% trans "All Brands" %}</option>
+                {% for brand in brands %}<option value="{{ brand.id }}" {% if filters.brand == brand.id|stringformat:"s" %}selected{% endif %}>{{ brand|localized:"name" }}</option>{% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="active" class="mb-2 block text-sm font-medium text-slate-700">{% trans "Status" %}</label>
+            <select id="active" name="active" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:border-slate-900 focus:outline-none">
+                <option value="">{% trans "All Products" %}</option>
+                <option value="true" {% if filters.active == "true" %}selected{% endif %}>{% trans "Active" %}</option>
+                <option value="false" {% if filters.active == "false" %}selected{% endif %}>{% trans "Inactive" %}</option>
+            </select>
+        </div>
+        <div>
+            <label for="featured" class="mb-2 block text-sm font-medium text-slate-700">{% trans "Featured" %}</label>
+            <select id="featured" name="featured" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:border-slate-900 focus:outline-none">
+                <option value="">{% trans "All" %}</option>
+                <option value="true" {% if filters.featured == "true" %}selected{% endif %}>{% trans "Featured" %}</option>
+                <option value="false" {% if filters.featured == "false" %}selected{% endif %}>{% trans "Not Featured" %}</option>
+            </select>
+        </div>
+    </div>
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <a href="{% url 'dashboard:products:catalog' %}" class="text-sm font-medium text-slate-600 hover:text-slate-900">{% trans "Reset Filters" %}</a>
+        <button type="submit" class="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800">{% trans "Apply Filters" %}</button>
+    </div>
+</form>

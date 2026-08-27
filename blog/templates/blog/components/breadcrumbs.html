@@ -1,0 +1,59 @@
+<!-- components/breadcrumbs.html -->
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<nav
+    class="border-b border-stone-200 bg-stone-50"
+    aria-label="{% trans 'Breadcrumb' %}"
+>
+    <div class="mx-auto flex max-w-7xl items-center gap-2 px-4 py-4 text-sm text-stone-500">
+
+        <a
+            href="{% url 'products:home' %}"
+            class="transition hover:text-emerald-600"
+        >
+            {% trans "Home" %}
+        </a>
+
+        {% if request.resolver_match.app_name == "blog" %}
+
+            <svg class="h-4 w-4 text-stone-400"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"/>
+            </svg>
+
+            <a
+                href="{% url 'blog:article_list' %}"
+                class="transition hover:text-emerald-600"
+            >
+                {% trans "Articles" %}
+            </a>
+
+            {% if article %}
+                <svg class="h-4 w-4 text-stone-400"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"/>
+                </svg>
+
+                <span class="truncate font-medium text-stone-900">
+                    {% if LANGUAGE_CODE == "fa" and article.title_fa %}{{ article.title_fa }}{% else %}{{ article.title }}{% endif %}
+                </span>
+            {% elif selected_category_object %}
+                <svg class="h-4 w-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <span class="truncate font-medium text-stone-900">{% if LANGUAGE_CODE == "fa" and selected_category_object.name_fa %}{{ selected_category_object.name_fa }}{% else %}{{ selected_category_object.name }}{% endif %}</span>
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+</nav>

@@ -1,0 +1,8 @@
+{% load i18n %}
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold text-slate-900">{% trans "Catalog Packaging" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "Selling prices are managed per purchasable variant and currency." %}</p></div>
+    <div class="grid gap-6 p-6 md:grid-cols-2">
+        {% include "components/form_field.html" with field=form.tiles_per_box %}
+        {% include "components/form_field.html" with field=form.coverage_per_box_m2 %}
+    </div>
+</section>

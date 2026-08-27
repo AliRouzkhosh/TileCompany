@@ -1,0 +1,13 @@
+{% load i18n %}
+<dialog id="logoutDialog" class="sf-logout-dialog w-[calc(100%-2rem)] max-w-sm rounded-card border border-border bg-surface p-0 text-text-primary shadow-raised" aria-labelledby="logoutDialogTitle" data-logout-dialog>
+    <div class="p-5 sm:p-6">
+        <p class="text-sm font-semibold text-brand">{% trans "Account" %}</p>
+        <h2 id="logoutDialogTitle" class="mt-2 text-xl font-bold tracking-tight">{% trans "Log out?" %}</h2>
+        <p class="mt-2 text-sm leading-6 text-text-secondary">{% trans "Are you sure you want to log out of your account?" %}</p>
+        <form method="post" action="{% url 'accounts:logout' %}" class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end" data-logout-form>
+            {% csrf_token %}
+            <button type="button" class="sf-button sf-button--secondary min-h-11 px-4" data-logout-cancel>{% trans "Cancel" %}</button>
+            <button type="submit" class="sf-button sf-button--quiet min-h-11 border-error px-4 text-error hover:border-error hover:bg-error-subtle" data-logout-confirm>{% trans "Log out" %}</button>
+        </form>
+    </div>
+</dialog>

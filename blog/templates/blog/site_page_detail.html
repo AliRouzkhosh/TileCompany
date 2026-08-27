@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ page_meta_title }}{% endblock %}
+{% block meta_description %}{% if page_meta_description %}{{ page_meta_description }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-5xl">
+    {% include "components/breadcrumbs.html" %}
+    <article class="overflow-hidden rounded-[1.75rem] border border-border bg-surface shadow-surface" data-site-page>
+        <header class="border-b border-border bg-surface-subtle px-5 py-8 sm:px-10 sm:py-12">
+            <h1 class="text-3xl font-semibold tracking-tight text-text-primary sm:text-5xl">{{ page_title }}</h1>
+            {% if page_summary %}<p class="mt-4 max-w-3xl text-base leading-7 text-text-secondary sm:text-xl sm:leading-8">{{ page_summary }}</p>{% endif %}
+        </header>
+        <div class="px-5 py-8 sm:px-10 sm:py-12">
+            <div class="article-content prose prose-stone prose-lg mx-auto" dir="{% if LANGUAGE_CODE == 'fa' %}rtl{% else %}ltr{% endif %}">
+                {{ page_content|safe }}
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% load i18n %}
+
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="border-b border-slate-200 px-6 py-4">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            {% trans "Product Settings" %}
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            {% trans "Visibility and merchandising options." %}
+        </p>
+
+    </div>
+
+    <div class="space-y-6 p-6">
+
+        <div>
+
+            <label class="block text-sm font-medium text-slate-700" for="{{ form.image.id_for_label }}">{% trans "Product Image" %}</label>
+
+            <label class="mt-2 flex cursor-pointer items-center justify-between rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm transition hover:border-slate-700 hover:bg-slate-100" for="{{ form.image.id_for_label }}">
+                <span data-file-input-label="{{ form.image.id_for_label }}" data-empty="{% trans 'No files selected' %}" data-selected="{% trans 'Files selected' %}">{% trans "No files selected" %}</span>
+                <span class="rounded-lg bg-white px-3 py-2 font-medium text-slate-800 shadow-sm">{% trans "Choose files" %}</span>
+            </label>
+            <span class="sr-only">{{ form.image }}</span>
+
+            {{ form.image.errors }}
+
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+
+            <label class="flex items-center gap-3 rounded-lg border border-slate-200 p-4">
+
+                {{ form.is_active }}
+
+                <div>
+
+                    <p class="font-medium text-slate-900">
+                        {% trans "Active" %}
+                    </p>
+
+                    <p class="text-sm text-slate-500">
+                        {% trans "Product is visible in the storefront." %}
+                    </p>
+
+                </div>
+
+            </label>
+
+            <label class="flex items-center gap-3 rounded-lg border border-slate-200 p-4">
+
+                {{ form.is_featured }}
+
+                <div>
+
+                    <p class="font-medium text-slate-900">
+                        {% trans "Featured" %}
+                    </p>
+
+                    <p class="text-sm text-slate-500">
+                        {% trans "Highlight this product across the shop." %}
+                    </p>
+
+                </div>
+
+            </label>
+
+        </div>
+
+    </div>
+
+</section>

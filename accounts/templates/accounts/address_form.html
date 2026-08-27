@@ -1,0 +1,81 @@
+{% extends "accounts/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
+{% block account_content %}
+
+{% translate "Account" context "address page" as eyebrow %}
+{% translate "Add or update a shipping address." context "address page" as description %}
+{% include "accounts/components/account_header.html" with eyebrow=eyebrow title=page_title description=description %}
+
+<form method="post" class="sf-surface max-w-3xl p-5 sm:p-6" novalidate>
+
+    {% csrf_token %}
+
+    <div class="grid gap-6 sm:grid-cols-2">
+
+        {% for field in form %}
+
+            {% if field.name == "street_address" %}
+
+                <div class="sm:col-span-2">
+
+            {% elif field.name == "is_default_shipping" or field.name == "is_default_billing" %}
+
+                <div class="sm:col-span-2 flex items-center gap-3">
+
+            {% else %}
+
+                <div>
+
+            {% endif %}
+
+                {% if field.field.widget.input_type != "checkbox" %}
+                    <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-medium text-stone-700">
+                        {{ field.label }}
+                    </label>
+                {% endif %}
+
+                {{ field }}
+
+                {% if field.field.widget.input_type == "checkbox" %}
+                    <label for="{{ field.id_for_label }}" class="text-sm font-medium text-stone-700">
+                        {{ field.label }}
+                    </label>
+                {% endif %}
+
+                {% if field.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ field.errors|join:", " }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="mt-8 flex flex-wrap justify-end gap-3">
+
+        <a href="{% url 'accounts:address_list' %}"
+           class="sf-button sf-button--secondary min-h-11">
+
+            {% trans "Cancel" context "address page" %}
+
+        </a>
+
+        <button type="submit" class="sf-button sf-button--primary min-h-11">
+
+            {% trans "Save address" context "address page" %}
+
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

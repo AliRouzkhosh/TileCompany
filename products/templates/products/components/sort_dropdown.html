@@ -1,0 +1,21 @@
+{% load i18n %}
+<form action="{{ request.path }}" method="get" class="shrink-0" hx-get="{{ request.path }}" hx-target="#catalog-workspace" hx-select="#catalog-workspace" hx-swap="outerHTML show:none" hx-push-url="true">
+    {% for key, values in request.GET.lists %}
+        {% if key != "sort" and key != "page" %}
+            {% for v in values %}<input type="hidden" name="{{ key }}" value="{{ v }}">{% endfor %}
+        {% endif %}
+    {% endfor %}
+    <label for="catalogSort{% if sort_display == 'mobile' %}Mobile{% else %}Desktop{% endif %}" class="{% if sort_display == 'mobile' %}sr-only{% else %}me-2 text-sm font-medium text-text-secondary{% endif %}">{% trans "Sort by" %}</label>
+    <select id="catalogSort{% if sort_display == 'mobile' %}Mobile{% else %}Desktop{% endif %}"
+            name="sort" data-submit-on-change
+            {% if sort_display == 'mobile' %}data-mobile-sort{% endif %}
+            class="h-11 border border-border-strong bg-surface px-3 text-sm font-medium text-text-primary {% if sort_display == 'mobile' %}max-w-[10.5rem] rounded-full{% else %}rounded-control{% endif %}">
+        {% if query %}<option value="relevance" {% if current_filters.sort == "relevance" %}selected{% endif %}>{% trans "Relevance" %}</option>{% endif %}
+        <option value="newest" {% if current_filters.sort == "newest" or not current_filters.sort %}selected{% endif %}>{% trans "Newest" %}</option>
+        <option value="price_asc" {% if current_filters.sort == "price_asc" %}selected{% endif %}>{% trans "Price: Low to High" %}</option>
+        <option value="price_desc" {% if current_filters.sort == "price_desc" %}selected{% endif %}>{% trans "Price: High to Low" %}</option>
+        <option value="rating" {% if current_filters.sort == "rating" %}selected{% endif %}>{% trans "Rating" %}</option>
+        <option value="best_selling" {% if current_filters.sort == "best_selling" %}selected{% endif %}>{% trans "Best Selling" %}</option>
+    </select>
+    <noscript><button type="submit" class="sf-button sf-button--secondary mt-2">{% trans "Apply" %}</button></noscript>
+</form>

@@ -1,0 +1,12 @@
+{% load pricing %}
+{% for item in account_navigation_items %}
+    <li>
+        <a href="{{ item.url }}" hx-get="{{ item.url }}" hx-target="#account-workspace" hx-select="#account-workspace" hx-swap="outerHTML show:none" hx-push-url="true" data-htmx-intent="navigation" class="account-nav-link {% if item.active %}account-nav-link--active{% endif %}" {% if item.active %}aria-current="page"{% endif %}{% if menu_mode %} role="menuitem"{% endif %}>
+            <i data-lucide="{{ item.icon }}" class="sf-icon" aria-hidden="true"></i>
+            <span>{{ item.label }}</span>
+            {% if item.key == "notifications" and notification_unread_count %}
+                <span class="account-nav-link__badge" aria-label="{{ notification_unread_count|localized_number }}">{% if notification_unread_count > 99 %}{{ 99|localized_number }}+{% else %}{{ notification_unread_count|localized_number }}{% endif %}</span>
+            {% endif %}
+        </a>
+    </li>
+{% endfor %}

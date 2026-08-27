@@ -1,0 +1,33 @@
+<!--dashboard/templates/dashboard/orders/queues/all_orders.html-->
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    <div>
+
+        <div>
+
+            <h1 class="text-3xl font-bold">
+                {% trans "All Orders" %}
+            </h1>
+
+            <p class="text-stone-500">
+                {% trans "Browse and manage every order." %}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% include "dashboard/components/filters.html" %}
+
+    {% include "dashboard/orders/components/queue_table.html" with orders=orders %}
+
+    {% include "dashboard/components/pagination.html" %}
+
+</div>
+
+{% endblock %}

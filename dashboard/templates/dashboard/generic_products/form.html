@@ -1,0 +1,12 @@
+{% extends "dashboard/base.html" %}{% load i18n %}
+{% block dashboard_content %}
+<div class="mx-auto max-w-5xl space-y-6">
+  <div><p class="text-sm font-semibold text-emerald-700">{{ product_type.name }} · <code>{{ product_type.code }}</code></p><h1 class="text-3xl font-bold">{{ title }}</h1><p class="mt-2 text-sm text-slate-500">{% trans "ProductType is immutable after creation. Publication state is managed by the dedicated publish controls." %}</p></div>
+  <form method="post" enctype="multipart/form-data" class="space-y-6">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="rounded-xl border border-red-200 bg-red-50 p-4">{{ form.non_field_errors }}</div>{% endif %}
+    <section class="rounded-2xl border bg-white p-6"><h2 class="mb-5 text-xl font-bold">{% trans "Core Product" %}</h2><div class="grid gap-5 md:grid-cols-2">{% for field in form.core_bound_fields %}<div class="{% if field.name == 'description' or field.name == 'description_fa' or field.name == 'category_ids' %}md:col-span-2{% endif %}">{% include "components/form_field.html" with field=field %}</div>{% endfor %}</div></section>
+    <section class="rounded-2xl border bg-white p-6"><h2 class="mb-2 text-xl font-bold">{% trans "Product Attributes" %}</h2><p class="mb-5 text-sm text-slate-500">{% trans "Fields are generated from the active ProductType schema." %}</p><div class="grid gap-5 md:grid-cols-2">{% for field in form.dynamic_bound_fields %}<div>{% include "components/form_field.html" with field=field %}</div>{% empty %}<p class="text-sm text-slate-500">{% trans "No active Product attributes are configured." %}</p>{% endfor %}</div></section>
+    <div class="flex justify-end gap-3"><a href="{% url 'dashboard:products:catalog' %}" class="rounded-xl border px-5 py-2.5">{% trans "Cancel" %}</a><button class="rounded-xl bg-slate-900 px-5 py-2.5 font-semibold text-white">{% trans "Save Product" %}</button></div>
+  </form>
+</div>
+{% endblock %}

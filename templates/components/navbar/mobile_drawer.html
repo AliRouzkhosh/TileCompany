@@ -1,0 +1,93 @@
+{% load i18n pricing %}
+<div class="mobile-drawer-layer lg:hidden" data-mobile-drawer-layer aria-hidden="true" inert>
+    <div class="mobile-overlay-backdrop" data-mobile-drawer-backdrop></div>
+    <aside id="mobileDrawer" class="mobile-drawer" role="dialog" aria-modal="true" aria-labelledby="mobileDrawerTitle" tabindex="-1" data-mobile-drawer>
+        <div class="flex min-h-16 items-center justify-between gap-3 border-b border-border px-4">
+            <div id="mobileDrawerTitle">{% include "components/brand.html" with compact=True %}</div>
+            <button type="button" id="mobileDrawerClose" class="sf-icon-button" data-mobile-drawer-close aria-label="{% trans 'Close navigation' %}"><i data-lucide="x" class="sf-icon" aria-hidden="true"></i></button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto overscroll-contain px-3 py-4">
+            <nav aria-label="{% trans 'Mobile primary navigation' %}">
+                <button type="button" class="mobile-nav-link w-full {% if request.resolver_match.namespace == 'products' and request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'wishlist' %}is-active{% endif %}" aria-expanded="false" aria-controls="mobileShopDisclosure" data-mobile-disclosure>
+                    <span>{% trans "Shop" %}</span>
+                    <i data-lucide="chevron-down" class="sf-icon h-4 w-4 transition-transform duration-200" data-disclosure-chevron aria-hidden="true"></i>
+                </button>
+                <div id="mobileShopDisclosure" class="mobile-disclosure-panel" data-mobile-disclosure-panel aria-hidden="true" inert>
+                    <div class="overflow-hidden">
+                        <div class="ms-2 border-s border-border py-1 ps-2">
+                            <a href="{{ storefront_navigation.view_all_url }}" class="mobile-subnav-trigger mb-1 text-brand-active">
+                                <span>{% trans "View all products" %}</span>
+                                <i data-lucide="arrow-right" class="sf-icon directional-icon h-4 w-4" aria-hidden="true"></i>
+                            </a>
+                            {% for section in storefront_navigation.sections %}
+                            <button type="button" class="mobile-subnav-trigger w-full" aria-expanded="false" aria-controls="mobileShopSection{{ forloop.counter }}" data-mobile-disclosure>
+                                <span>{{ section.label }}</span>
+                                <i data-lucide="chevron-down" class="sf-icon h-4 w-4 transition-transform duration-200" data-disclosure-chevron aria-hidden="true"></i>
+                            </button>
+                            <div id="mobileShopSection{{ forloop.counter }}" class="mobile-disclosure-panel" data-mobile-disclosure-panel aria-hidden="true" inert>
+                                <div class="overflow-hidden pb-1">
+                                    <ul class="ms-2 border-s border-border ps-2">
+                                        {% for item in section.items %}
+                                        <li>
+                                            <a href="{{ item.url }}" class="mobile-subnav-link">{{ item.label }}</a>
+                                            {% if item.children %}<ul class="ms-3 border-s border-border ps-2">{% for child in item.children %}<li><a href="{{ child.url }}" class="mobile-subnav-child-link">{{ child.label }}</a></li>{% endfor %}</ul>{% endif %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{% url 'blog:article_list' %}" class="mobile-nav-link {% if request.resolver_match.namespace == 'blog' %}is-active{% endif %}" {% if request.resolver_match.namespace == 'blog' %}aria-current="page"{% endif %}>{% trans "Articles" %}</a>
+                <a href="{% url 'support:support_home' %}" class="mobile-nav-link {% if request.resolver_match.namespace == 'support' %}is-active{% endif %}" {% if request.resolver_match.namespace == 'support' %}aria-current="page"{% endif %}>{% trans "Support" %}</a>
+            </nav>
+
+            <div class="my-4 border-t border-border"></div>
+
+            {% if user.is_authenticated %}
+            <section aria-labelledby="mobileAccountTitle">
+                <div class="mb-2 rounded-control bg-surface-subtle px-3 py-3">
+                    <p id="mobileAccountTitle" class="truncate font-semibold text-text-primary">{{ user.username }}</p>
+                    {% if user.email %}<p class="truncate text-sm text-text-muted">{{ user.email }}</p>{% endif %}
+                </div>
+                <nav aria-label="{% trans 'Account navigation' %}">
+                    <a href="{% url 'notifications:center' %}" class="mobile-secondary-link mobile-notification-link{% if notification_unread_count %} is-unread{% endif %}">
+                        <span>{% trans "Notifications" %}</span>
+                        {% if notification_unread_count %}<span data-mobile-notification-count class="flex h-5 min-w-5 items-center justify-center rounded-full bg-error px-1.5 text-[10px] font-bold text-white">{% if notification_unread_count > 99 %}{{ 99|localized_number }}+{% else %}{{ notification_unread_count|localized_number }}{% endif %}</span>{% endif %}
+                    </a>
+                    <a href="{% url 'accounts:overview' %}" class="mobile-secondary-link">{% trans "Account center" %}</a>
+                    <a href="{% url 'orders:order_list' %}" class="mobile-secondary-link">{% trans "Orders" %}</a>
+                    <a href="{% url 'products:wishlist' %}" class="mobile-secondary-link">{% trans "Wishlist" %}</a>
+                    <a href="{% url 'support:ticket_list' %}" class="mobile-secondary-link">{% trans "Support Tickets" %}</a>
+                    {% if can_access_dashboard %}<a href="{% url 'dashboard:home' %}" class="mobile-secondary-link text-brand-active">{% trans "Dashboard" %}</a>{% endif %}
+                </nav>
+            </section>
+            {% else %}
+            <section aria-label="{% trans 'Account access' %}" class="grid grid-cols-2 gap-2">
+                <a href="{% url 'accounts:login' %}" class="sf-button sf-button--secondary text-sm">{% trans "Login" %}</a>
+                <a href="{% url 'accounts:register' %}" class="sf-button sf-button--quiet text-sm">{% trans "Register" %}</a>
+            </section>
+            {% endif %}
+        </div>
+
+        <div class="border-t border-border bg-surface-subtle px-3 py-3">
+            <div class="grid grid-cols-2 gap-2">
+                {% include "components/navbar/language_switcher.html" with button_class="mobile-utility-control" long_label=True %}
+                <button type="button" data-theme-toggle data-light-mode-label="{% trans 'Light mode' %}" data-dark-mode-label="{% trans 'Dark mode' %}" data-switch-to-light-label="{% trans 'Switch to light mode' %}" data-switch-to-dark-label="{% trans 'Switch to dark mode' %}" aria-pressed="false" aria-label="{% trans 'Switch to dark mode' %}" class="mobile-utility-control">
+                    <span data-theme-moon aria-hidden="true"><i data-lucide="moon" class="sf-icon"></i></span>
+                    <span data-theme-sun class="hidden" aria-hidden="true"><i data-lucide="sun" class="sf-icon"></i></span>
+                    <span data-theme-label>{% trans "Dark mode" %}</span>
+                </button>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="mt-5 border-t border-border pt-4">
+                <button type="button" class="mobile-secondary-link w-full text-error" data-logout-trigger><span>{% trans "Log out" %}</span><i data-lucide="log-out" class="sf-icon h-4 w-4" aria-hidden="true"></i></button>
+            </div>
+            {% endif %}
+        </div>
+    </aside>
+</div>

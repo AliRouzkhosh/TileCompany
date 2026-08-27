@@ -1,0 +1,12 @@
+{% load i18n %}
+<div class="rounded-2xl bg-white p-6 shadow-sm">
+    <h2 class="mb-5 text-lg font-semibold">{% trans "Quick Actions" %}</h2>
+    <div class="grid gap-3">
+        <a href="{% url 'dashboard:support:inbox' %}?queue=needs_response" class="rounded-xl bg-teal-600 px-4 py-3 text-center font-medium text-white transition hover:bg-teal-700">{% trans "Support Inbox" %}</a>
+        <a href="{% url 'dashboard:blog:create' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-center font-medium text-white transition hover:bg-slate-800"><i data-lucide="file-plus-2" class="sf-icon h-5 w-5" aria-hidden="true"></i>{% trans "New Article" %}</a>
+        <a href="{% url 'dashboard:fulfillment_queue' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-center font-medium text-white transition hover:bg-indigo-700"><i data-lucide="package-check" class="sf-icon h-5 w-5" aria-hidden="true"></i>{% trans "Process Shipments" %}</a>
+        <a href="{% url 'dashboard:refund_queue' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-3 text-center font-medium text-white transition hover:bg-amber-600"><i data-lucide="rotate-ccw" class="sf-icon h-5 w-5" aria-hidden="true"></i>{% trans "Review Refunds" %}</a>
+        <a href="{% url 'dashboard:moderation' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-center font-medium text-white transition hover:bg-violet-700"><i data-lucide="message-square-text" class="sf-icon h-5 w-5" aria-hidden="true"></i>{% trans "Moderate Content" %}</a>
+        <a href="{% url 'dashboard:analytics' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-center font-medium text-white transition hover:bg-emerald-700"><i data-lucide="chart-no-axes-combined" class="sf-icon h-5 w-5" aria-hidden="true"></i>{% trans "View Analytics" %}</a>
+    </div>
+</div>

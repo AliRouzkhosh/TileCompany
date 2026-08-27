@@ -1,0 +1,6 @@
+{% extends "accounts/base.html" %}
+{% load i18n pricing %}
+{% block title %}{% trans "My Support Tickets" %}{% endblock %}
+{% block account_content %}
+{% include "support/components/ticket_list_workspace.html" %}
+{% endblock %}

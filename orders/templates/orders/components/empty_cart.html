@@ -1,0 +1,8 @@
+{% load i18n %}
+{% url "products:product_list" as products_url %}
+{% url "products:home" as home_url %}
+{% trans "Your cart is empty" as empty_title %}
+{% trans "There are no products in your cart yet. Browse the catalog to choose a product and configuration." as empty_description %}
+{% trans "Browse products" as browse_products %}
+{% trans "Back to home" as back_to_home %}
+{% include "components/empty_state.html" with icon="cart" title=empty_title description=empty_description primary_url=products_url primary_text=browse_products secondary_url=home_url secondary_text=back_to_home %}

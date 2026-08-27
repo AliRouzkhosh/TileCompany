@@ -1,0 +1,21 @@
+{% load i18n pricing %}
+<div class="overflow-hidden rounded-2xl bg-white shadow">
+    <table class="min-w-full">
+        <thead class="bg-stone-100"><tr><th class="px-6 py-4 text-start">{% trans "Product" %}</th><th class="px-6 py-4">{% trans "Quantity" %}</th><th class="px-6 py-4">{% trans "Unit Price" %}</th><th class="px-6 py-4">{% trans "Subtotal" %}</th></tr></thead>
+        <tbody>
+        {% for item in order.items.all %}
+        {% with purchase=item.purchase_presentation %}
+        <tr class="border-t align-top">
+            <td class="px-6 py-4">
+                <div class="font-medium">{{ purchase.product_name }}</div>
+                {% include "orders/components/purchased_line_details.html" with presentation=purchase operator=True %}
+            </td>
+            <td class="px-6 py-4 text-center">{{ item.quantity|localized_number }}{% if purchase.quantity_noun %} {{ purchase.quantity_noun }}{% endif %}</td>
+            <td class="px-6 py-4 text-center">{{ item.unit_price|money:order.currency }}</td>
+            <td class="px-6 py-4 text-center">{{ item.subtotal|money:order.currency }}</td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

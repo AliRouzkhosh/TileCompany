@@ -1,0 +1,48 @@
+<!-- orders/cart_detail.html -->
+{% extends "base.html" %}
+{% load static pricing i18n %}
+
+{% block title %}{% trans "Shopping cart" %}{% endblock %}
+
+{% block content %}
+<div class="space-y-8" data-cart-page>
+    {% include "components/breadcrumbs.html" %}
+
+    <header class="max-w-3xl" data-cart-header>
+        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-brand">{% trans "Your order" %}</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-[-0.03em] text-text-primary sm:text-4xl">{% trans "Shopping cart" %}</h1>
+        {% if items %}
+            <p class="mt-3 text-sm text-text-secondary sm:text-base">
+                {% blocktrans count counter=items|length with display_count=items|length|localized_number %}{{ display_count }} product configuration{% plural %}{{ display_count }} product configurations{% endblocktrans %}
+                <span class="mx-1.5 text-border-strong" aria-hidden="true">·</span>
+                {% trans "Total quantity" %}: <span data-cart-page-quantity>{{ cart_quantity|localized_number }}</span>
+            </p>
+        {% endif %}
+    </header>
+
+    {% if items %}
+        <div id="cartPage" class="grid items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] xl:gap-10">
+            <section id="cartItems" class="overflow-hidden rounded-surface border border-border bg-surface shadow-surface" aria-label="{% trans 'Products in your cart' %}">
+                <div class="divide-y divide-border" data-cart-items>
+                    {% for item in items %}
+                        {% include "orders/components/cart_item.html" %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <aside id="cartSummary" class="lg:sticky lg:top-24" aria-label="{% trans 'Order Summary' %}">
+                {% include "orders/components/cart_summary.html" %}
+            </aside>
+        </div>
+    {% else %}
+        <div class="py-6 sm:py-10" data-empty-cart>
+            {% include "orders/components/empty_cart.html" %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<div id="cart-i18n" class="hidden" data-remove-confirmation="{% trans 'Remove this product from your shopping cart?' %}" data-update-failed="{% trans 'We could not update this quantity. Please try again.' %}"></div>
+<script src="{% static 'js/cart.js' %}?v=5a"></script>
+{% endblock %}

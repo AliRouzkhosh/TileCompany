@@ -1,0 +1,82 @@
+<!-- dashboard/products/components/detail/seo.html -->
+{% load localized_dates %}
+
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="border-b border-slate-200 px-6 py-4">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            SEO & Metadata
+        </h2>
+
+    </div>
+
+    <div class="divide-y divide-slate-100">
+
+        <div class="flex items-center justify-between px-6 py-4">
+            <span class="text-slate-500">
+                Product URL
+            </span>
+
+            <a
+                href="{{ product.get_absolute_url }}"
+                target="_blank"
+                class="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+            >
+                View Store Page
+            </a>
+        </div>
+
+        <div class="flex items-center justify-between px-6 py-4">
+            <span class="text-slate-500">
+                Slug
+            </span>
+
+            <span class="font-medium break-all">
+                {{ product.slug }}
+            </span>
+        </div>
+
+        <div class="flex items-center justify-between px-6 py-4">
+            <span class="text-slate-500">
+                Database ID
+            </span>
+
+            <span class="font-medium">
+                #{{ product.id }}
+            </span>
+        </div>
+
+        <div class="flex items-center justify-between px-6 py-4">
+            <span class="text-slate-500">
+                Created
+            </span>
+
+            <span>
+                {{ product.created_at|localized_datetime }}
+            </span>
+        </div>
+
+        <div class="flex items-center justify-between px-6 py-4">
+            <span class="text-slate-500">
+                Last Updated
+            </span>
+
+            <span>
+                {{ product.updated_at|localized_datetime }}
+            </span>
+        </div>
+
+        <div class="flex items-center justify-between px-6 py-4">
+            <span class="text-slate-500">
+                Price Synced
+            </span>
+
+            <span>
+                Variant prices carry their own update timestamps.
+            </span>
+        </div>
+
+    </div>
+
+</div>

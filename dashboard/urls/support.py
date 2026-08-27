@@ -1,0 +1,4 @@
+from django.urls import path
+from dashboard.views import support
+app_name="support"
+urlpatterns=[path("",support.inbox,name="inbox"),path("categories/",support.category_list,name="categories"),path("categories/create/",support.category_edit,name="category_create"),path("categories/<int:pk>/edit/",support.category_edit,name="category_edit"),path("categories/<int:pk>/delete/",support.category_delete,name="category_delete"),path("help/",support.article_list,name="articles"),path("help/create/",support.article_edit,name="article_create"),path("help/<int:pk>/edit/",support.article_edit,name="article_edit"),path("help/<int:pk>/delete/",support.article_delete,name="article_delete"),path("<int:pk>/",support.ticket_detail,name="detail"),path("<int:pk>/action/<str:action>/",support.ticket_action,name="action")]

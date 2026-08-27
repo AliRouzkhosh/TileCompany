@@ -1,0 +1,81 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block dashboard_content %}
+{% include "dashboard/components/breadcrumbs.html" with title=page_title %}
+
+<div class="mx-auto max-w-5xl space-y-6">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900">{{ page_title }}</h1>
+        <p class="mt-1 text-sm text-slate-500">{% trans "Manage this purchasable SKU, its inventory, packaging, and independent currency prices." %}</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold">{% trans "Variant Details" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "The SKU identifies the purchasable inventory item." %}</p></div>
+            <div class="grid gap-5 p-6 md:grid-cols-2">
+                {% include "components/form_field.html" with field=form.sku %}
+                {% include "components/form_field.html" with field=form.sort_order %}
+                <div class="flex items-center gap-3 md:col-span-2">{{ form.is_active }}<label for="{{ form.is_active.id_for_label }}" class="text-sm font-medium text-slate-700">{{ form.is_active.label }}</label>{{ form.is_active.errors }}</div>
+            </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold">{% trans "Attributes" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "Variant-specific finish, colour, size, and physical dimensions." %}</p></div>
+            <div class="grid gap-5 p-6 md:grid-cols-2">
+                {% include "components/form_field.html" with field=form.color %}
+                {% include "components/form_field.html" with field=form.size %}
+                {% include "components/form_field.html" with field=form.finish %}
+                {% include "components/form_field.html" with field=form.thickness_mm %}
+                {% include "components/form_field.html" with field=form.length_mm %}
+                {% include "components/form_field.html" with field=form.width_mm %}
+            </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold">{% trans "Inventory" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "Stock and low-stock monitoring are managed per SKU." %}</p></div>
+            <div class="grid gap-5 p-6 md:grid-cols-2">
+                {% include "components/form_field.html" with field=form.stock %}
+                {% include "components/form_field.html" with field=form.low_stock_threshold %}
+            </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold">{% trans "Packaging" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "The selling unit is independent from currency." %}</p></div>
+            <div class="grid gap-5 p-6 md:grid-cols-2">
+                {% include "components/form_field.html" with field=form.tiles_per_box %}
+                {% include "components/form_field.html" with field=form.coverage_per_box_m2 %}
+                {% include "components/form_field.html" with field=form.price_unit %}
+            </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold">{% trans "Pricing" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "Prices are independently managed for each currency. Leaving both fields blank removes that currency's price." %}</p></div>
+            <div class="grid gap-5 p-6 md:grid-cols-2">
+                {% include "components/form_field.html" with field=form.usd_amount %}
+                {% include "components/form_field.html" with field=form.usd_compare_at_amount %}
+                {% include "components/form_field.html" with field=form.irt_amount %}
+                {% include "components/form_field.html" with field=form.irt_compare_at_amount %}
+            </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 px-6 py-4"><h2 class="text-lg font-semibold">{% trans "Images" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "Add optional images specific to this variant." %}</p></div>
+            <div class="p-6"><label for="id_gallery_images" class="mb-2 block text-sm font-medium text-gray-700">{% trans "Variant Images" %}</label><label for="id_gallery_images" class="flex cursor-pointer items-center justify-between rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm transition hover:border-slate-700 hover:bg-slate-100"><span id="variant-gallery-file-name" data-file-input-label="id_gallery_images" data-empty="{% trans 'No files selected' %}" data-selected="{% trans 'Files selected' %}">{% trans "No files selected" %}</span><span class="rounded-lg bg-white px-3 py-2 font-medium text-slate-800 shadow-sm">{% trans "Choose files" %}</span></label><input id="id_gallery_images" name="gallery_images" type="file" multiple class="sr-only"></div>
+        </section>
+
+        <div class="sticky bottom-0 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-lg">
+            <p class="text-sm text-slate-500">{% trans "Changes to the SKU and its currency prices are saved together." %}</p>
+            <div class="flex gap-3"><a href="{% url 'dashboard:products:variants:catalog' product.pk %}" class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100">{% trans "Cancel" %}</a><button type="submit" class="rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-slate-800">{% trans "Save Variant" %}</button></div>
+        </div>
+    </form>
+</div>
+{% endblock %}

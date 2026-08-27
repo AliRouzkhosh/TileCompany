@@ -1,0 +1,42 @@
+{% extends "accounts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Account" %} | TileStore{% endblock %}
+{% block account_content %}
+<div class="account-overview">
+    <h1 class="account-overview__title">{% trans "Account" %}</h1>
+
+    <div class="account-overview__top-grid">
+        <section class="account-overview__surface account-identity-card" aria-labelledby="account-identity-title">
+            <div class="account-identity-card__avatar" aria-hidden="true">{{ request.user.get_full_name|default:request.user.username|first|upper }}</div>
+            <div class="account-identity-card__details min-w-0"><h2 id="account-identity-title" class="font-semibold text-text-primary">{{ request.user.get_full_name|default:request.user.username }}</h2>{% if request.user.email %}<p class="mt-1 truncate text-sm text-text-secondary" dir="ltr">{{ request.user.email }}</p>{% endif %}{% if profile.phone %}<p class="account-identity-card__detail" dir="ltr"><i data-lucide="phone" class="sf-icon" aria-hidden="true"></i>{{ profile.phone }}</p>{% endif %}{% if profile.is_business and profile.company_name %}<p class="account-identity-card__detail"><i data-lucide="building-2" class="sf-icon" aria-hidden="true"></i><span>{{ profile.company_name }}</span></p>{% endif %}</div>
+            <a href="{% url 'accounts:profile' %}" class="account-overview__quiet-action">{% trans "Edit profile" %}</a>
+        </section>
+
+        <section class="account-orders-panel" aria-labelledby="orders-summary-title" data-orders-summary>
+            <div class="flex min-w-0 items-center justify-between gap-4"><h2 id="orders-summary-title" class="text-lg font-semibold text-text-primary">{% trans "My orders" %}</h2><a href="{% url 'orders:order_list' %}" class="account-overview__quiet-action shrink-0">{% trans "View all orders" %}</a></div>
+            <div class="account-orders-panel__cells">
+                <a href="{% url 'orders:order_list' %}?status=currentcd" class="account-order-summary-cell">
+                    <i data-lucide="package-check" class="sf-icon text-brand" aria-hidden="true"></i>
+                    <span class="account-order-summary-cell__count" dir="ltr">{{ order_status_counts.current }}</span>
+                    <span>{% trans "Current" %}</span>
+                </a>
+                <a href="{% url 'orders:order_list' %}?status=delivered" class="account-order-summary-cell">
+                    <i data-lucide="truck" class="sf-icon text-info" aria-hidden="true"></i>
+                    <span class="account-order-summary-cell__count" dir="ltr">{{ order_status_counts.delivered }}</span>
+                    <span>{% trans "Delivered" %}</span>
+                </a>
+                <a href="{% url 'orders:order_list' %}?status=cancelled" class="account-order-summary-cell">
+                    <i data-lucide="circle-x" class="sf-icon text-text-muted" aria-hidden="true"></i>
+                    <span class="account-order-summary-cell__count" dir="ltr">{{ order_status_counts.cancelled }}</span>
+                    <span>{% trans "Cancelled" %}</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="account-overview__surface account-address-card" aria-labelledby="address-summary-title">
+            <div class="account-overview__section-icon" aria-hidden="true"><i data-lucide="map-pin" class="sf-icon"></i></div>
+            <div class="min-w-0"><h2 id="address-summary-title" class="font-semibold text-text-primary">{% trans "Default shipping address" %}</h2>{% if default_address %}<p class="mt-3 text-sm font-medium text-text-primary">{{ default_address.first_name }} {{ default_address.last_name }}</p><p class="mt-1 break-words text-sm leading-6 text-text-secondary">{{ default_address.street_address }}<br>{{ default_address.city }}, {{ default_address.province }}</p><a href="{% url 'accounts:address_list' %}" class="account-overview__quiet-action">{% trans "Manage addresses" %}</a>{% else %}<p class="mt-2 text-sm leading-6 text-text-secondary">{% trans "Add a saved address to make checkout faster." %}</p><a href="{% url 'accounts:address_create' %}" class="account-overview__quiet-action">{% trans "Add address" context "address page" %}</a>{% endif %}</div>
+        </section>
+    </div>
+</div>
+{% endblock %}

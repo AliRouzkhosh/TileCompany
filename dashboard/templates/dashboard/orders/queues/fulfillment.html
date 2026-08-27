@@ -1,0 +1,28 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    <div>
+
+        <h1 class="text-3xl font-bold">
+            {% trans "Fulfillment Queue" %}
+        </h1>
+
+        <p class="text-stone-500">
+            {% trans "Eligible orders waiting to be packed and shipped." %}
+        </p>
+
+    </div>
+
+    {% include "dashboard/components/filters.html" %}
+
+    {% include "dashboard/orders/components/queue_table.html" with orders=orders %}
+
+    {% include "dashboard/components/pagination.html" %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% load i18n %}
+<div class="relative" data-avatar-menu>
+    <button
+        type="button"
+        id="avatarButton"
+        data-avatar-toggle
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-brand-mid bg-brand-subtle text-sm font-semibold text-brand-active transition duration-200 hover:border-brand hover:bg-brand-mid"
+        aria-expanded="false"
+        aria-haspopup="true"
+        aria-controls="avatarDropdown"
+        aria-label="{% trans 'Account menu' %}"
+    >{{ user.username|slice:":1"|upper }}</button>
+
+    <div id="avatarDropdown" data-avatar-dropdown class="sf-surface-raised absolute end-0 z-[60] mt-2 hidden w-72 overflow-hidden">
+        <div class="border-b border-border bg-surface-subtle px-5 py-4">
+            <div class="flex items-center gap-3">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-subtle font-semibold text-brand-active">{{ user.username|slice:":1"|upper }}</div>
+                <div class="min-w-0">
+                    <p class="truncate font-semibold text-text-primary">{{ user.username }}</p>
+                    {% if user.email %}<p class="truncate text-sm text-text-muted">{{ user.email }}</p>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <nav class="py-2" aria-label="{% trans 'Account navigation' %}">
+            <a href="{% url 'accounts:profile' %}" class="account-menu-link"><i data-lucide="user" class="sf-icon" aria-hidden="true"></i><span>{% trans "My Profile" %}</span></a>
+            <a href="{% url 'products:wishlist' %}" class="account-menu-link"><i data-lucide="heart" class="sf-icon" aria-hidden="true"></i><span>{% trans "Wishlist" %}</span></a>
+            <a href="{% url 'orders:order_list' %}" class="account-menu-link"><i data-lucide="package" class="sf-icon" aria-hidden="true"></i><span>{% trans "My Orders" %}</span></a>
+            <a href="{% url 'support:ticket_list' %}" class="account-menu-link"><i data-lucide="ticket" class="sf-icon" aria-hidden="true"></i><span>{% trans "Support Tickets" %}</span></a>
+        </nav>
+
+        {% if can_access_dashboard %}
+        <div class="border-t border-border py-2">
+            <a href="{% url 'dashboard:home' %}" class="account-menu-link font-medium text-brand-active"><i data-lucide="layout-dashboard" class="sf-icon" aria-hidden="true"></i><span>{% trans "Admin Dashboard" %}</span></a>
+        </div>
+        {% endif %}
+
+        <div class="border-t border-border py-2">
+            <button type="button" class="account-menu-link w-full text-error" data-logout-trigger><i data-lucide="log-out" class="sf-icon" aria-hidden="true"></i><span>{% trans "Log out" %}</span></button>
+        </div>
+    </div>
+</div>

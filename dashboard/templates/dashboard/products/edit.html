@@ -1,0 +1,17 @@
+<!-- dashboard/templates/dashboard/products/edit.html -->
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    <h1 class="text-2xl font-bold">
+        {% blocktrans with name=product.name %}Edit {{ name }}{% endblocktrans %}
+    </h1>
+
+    {% include "dashboard/products/components/forms/product_form.html" %}
+
+</div>
+
+{% endblock %}

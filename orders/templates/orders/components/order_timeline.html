@@ -1,0 +1,4 @@
+{% load i18n localized_dates %}
+{% if timeline %}
+<section class="order-detail__timeline" aria-labelledby="order-history-title"><h2 id="order-history-title">{% trans "Order history" %}</h2><ol>{% for entry in timeline %}<li><p>{{ entry.label }}</p><time datetime="{{ entry.timestamp|date:'c' }}">{{ entry.timestamp|localized_datetime }}</time></li>{% endfor %}</ol></section>
+{% endif %}

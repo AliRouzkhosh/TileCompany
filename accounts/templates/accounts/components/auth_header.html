@@ -1,0 +1,20 @@
+<!-- accounts/templates/accounts/components/auth_header.html !-->
+<div class="mb-7 text-center">
+
+    {% if eyebrow %}
+        <p class="mb-2 text-xs font-semibold tracking-[0.14em] text-brand">
+            {{ eyebrow }}
+        </p>
+    {% endif %}
+
+    <h1 class="text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">
+        {{ title }}
+    </h1>
+
+    {% if description %}
+        <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-text-secondary">
+            {{ description }}
+        </p>
+    {% endif %}
+
+</div>

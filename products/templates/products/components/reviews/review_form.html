@@ -1,0 +1,38 @@
+{% load i18n %}
+<section class="mb-5 rounded-surface border border-border bg-surface px-4 py-4 sm:px-5" data-review-create>
+    <div class="review-create-panel flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h3 class="text-base font-semibold text-text-primary">{% trans "Share your experience" %}</h3>
+            <p class="mt-1 text-sm text-text-muted">{% trans "Help other customers by reviewing this product." %}</p>
+        </div>
+        <button type="button" class="review-open-btn sf-button sf-button--secondary min-h-11 shrink-0 px-4 py-2.5 text-sm">{% trans "Write a review" %}</button>
+    </div>
+
+    <div class="review-pending-panel hidden rounded-control border border-warning/35 bg-warning/10 px-4 py-3">
+        <h4 class="text-sm font-semibold text-text-primary">{% trans "Review awaiting approval" %}</h4>
+        <p class="mt-1 text-sm text-text-secondary">{% trans "Thank you for your review. It has been submitted successfully and will become visible after moderation." %}</p>
+    </div>
+
+    <div class="review-success-panel hidden rounded-control border border-success/30 bg-success/10 px-4 py-3">
+        <h4 class="text-sm font-semibold text-success">{% trans "Review submitted" %}</h4>
+        <p class="mt-1 text-sm text-text-secondary">{% trans "Thank you for helping other customers." %}</p>
+    </div>
+
+    <div class="review-form-wrapper mt-5 hidden">
+        <form method="post" action="{% url 'reviews:create_review' product.id %}" class="review-create-form space-y-4" hx-post="{% url 'reviews:create_review' product.id %}" hx-target="#product-reviews-region" hx-swap="outerHTML">
+            {% csrf_token %}
+            <div>
+                <label class="mb-2 block text-sm font-medium text-text-secondary">{% trans "Rating" %}</label>
+                {{ form.rating }}
+            </div>
+            <div>
+                <label class="mb-2 block text-sm font-medium text-text-secondary">{% trans "Your review" %}</label>
+                {{ form.comment }}
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button type="submit" class="sf-button sf-button--primary min-h-11 px-5 py-2.5 text-sm">{% trans "Submit review" %}</button>
+                <button type="button" class="review-form-cancel sf-button sf-button--secondary min-h-11 px-5 py-2.5 text-sm">{% trans "Cancel" %}</button>
+            </div>
+        </form>
+    </div>
+</section>

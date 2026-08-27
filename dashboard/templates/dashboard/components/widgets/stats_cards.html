@@ -1,0 +1,18 @@
+{% load i18n pricing %}
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+    <a href="{% url 'dashboard:all_orders' %}" class="group rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <p class="text-sm text-stone-500">{% trans "Total Orders" %}</p><h2 class="mt-2 text-3xl font-bold">{{ stats.total_orders|localized_number }}</h2><p class="mt-2 text-sm text-stone-400 group-hover:text-stone-600">{% trans "View all orders" %} <span aria-hidden="true">→</span></p>
+    </a>
+    <a href="{% url 'dashboard:fulfillment_queue' %}" class="group rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <p class="text-sm text-stone-500">{% trans "Fulfillment Queue" %}</p><h2 class="mt-2 text-3xl font-bold text-blue-600">{{ stats.fulfillment_queue|localized_number }}</h2><p class="mt-2 text-sm text-stone-400 group-hover:text-stone-600">{% trans "Orders waiting to ship" %} <span aria-hidden="true">→</span></p>
+    </a>
+    <a href="{% url 'dashboard:in_transit_queue' %}" class="group rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <p class="text-sm text-stone-500">{% trans "In Transit" %}</p><h2 class="mt-2 text-3xl font-bold text-indigo-600">{{ stats.in_transit_orders|localized_number }}</h2><p class="mt-2 text-sm text-stone-400 group-hover:text-stone-600">{% trans "Shipped orders awaiting delivery." %} <span aria-hidden="true">→</span></p>
+    </a>
+    <a href="{% url 'dashboard:refund_queue' %}" class="group rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <p class="text-sm text-stone-500">{% trans "Refund Queue" %}</p><h2 class="mt-2 text-3xl font-bold text-amber-600">{{ stats.refund_review_queue|localized_number }}</h2><p class="mt-2 text-sm text-stone-400 group-hover:text-stone-600">{% trans "Review refund requests" %} <span aria-hidden="true">→</span></p>
+    </a>
+    <a href="{% url 'dashboard:analytics' %}" class="group rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <p class="text-sm text-stone-500">{% trans "Revenue" %}</p><h2 class="mt-2 text-3xl font-bold text-green-600">{% for revenue in stats.total_revenue_by_currency %}<span class="block">{{ revenue.total|money:revenue.currency }}</span>{% empty %}—{% endfor %}</h2><p class="mt-2 text-sm text-stone-400 group-hover:text-stone-600">{% trans "Revenue analytics" %} <span aria-hidden="true">→</span></p>
+    </a>
+</div>

@@ -1,0 +1,16 @@
+<!-- navbar.html !-->
+<header class="sticky top-0 z-50">
+
+    {% include "components/navbar/desktop_nav.html" %}
+
+    {% include "components/navbar/mobile_nav.html" %}
+
+    {% include "components/navbar/mobile_search.html" %}
+
+    {% include "components/navbar/mobile_drawer.html" %}
+
+</header>
+
+{% if user.is_authenticated %}
+    {% include "components/navbar/logout_dialog.html" %}
+{% endif %}

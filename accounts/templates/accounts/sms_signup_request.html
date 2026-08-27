@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Sign up with mobile" %} | TileStore{% endblock %}
+{% block content %}
+{% include "accounts/components/auth_container_start.html" %}
+{% include "accounts/partials/register_sms_workspace.html" %}
+{% include "accounts/components/auth_cross_footer.html" with auth_cross_footer="register" %}
+{% include "accounts/components/auth_container_end.html" %}
+{% endblock %}

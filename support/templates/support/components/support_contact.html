@@ -1,0 +1,102 @@
+<!-- support/components/support_contact.html -->
+{% load i18n %}
+
+<section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+    <!-- ========================================== -->
+    <!-- Header                                     -->
+    <!-- ========================================== -->
+
+    <div class="mb-6">
+
+        <h2 class="text-lg font-semibold text-gray-900">
+            {% trans "Need more help?" %}
+        </h2>
+
+        <p class="mt-2 text-sm text-gray-600">
+            {% blocktrans %}If you can't find the answer you're looking for, our support team is happy to assist you.{% endblocktrans %}
+        </p>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- Contact Information                        -->
+    <!-- ========================================== -->
+
+    <div class="space-y-5">
+
+        <div class="flex items-start gap-4">
+
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
+
+                <i
+                    data-lucide="mail"
+                    class="h-5 w-5 text-emerald-600"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <p class="text-sm font-medium text-gray-500">
+                    {% trans "Email" %}
+                </p>
+
+                <p class="mt-1 font-semibold text-gray-900">
+                    {{ support_email }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="flex items-start gap-4">
+
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
+
+                <i
+                    data-lucide="phone"
+                    class="h-5 w-5 text-emerald-600"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <p class="text-sm font-medium text-gray-500">
+                    {% trans "Phone" %}
+                </p>
+
+                <p class="mt-1 font-semibold text-gray-900">
+                    {{ support_phone }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- Footer                                     -->
+    <!-- ========================================== -->
+
+    <div class="mt-8 border-t border-gray-100 pt-6">
+
+        <a
+            href="{% url 'support:ticket_create' %}"
+            class="inline-flex items-center gap-2 font-medium text-emerald-600 transition hover:text-emerald-700"
+        >
+
+            {% trans "Open a Support Ticket" %}
+
+            <i
+                data-lucide="arrow-right"
+                class="h-4 w-4"
+            ></i>
+
+        </a>
+
+    </div>
+
+</section>

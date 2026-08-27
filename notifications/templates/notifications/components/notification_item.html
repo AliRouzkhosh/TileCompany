@@ -1,0 +1,31 @@
+{% load i18n localized_dates %}
+<form method="post" action="{% url 'notifications:open' item.notification.pk %}" hx-boost="false" data-notification-state="{% if item.notification.is_read %}read{% else %}unread{% endif %}">
+    {% csrf_token %}
+    {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+    <button type="submit" class="group grid min-h-11 w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-start gap-3 px-4 py-4 text-start transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-brand-mid sm:grid-cols-[2.75rem_minmax(0,1fr)_auto] sm:px-5 {% if not item.notification.is_read %}bg-brand-subtle/55 hover:bg-brand-subtle{% else %}bg-surface hover:bg-surface-subtle{% endif %}">
+        <span class="flex h-10 w-10 items-center justify-center rounded-control bg-surface-subtle {% if item.presentation.tone == 'danger' %}text-error{% elif item.presentation.tone == 'warning' %}text-warning{% elif item.presentation.tone == 'success' %}text-success{% elif item.presentation.tone == 'info' %}text-info{% else %}text-text-secondary{% endif %}" aria-hidden="true">
+            <i data-lucide="{{ item.presentation.icon }}" class="sf-icon"></i>
+        </span>
+        <span class="min-w-0">
+            <span class="block break-words text-sm leading-5 text-text-primary sm:text-base {% if not item.notification.is_read %}font-bold{% else %}font-semibold{% endif %}">{{ item.presentation.title }}</span>
+            <span class="mt-1 block break-words text-sm leading-6 text-text-secondary">{{ item.presentation.message_html }}</span>
+            <span class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <time datetime="{{ item.notification.created_at|date:'c' }}" class="text-xs font-medium text-text-muted">{{ item.notification.created_at|localized_datetime }}</time>
+                {% if item.presentation.action_label %}
+                <span class="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-brand group-hover:text-brand-hover">
+                    {{ item.presentation.action_label }}
+                    <i data-lucide="chevron-right" class="directional-icon h-4 w-4" aria-hidden="true"></i>
+                </span>
+                {% endif %}
+            </span>
+        </span>
+        <span class="mt-1 flex h-5 min-w-5 items-center justify-end">
+            {% if not item.notification.is_read %}
+                <span class="h-2.5 w-2.5 rounded-full bg-brand" aria-hidden="true"></span>
+                <span class="sr-only">{% trans "Unread notification" %}</span>
+            {% else %}
+                <span class="sr-only">{% trans "Read notification" %}</span>
+            {% endif %}
+        </span>
+    </button>
+</form>

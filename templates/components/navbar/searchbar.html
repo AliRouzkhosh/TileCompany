@@ -1,0 +1,41 @@
+{% load i18n %}
+<div
+    class="relative w-full"
+    data-search
+    data-search-endpoint="{% url 'products:search_suggestions' %}"
+    data-filters-label="{% trans 'Filters' %}"
+    data-products-label="{% trans 'Products' %}"
+>
+    <form action="{% url 'products:product_list' %}" method="get" role="search" class="relative">
+        <label for="{{ search_id|default:'storefrontSearch' }}Input" class="sr-only">{% trans "Search products" %}</label>
+        <span class="pointer-events-none absolute inset-y-0 start-3.5 flex items-center text-text-muted" aria-hidden="true">
+            <i data-lucide="search" class="sf-icon"></i>
+        </span>
+        <input
+            id="{{ search_id|default:'storefrontSearch' }}Input"
+            data-search-input
+            name="q"
+            type="search"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="{{ search_id|default:'storefrontSearch' }}Suggestions"
+            autocomplete="off"
+            spellcheck="false"
+            value="{{ request.GET.q }}"
+            placeholder="{% trans 'Search products, attributes or SKU...' %}"
+            class="h-11 w-full rounded-control border border-border-strong bg-surface-subtle ps-11 pe-12 text-sm text-text-primary placeholder:text-text-muted transition duration-200 hover:border-brand-mid focus:border-brand focus:bg-surface focus:outline-none"
+        >
+        <button type="submit" class="sf-icon-button absolute inset-y-0 end-0 h-11 w-11" aria-label="{% trans 'Search' %}" title="{% trans 'Search' %}">
+            <i data-lucide="arrow-right" class="sf-icon directional-icon h-[18px] w-[18px]" aria-hidden="true"></i>
+        </button>
+    </form>
+    <div
+        id="{{ search_id|default:'storefrontSearch' }}Suggestions"
+        data-search-suggestions
+        class="sf-surface-raised absolute inset-x-0 top-full z-[60] mt-2 hidden max-h-[var(--search-suggestions-max-height,70vh)] overflow-y-auto"
+        role="region"
+        aria-label="{% trans 'Search suggestions' %}"
+        aria-live="polite"
+    ></div>
+</div>

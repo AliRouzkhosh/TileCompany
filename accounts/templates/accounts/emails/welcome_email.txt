@@ -1,0 +1,9 @@
+{% load i18n %}{% trans "Welcome to TileStore" %}
+
+{% blocktrans with username=user.get_username %}Hello {{ username }}, your TileStore account has been created successfully.{% endblocktrans %}
+
+{% trans "You can review your account here:" %}
+{{ account_url }}
+
+{% trans "Need help?" %}
+{{ support_url }}

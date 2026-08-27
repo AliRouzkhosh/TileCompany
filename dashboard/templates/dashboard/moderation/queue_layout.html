@@ -1,0 +1,19 @@
+<!-- dashboard/moderation/queue_layout.html -->
+<div class="space-y-6">
+
+    {% include header_template %}
+
+    {% if filters_template %}
+        {% include filters_template %}
+    {% endif %}
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        {% block queue_content %}
+        {% endblock %}
+
+    </div>
+
+    {% include "dashboard/components/pagination.html" %}
+
+</div>

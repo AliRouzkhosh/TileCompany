@@ -1,0 +1,91 @@
+{% load i18n pricing %}
+<nav class="desktop-header hidden border-b border-border bg-surface/95 backdrop-blur-md lg:block" aria-label="{% trans 'Primary navigation' %}">
+    <div class="relative h-full" data-shop-disclosure>
+        <div class="store-container desktop-header-grid h-full items-center">
+            <div class="flex min-w-0 items-center gap-4 xl:gap-8">
+                {% include "components/brand.html" with compact=True %}
+
+                <div class="flex shrink-0 items-center gap-0.5 xl:gap-1.5">
+                    <div class="desktop-shop-control" data-shop-trigger-area>
+                        <a
+                            href="{% url 'products:product_list' %}"
+                            id="desktopShopLink"
+                            data-shop-link
+                            class="desktop-nav-link desktop-shop-link {% if request.resolver_match.namespace == 'products' and request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'wishlist' %}is-active{% endif %}"
+                            {% if request.resolver_match.namespace == 'products' and request.resolver_match.url_name == 'product_list' %}aria-current="page"{% endif %}
+                        >{% trans "Shop" %}</a>
+                        <button
+                            type="button"
+                            id="desktopShopDisclosureButton"
+                            data-shop-trigger
+                            aria-expanded="false"
+                            aria-controls="desktopShopMegaMenu"
+                            aria-label="{% trans 'Toggle Shop navigation' %}"
+                            class="desktop-nav-link desktop-shop-toggle group"
+                        >
+                            <i data-lucide="chevron-down" class="sf-icon h-4 w-4 transition-transform duration-200 group-aria-expanded:rotate-180" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <a
+                        href="{% url 'blog:article_list' %}"
+                        class="desktop-nav-link {% if request.resolver_match.namespace == 'blog' %}is-active{% endif %}"
+                        {% if request.resolver_match.namespace == 'blog' %}aria-current="page"{% endif %}
+                    >{% trans "Articles" %}</a>
+                    <a
+                        href="{% url 'support:support_home' %}"
+                        class="desktop-nav-link {% if request.resolver_match.namespace == 'support' %}is-active{% endif %}"
+                        {% if request.resolver_match.namespace == 'support' %}aria-current="page"{% endif %}
+                    >{% trans "Support" %}</a>
+                </div>
+            </div>
+
+            <div class="min-w-48">
+                {% include "components/navbar/searchbar.html" with search_id="desktopHeaderSearch" %}
+            </div>
+
+            <div class="flex shrink-0 items-center gap-2">
+                {% include "components/navbar/language_switcher.html" with button_class="desktop-language-control" %}
+
+                <button
+                    type="button"
+                    data-theme-toggle
+                    data-light-mode-label="{% trans 'Light mode' %}"
+                    data-dark-mode-label="{% trans 'Dark mode' %}"
+                    data-switch-to-light-label="{% trans 'Switch to light mode' %}"
+                    data-switch-to-dark-label="{% trans 'Switch to dark mode' %}"
+                    aria-pressed="false"
+                    aria-label="{% trans 'Switch to dark mode' %}"
+                    class="sf-icon-button"
+                    title="{% trans 'Toggle color theme' %}"
+                >
+                    <span data-theme-moon aria-hidden="true"><i data-lucide="moon" class="sf-icon"></i></span>
+                    <span data-theme-sun class="hidden" aria-hidden="true"><i data-lucide="sun" class="sf-icon"></i></span>
+                    <span data-theme-label class="sr-only">{% trans "Dark mode" %}</span>
+                </button>
+
+                {% include "notifications/components/bell.html" %}
+
+                <a href="{% url 'orders:cart_detail' %}" class="sf-icon-button relative" aria-label="{% trans 'Cart' %}" title="{% trans 'Cart' %}">
+                    <i data-lucide="shopping-bag" class="sf-icon" aria-hidden="true"></i>
+                    {% if cart_count %}
+                    <span data-cart-count class="absolute -top-1 -end-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold leading-none text-white">
+                        {{ cart_count|localized_number }}
+                    </span>
+                    {% endif %}
+                </a>
+
+                {% if user.is_authenticated %}
+                    {% include "components/navbar/avatar_dropdown.html" %}
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="sf-button sf-button--secondary px-4 text-sm">{% trans "Login" %}</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="desktopShopMegaMenu" data-shop-panel class="desktop-mega-panel absolute inset-x-0 top-full z-[55] hidden" aria-labelledby="desktopShopLink">
+            <div class="store-container">
+                {% include "components/navbar/shop_mega_menu.html" %}
+            </div>
+        </div>
+    </div>
+</nav>

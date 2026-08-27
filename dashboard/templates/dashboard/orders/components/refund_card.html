@@ -1,0 +1,138 @@
+{% load i18n localized_dates %}
+
+<div class="rounded-2xl bg-white p-6 shadow">
+
+    <h3 class="mb-4 text-lg font-semibold">
+        {% trans "Refund" %}
+    </h3>
+
+    {% include "dashboard/components/badges/refund_badge.html" %}
+
+    <div class="mt-4 space-y-4 text-sm">
+
+        <div>
+            <span class="font-medium">
+                {% trans "Status:" %}
+            </span>
+            {{ order.get_refund_status_display }}
+        </div>
+
+        {% if order.refund_reason %}
+        <div>
+            <span class="font-medium">
+                {% trans "Reason:" %}
+            </span>
+            {{ order.get_refund_reason_display }}
+        </div>
+        {% endif %}
+
+        {% if order.refund_message %}
+        <div>
+
+            <p class="mb-2 font-medium">
+                {% trans "Customer Message" %}
+            </p>
+
+            <div class="rounded-xl border border-stone-200 bg-stone-50 p-3 whitespace-pre-line text-stone-700">
+
+                {{ order.refund_message }}
+
+            </div>
+
+        </div>
+        {% endif %}
+
+        {% if order.refund_attachments.all %}
+        <div>
+            <p class="mb-2 font-medium">{% trans "Supporting files" %}</p>
+            <ul class="space-y-1">
+                {% for attachment in order.refund_attachments.all %}
+                <li><a class="text-orange-700 underline hover:text-orange-800" href="{% url 'orders:refund_attachment_download' attachment.pk %}">{{ attachment.original_filename }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if order.refund_response %}
+        <div>
+
+            <p class="mb-2 font-medium">
+                {% trans "Staff Response" %}
+            </p>
+
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-3 whitespace-pre-line text-blue-900">
+
+                {{ order.refund_response }}
+
+            </div>
+
+        </div>
+        {% endif %}
+
+        {% if order.refund_requested_at %}
+        <div>
+            <span class="font-medium">
+                {% trans "Requested:" %}
+            </span>
+
+            {{ order.refund_requested_at|localized_datetime }}
+        </div>
+        {% endif %}
+
+        {% if order.refund_reviewed_at %}
+        <div>
+            <span class="font-medium">
+                {% trans "Reviewed:" %}
+            </span>
+
+            {{ order.refund_reviewed_at|localized_datetime }}
+        </div>
+        {% endif %}
+
+        {% if order.refund_processed_at %}
+        <div>
+            <span class="font-medium">
+                {% trans "Processed:" %}
+            </span>
+
+            {{ order.refund_processed_at|localized_datetime }}
+        </div>
+        {% endif %}
+
+        {% if order.refund_reviewed_by %}
+        <div>
+            <span class="font-medium">
+                {% trans "Reviewed by:" %}
+            </span>
+
+            {{ order.refund_reviewed_by.username }}
+        </div>
+        {% endif %}
+
+        {% if order.refund_support_ticket %}
+        <div>
+            <span class="font-medium">{% trans "Linked refund conversation:" %}</span>
+            <a class="text-orange-700 underline hover:text-orange-800" href="{% url 'dashboard:support:detail' order.refund_support_ticket.id %}">{% blocktrans with ticket_id=order.refund_support_ticket.id %}Ticket #{{ ticket_id }}{% endblocktrans %}</a>
+            {% if order.refund_status == "needs_information" and order.refund_support_ticket.status == "waiting_customer" %}
+            <p class="mt-2 font-semibold text-amber-800">{% trans "Waiting for customer" %}</p>
+            <p class="mt-1 text-stone-600">{% trans "The customer needs to reply before review can continue." %}</p>
+            {% elif order.refund_status == "needs_information" and order.refund_support_ticket.status == "waiting_support" %}
+            <p class="mt-2 font-semibold text-indigo-700">{% trans "Customer replied" %}</p>
+            <p class="mt-1 text-stone-600">{% trans "Ready for staff review." %}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if order.refund_requested_stage %}
+        <div><span class="font-medium">{% trans "Requested at stage:" %}</span> {{ order.get_refund_requested_stage_display }}</div>
+        {% endif %}
+
+        {% if order.inventory_restored_at %}
+        <div><span class="font-medium">{% trans "Inventory restored:" %}</span> {{ order.inventory_restored_at|localized_datetime }}</div>
+        {% elif order.is_refund_approved and order.refund_requested_stage == "delivered" %}
+        <div class="text-amber-700">{% trans "Inventory will be restored when the refund is processed." %}</div>
+        {% endif %}
+
+    </div>
+
+</div>

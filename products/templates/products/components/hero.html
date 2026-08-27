@@ -1,0 +1,41 @@
+{% load i18n localized_content %}
+<section class="home-hero overflow-hidden rounded-feature bg-surface" data-home-hero data-home-section="hero">
+    <div class="grid lg:min-h-[31rem] lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)]">
+        <div class="relative z-10 flex flex-col justify-center px-6 py-7 sm:px-10 sm:py-12 lg:px-12 lg:py-14 xl:px-16">
+            <p class="inline-flex w-fit items-center gap-2 rounded-full bg-brand-subtle px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-active">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden="true"></span>
+                {% trans "Tiles, ceramics and installation" %}
+            </p>
+
+            <h1 class="mt-4 max-w-xl text-[clamp(2.125rem,10.5vw,2.5rem)] font-semibold leading-[1.18] tracking-[-0.035em] text-text-primary sm:mt-5 sm:text-[clamp(2.25rem,5vw,4.25rem)] sm:leading-[1.08] lg:leading-[1.04]">
+                {% trans "Materials for every surface and every project." %}
+            </h1>
+
+            <p class="mt-4 max-w-lg text-[0.9375rem] leading-6 text-text-secondary sm:mt-5 sm:text-lg sm:leading-8">
+                {% trans "Explore tiles and ceramics alongside the tools and installation materials that bring projects together." %}
+            </p>
+
+            {% if root_categories %}
+                <div class="mt-6 flex flex-col gap-2.5 min-[360px]:flex-row min-[360px]:flex-wrap sm:mt-7 sm:gap-3">
+                    {% for category in root_categories %}
+                        <a href="{{ category.url }}" class="sf-button {% if forloop.first %}sf-button--primary{% else %}sf-button--secondary{% endif %} min-h-12 sm:px-6">
+                            {% blocktranslate with category_name=category|localized:'name' %}Browse {{ category_name }}{% endblocktranslate %}
+                            {% if forloop.first %}<svg class="directional-icon sf-icon" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg>{% endif %}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="relative h-56 overflow-hidden bg-surface-subtle sm:h-80 lg:h-auto lg:min-h-full" data-hero-media>
+            {% if hero_image_url %}
+                <img src="{{ hero_image_url }}" alt="{{ hero_image_alt }}" class="h-full w-full object-cover" fetchpriority="high">
+            {% else %}
+                <div class="home-media-fallback flex h-full items-center justify-center" role="img" aria-label="{% trans 'Tile showroom image coming soon' %}">
+                    <svg class="h-20 w-20 text-text-muted/45" aria-hidden="true" fill="none" viewBox="0 0 96 96" stroke="currentColor"><path stroke-width="2" d="M12 12h32v32H12zM52 12h32v32H52zM12 52h32v32H12zM52 52h32v32H52z"/></svg>
+                </div>
+            {% endif %}
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent lg:bg-gradient-to-e lg:from-black/10 lg:to-transparent" aria-hidden="true"></div>
+        </div>
+    </div>
+</section>

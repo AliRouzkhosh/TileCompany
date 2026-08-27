@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Login" %} | TileStore{% endblock %}
+{% block content %}
+{% include "accounts/components/auth_container_start.html" %}
+{% include "accounts/partials/login_password_workspace.html" %}
+{% include "accounts/components/auth_cross_footer.html" with auth_cross_footer="login" %}
+{% include "accounts/components/auth_container_end.html" %}
+{% endblock %}

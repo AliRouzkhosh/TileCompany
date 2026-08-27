@@ -1,0 +1,229 @@
+<!-- orders/components/checkout_form.html -->
+
+<form method="post"
+      class="space-y-8 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+
+    {% csrf_token %}
+
+    <!-- ================================ -->
+    <!-- Contact Information              -->
+    <!-- ================================ -->
+
+    <section>
+
+        <div class="mb-5">
+            <h2 class="text-lg font-semibold text-stone-900">
+                Contact Information
+            </h2>
+
+            <p class="mt-1 text-sm text-stone-500">
+                Enter the contact details we'll use regarding your order.
+            </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+
+            <!-- Full Name -->
+            <div class="sm:col-span-2">
+                <label for="full_name"
+                       class="mb-2 block text-sm font-medium text-stone-700">
+                    Full Name
+                </label>
+
+                <input
+                    id="full_name"
+                    name="full_name"
+                    type="text"
+                    required
+                    autocomplete="name"
+                    value="{{ request.POST.full_name|default:'' }}"
+                    placeholder="John Doe"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">
+            </div>
+
+            <!-- Phone -->
+            <div>
+
+                <label for="phone"
+                       class="mb-2 block text-sm font-medium text-stone-700">
+                    Phone Number
+                </label>
+
+                <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    autocomplete="tel"
+                    value="{{ request.POST.phone|default:'' }}"
+                    placeholder="+98..."
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">
+
+            </div>
+
+            <!-- Postal Code -->
+
+            <div>
+
+                <label for="postal_code"
+                       class="mb-2 block text-sm font-medium text-stone-700">
+                    Postal Code
+                    <span class="font-normal text-stone-400">(Optional)</span>
+                </label>
+
+                <input
+                    id="postal_code"
+                    name="postal_code"
+                    type="text"
+                    autocomplete="postal-code"
+                    value="{{ request.POST.postal_code|default:'' }}"
+                    placeholder="Postal Code"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================================ -->
+    <!-- Shipping Address                 -->
+    <!-- ================================ -->
+
+    <section>
+
+        <div class="mb-5">
+
+            <h2 class="text-lg font-semibold text-stone-900">
+                Shipping Address
+            </h2>
+
+            <p class="mt-1 text-sm text-stone-500">
+                Tell us where your order should be delivered.
+            </p>
+
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+
+            <!-- Province -->
+
+            <div>
+
+                <label for="province"
+                       class="mb-2 block text-sm font-medium text-stone-700">
+                    Province / State
+                </label>
+
+                <input
+                    id="province"
+                    name="province"
+                    type="text"
+                    autocomplete="address-level1"
+                    value="{{ request.POST.province|default:'' }}"
+                    placeholder="Province"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">
+
+            </div>
+
+            <!-- City -->
+
+            <div>
+
+                <label for="city"
+                       class="mb-2 block text-sm font-medium text-stone-700">
+                    City
+                </label>
+
+                <input
+                    id="city"
+                    name="city"
+                    type="text"
+                    required
+                    autocomplete="address-level2"
+                    value="{{ request.POST.city|default:'' }}"
+                    placeholder="City"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">
+
+            </div>
+
+            <!-- Address -->
+
+            <div class="sm:col-span-2">
+
+                <label for="address"
+                       class="mb-2 block text-sm font-medium text-stone-700">
+                    Street Address
+                </label>
+
+                <textarea
+                    id="address"
+                    name="address"
+                    rows="4"
+                    required
+                    autocomplete="street-address"
+                    placeholder="Street, building, apartment..."
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">{{ request.POST.address|default:'' }}</textarea>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================================ -->
+    <!-- Additional Information           -->
+    <!-- ================================ -->
+
+    <section>
+
+        <div class="mb-5">
+
+            <h2 class="text-lg font-semibold text-stone-900">
+                Additional Information
+            </h2>
+
+            <p class="mt-1 text-sm text-stone-500">
+                Optional information to help us process your order.
+            </p>
+
+        </div>
+
+        <!-- Order Notes -->
+
+        <div>
+
+            <label for="notes"
+                   class="mb-2 block text-sm font-medium text-stone-700">
+                Order Notes
+                <span class="font-normal text-stone-400">(Optional)</span>
+            </label>
+
+            <textarea
+                id="notes"
+                name="notes"
+                rows="4"
+                placeholder="Delivery instructions, preferred contact, etc."
+                class="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-100">{{ request.POST.notes|default:'' }}</textarea>
+
+        </div>
+
+    </section>
+
+    <!-- ================================ -->
+    <!-- Future Features                  -->
+    <!-- ================================ -->
+
+    <div class="hidden">
+
+        <input type="text" name="company_name">
+
+        <input type="text" name="tax_number">
+
+        <input type="date" name="delivery_date">
+
+        <input type="text" name="coupon">
+
+    </div>
+
+</form>

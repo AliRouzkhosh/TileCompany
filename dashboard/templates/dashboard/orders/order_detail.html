@@ -1,0 +1,85 @@
+<!-- dashboard/templates/dashboard/order_detail.html !-->
+{% extends "dashboard/base.html" %}
+{% load i18n localized_dates %}
+
+{% block title %}
+{% trans "Order" %} #{{ order.user_order_number }}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="space-y-8">
+
+    <div class="flex items-center justify-between">
+
+        <div>
+
+            <div class="flex flex-wrap items-center gap-3">
+
+                <h1 class="text-3xl font-bold">
+                    {% trans "Order" %} #{{ order.user_order_number }}
+                </h1>
+
+                <span class="rounded-full px-3 py-1 text-sm font-medium
+                    {% if order.status == 'pending' %}
+                        bg-yellow-100 text-yellow-800
+                    {% elif order.status == 'confirmed' %}
+                        bg-blue-100 text-blue-800
+                    {% elif order.status == 'on_hold' %}
+                        bg-orange-100 text-orange-800
+                    {% elif order.status == 'shipped' %}
+                        bg-indigo-100 text-indigo-800
+                    {% elif order.status == 'delivered' %}
+                        bg-green-100 text-green-800
+                    {% elif order.status == 'cancelled' %}
+                        bg-red-100 text-red-800
+                    {% endif %}">
+
+                    {{ order.get_status_display }}
+
+                </span>
+
+            </div>
+
+            <p class="mt-2 text-stone-500">
+
+                {% trans "Created on" %} {{ order.created_at|localized_datetime }}
+
+            </p>
+
+        </div>
+
+        {% include "dashboard/orders/components/action_buttons.html" %}
+
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-3">
+
+        <div class="space-y-6 xl:col-span-2">
+
+            {% include "dashboard/orders/components/order_item_table.html" %}
+
+            {% include "dashboard/orders/components/timeline.html" %}
+            {% include "dashboard/orders/components/order_notes.html" %}
+
+        </div>
+
+        <div class="space-y-6">
+
+            {% include "dashboard/orders/components/customer_card.html" %}
+
+            {% include "dashboard/orders/components/shipping_card.html" %}
+
+            {% include "dashboard/orders/components/payment_card.html" %}
+
+            {% if is_owner %}
+                {% include "dashboard/orders/components/refund_card.html" %}
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

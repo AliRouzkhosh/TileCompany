@@ -1,0 +1,40 @@
+{% extends "orders/checkout_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Shipping" %}{% endblock %}
+
+{% block checkout_content %}
+<div class="space-y-6" data-checkout-step-panel="shipping">
+    <header>
+        <h2 id="shipping-step-title" class="text-2xl font-semibold tracking-[-0.02em] text-text-primary">{% trans "Shipping" %}</h2>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-text-secondary">{% trans "Choose where and how your order should be delivered." %}</p>
+    </header>
+
+    {% if form.non_field_errors %}
+        <div class="checkout-error" role="alert" data-checkout-global-error>{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% include "orders/components/shipping_address_card.html" %}
+    {% include "orders/components/shipping_method_card.html" %}
+
+    <section aria-labelledby="delivery-slot-title" class="border-t border-border pt-5">
+        <div class="max-w-2xl">
+            <label id="delivery-slot-title" for="{{ form.delivery_slot.id_for_label }}" class="text-sm font-semibold text-text-primary">{% trans "Delivery slot" %} <span class="font-normal text-text-muted">({% trans "optional" %})</span></label>
+            <p id="delivery-slot-help" class="mt-1 text-xs leading-5 text-text-muted">{% trans "Preferred delivery time (optional)" %}</p>
+            <div class="mt-3">{{ form.delivery_slot }}</div>
+            {% if form.delivery_slot.errors %}<div id="delivery-slot-errors" class="checkout-error mt-2" role="alert">{{ form.delivery_slot.errors }}</div>{% endif %}
+        </div>
+    </section>
+
+    <div class="checkout-actions" data-checkout-actions>
+        <a href="{% url 'orders:cart_detail' %}" class="sf-button sf-button--secondary">
+            <i data-lucide="arrow-left" class="sf-icon directional-icon" aria-hidden="true"></i>
+            {% trans "Back to cart" %}
+        </a>
+        <button type="submit" class="sf-button sf-button--primary">
+            {% trans "Continue to payment" %}
+            <i data-lucide="arrow-right" class="sf-icon directional-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}

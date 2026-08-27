@@ -1,0 +1,17 @@
+{% load i18n %}
+<div id="auth-workspace">
+{% translate "New to TileStore" as eyebrow %}{% translate "Create account" as title %}{% translate "Create your account for a quicker checkout and a simpler way to keep track of your orders." as description %}
+{% include "accounts/components/auth_header.html" with eyebrow=eyebrow title=title description=description %}
+{% if sms_login_available %}
+<nav class="mb-6 grid grid-cols-2 rounded-xl bg-surface-subtle p-1" aria-label="{% trans 'Signup method' %}">
+    <span class="flex min-h-11 items-center justify-center rounded-lg bg-surface px-3 py-2 text-center text-sm font-semibold" aria-current="page">{% trans "Standard signup" %}</span>
+    <a href="{% url 'accounts:sms_signup_request' %}" hx-get="{% url 'accounts:sms_signup_request' %}" hx-target="#auth-workspace" hx-swap="outerHTML" class="flex min-h-11 items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-semibold text-brand hover:bg-surface">{% trans "Sign up with mobile" %}</a>
+</nav>
+{% endif %}
+<form method="post" action="{% url 'accounts:register' %}" class="space-y-7">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="rounded-control border border-error bg-surface-subtle p-3 text-sm text-error">{{ form.non_field_errors }}</div>{% endif %}
+    {% include "accounts/components/registration_fields.html" %}
+    <button type="submit" class="sf-button sf-button--primary w-full">{% trans "Create account" %}</button>
+</form>
+</div>

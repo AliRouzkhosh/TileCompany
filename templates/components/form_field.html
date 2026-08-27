@@ -1,0 +1,47 @@
+<!-- components/form_field.html -->
+
+<div>
+
+    {% if field.label %}
+
+        <label
+            for="{{ field.id_for_label }}"
+            class="mb-2 block text-sm font-medium text-text-primary"
+        >
+            {{ field.label }}
+
+            {% if field.field.required %}
+                <span class="text-red-500">*</span>
+            {% endif %}
+
+        </label>
+
+    {% endif %}
+
+    {{ field }}
+
+    {% if field.help_text %}
+
+        <p class="mt-2 text-sm text-text-secondary">
+            {{ field.help_text }}
+        </p>
+
+    {% endif %}
+
+    {% if field.errors %}
+
+        <ul class="mt-2 space-y-1">
+
+            {% for error in field.errors %}
+
+                <li class="text-sm text-red-600">
+                    {{ error }}
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% endif %}
+
+</div>

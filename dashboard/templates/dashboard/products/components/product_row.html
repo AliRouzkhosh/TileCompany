@@ -1,0 +1,15 @@
+{% load i18n pricing localized_content %}
+
+<tr class="transition hover:bg-slate-50">
+    <td class="px-6 py-4">
+        <div class="flex items-center gap-4">
+            <div class="h-16 w-16 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">{% if product.image %}<img src="{{ product.image.url }}" alt="{{ product|localized:"name" }}" class="h-full w-full object-cover">{% endif %}</div>
+            <div><p class="font-semibold text-slate-900">{{ product|localized:"name" }}</p><p class="text-sm text-slate-500">{% trans "Catalog code:" %} {{ product.sku }}</p></div>
+        </div>
+    </td>
+    <td class="px-6 py-4 text-sm text-slate-700">{% for category in product.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</td>
+    <td class="px-6 py-4 text-sm"><div dir="ltr">{% trans "USD" %}: {% if product.usd_min_price is None %}—{% elif product.usd_min_price == product.usd_max_price %}{{ product.usd_min_price|money:"USD" }}{% else %}{{ product.usd_min_price|money:"USD" }}–{{ product.usd_max_price|money:"USD" }}{% endif %}</div><div dir="ltr">{% trans "Toman (IRT)" %}: {% if product.irt_min_price is None %}—{% elif product.irt_min_price == product.irt_max_price %}{{ product.irt_min_price|money:"IRT" }}{% else %}{{ product.irt_min_price|money:"IRT" }}–{{ product.irt_max_price|money:"IRT" }}{% endif %}</div></td>
+    <td class="px-6 py-4"><div class="font-medium">{{ product.variant_stock|localized_number }}</div><div class="text-xs text-slate-500">{% blocktrans count count=product.variant_count with display_count=product.variant_count|localized_number %}{{ display_count }} variant{% plural %}{{ display_count }} variants{% endblocktrans %}</div></td>
+    <td class="px-6 py-4">{% include "dashboard/products/components/product_badges.html" %}</td>
+    <td class="px-6 py-4 text-end"><a href="{% url 'dashboard:products:detail' product.pk %}" class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm">{% trans "View" %}</a>{% if not product.product_type_id or product.product_type.code == 'tile' %}<a href="{% url 'dashboard:products:variants:catalog' product.pk %}" class="ms-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm">{% trans "Variants" %}</a>{% else %}<a href="{% url 'dashboard:products:generic_variant_catalog' product.pk %}" class="ms-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm">{% trans "Variants" %}</a>{% endif %}<a href="{% url 'dashboard:products:edit' product.pk %}" class="ms-2 rounded-lg bg-slate-900 px-3 py-1.5 text-sm text-white">{% trans "Edit" %}</a></td>
+</tr>

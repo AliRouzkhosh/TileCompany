@@ -1,0 +1,68 @@
+{% load i18n localized_content pricing %}
+<section class="scroll-mt-24" data-product-tabs>
+    <div class="border-b border-border">
+        <nav class="flex max-w-full gap-6 overflow-x-auto px-0.5 pt-0.5 [scrollbar-width:none] sm:gap-8 [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="{% trans 'Product information' %}" aria-orientation="horizontal" data-product-tab-rail>
+            <button type="button" id="product-tab-description" role="tab" aria-selected="true" aria-controls="description" tabindex="0" class="tab-button min-h-11 shrink-0 border-b-2 border-brand px-0.5 pb-3 text-sm font-semibold text-text-primary focus-visible:outline-none sm:text-base" data-tab="description">
+                {% trans "Description" %}
+            </button>
+            <button type="button" id="product-tab-specs" role="tab" aria-selected="false" aria-controls="specs" tabindex="-1" class="tab-button min-h-11 shrink-0 border-b-2 border-transparent px-0.5 pb-3 text-sm text-text-muted focus-visible:outline-none sm:text-base" data-tab="specs">
+                {% trans "Specifications" %}
+            </button>
+            <button type="button" id="product-tab-reviews" role="tab" aria-selected="false" aria-controls="reviews" tabindex="-1" class="tab-button min-h-11 shrink-0 border-b-2 border-transparent px-0.5 pb-3 text-sm text-text-muted focus-visible:outline-none sm:text-base" data-tab="reviews">
+                {% trans "Reviews" %} ({{ reviews.count|localized_number }})
+            </button>
+        </nav>
+    </div>
+
+    <div class="mt-6 sm:mt-8">
+        <div class="tab-content scroll-mt-24 opacity-100" id="description" role="tabpanel" aria-labelledby="product-tab-description" tabindex="0">
+            {% with product_description=product|localized:"description" %}
+                <section class="max-w-[75ch]" aria-labelledby="product-description-title">
+                    <h2 id="product-description-title" class="text-xl font-semibold tracking-[-0.02em] text-text-primary sm:text-2xl">{% trans "About this product" %}</h2>
+                    {% if product_description %}
+                        <div class="mt-4 space-y-4 text-base leading-8 text-text-secondary [&_a]:text-brand-active [&_a]:underline [&_li]:ms-5 [&_ol]:list-decimal [&_ol]:space-y-2 [&_p]:max-w-[75ch] [&_strong]:font-semibold [&_strong]:text-text-primary [&_ul]:list-disc [&_ul]:space-y-2" data-product-description>
+                            {{ product_description|linebreaks }}
+                        </div>
+                    {% else %}
+                        <p class="mt-4 text-sm text-text-muted" data-description-empty>{% trans "Description is not available for this product." %}</p>
+                    {% endif %}
+                </section>
+            {% endwith %}
+        </div>
+
+        <div class="tab-content scroll-mt-24 hidden opacity-0" id="specs" role="tabpanel" aria-labelledby="product-tab-specs" tabindex="0" hidden>
+            {% include "products/components/product_specs.html" %}
+        </div>
+
+        <div class="tab-content scroll-mt-24 hidden max-w-4xl opacity-0" id="reviews" role="tabpanel" aria-labelledby="product-tab-reviews" tabindex="0" hidden>
+            {% include "products/components/reviews/review_region.html" %}
+            {% comment %}
+            {% if not user.is_authenticated %}
+                <div class="mb-5 flex items-start gap-3 rounded-control border border-border bg-surface-subtle px-4 py-3 text-sm text-text-secondary" data-review-status="anonymous">
+                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-text-muted" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 14v2m-6 5h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2Zm2-11V7a4 4 0 0 1 8 0v3"/></svg>
+                    <p>{% trans "Please sign in to leave a review." %}</p>
+                </div>
+            {% elif not user_has_purchased %}
+                <div class="mb-5 flex items-start gap-3 rounded-control border border-border bg-surface-subtle px-4 py-3 text-sm text-text-secondary" data-review-status="ineligible">
+                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-text-muted" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12.75 11.25 15 15 9.75M12 3l7.5 3v5.25c0 4.14-3.2 7.96-7.5 9.75-4.3-1.79-7.5-5.61-7.5-9.75V6L12 3Z"/></svg>
+                    <p>{% trans "Only customers who purchased this product can leave a review." %}</p>
+                </div>
+            {% elif pending_review %}
+                <div class="mb-5 flex items-start gap-3 rounded-control border border-warning/35 bg-warning/10 px-4 py-3" data-review-status="pending">
+                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 7v5l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    <div><h3 class="text-sm font-semibold text-text-primary">{% trans "Review Awaiting Approval" %}</h3><p class="mt-1 text-sm text-text-secondary">{% trans "Your review has been submitted and is waiting for moderation." %}</p></div>
+                </div>
+            {% elif user_has_review %}
+                <div class="ts-callout ts-callout--success mb-5" data-review-status="reviewed">
+                    <i data-lucide="circle-check" class="sf-icon shrink-0" aria-hidden="true"></i><div class="min-w-0 flex-1"><p class="font-medium">{% trans "You have already reviewed this product." %}</p></div>
+                    <button type="button" class="review-own-edit sf-button sf-button--primary min-h-11 shrink-0 px-4 text-sm" data-review-id="{{ user_review.id }}"><i data-lucide="pencil" class="sf-icon" aria-hidden="true"></i>{% trans "Edit your review" %}</button>
+                </div>
+            {% else %}
+                {% include "products/components/reviews/review_form.html" %}
+            {% endif %}
+
+            {% include "products/components/reviews/review_list.html" %}
+            {% endcomment %}
+        </div>
+    </div>
+</section>

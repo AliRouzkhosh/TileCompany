@@ -1,0 +1,73 @@
+<!-- dashboard/components/order_row.html -->
+{% load i18n localized_dates pricing %}
+
+<tr class="border-b border-stone-100 transition hover:bg-stone-50">
+
+    {% if not compact %}
+
+    <td class="px-4 py-4">
+
+        <input
+            type="checkbox"
+            class="order-checkbox"
+            name="orders"
+            value="{{ order.id }}"
+        >
+
+    </td>
+
+    {% endif %}
+
+    <td class="px-6 py-4 whitespace-nowrap">
+        #{{ order.user_order_number }}
+    </td>
+
+    <td class="px-6 py-4 whitespace-nowrap">
+        {{ order.user.username }}
+    </td>
+
+    <td class="px-6 py-4 whitespace-nowrap">
+        {{ order.total_amount|money:order.currency }}
+    </td>
+
+    <td class="px-6 py-4">
+        {% include "dashboard/components/badges/payment_badge.html" %}
+    </td>
+
+    <td class="px-6 py-4">
+        {% include "dashboard/components/badges/status_badge.html" %}
+    </td>
+
+    <td class="px-6 py-4">
+        {% include "dashboard/components/badges/refund_badge.html" %}
+        {% if refund_queue_mode == "review" and order.refund_status == "needs_information" %}
+            {% if order.refund_support_ticket.status == "waiting_customer" %}
+                <p class="mt-2 text-sm font-semibold text-amber-800">{% trans "Waiting for customer" %}</p>
+            {% elif order.refund_support_ticket.status == "waiting_support" %}
+                <p class="mt-2 text-sm font-semibold text-indigo-700">{% trans "Customer replied" %}</p>
+                <a class="mt-1 inline-block text-sm font-medium text-indigo-700 underline" href="{% url 'dashboard:support:detail' order.refund_support_ticket.id %}">{% trans "Open conversation" %}</a>
+            {% endif %}
+        {% endif %}
+    </td>
+
+    <td class="px-6 py-4 whitespace-nowrap">
+        {{ order.created_at|localized_datetime }}
+    </td>
+
+    <td class="px-6 py-4">
+
+        <div class="flex flex-wrap justify-center gap-2">
+
+            <a
+                href="{% url 'dashboard:order_detail' order.id %}"
+                class="rounded-lg border border-stone-300 px-3 py-1 text-xs font-medium text-stone-700 transition hover:bg-stone-100"
+            >
+                {% trans "View" %}
+            </a>
+            
+
+        </div>
+
+    </td>
+
+</tr>

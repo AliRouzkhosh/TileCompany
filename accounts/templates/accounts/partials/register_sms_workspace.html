@@ -1,0 +1,10 @@
+{% load i18n %}
+<div id="auth-workspace">
+{% translate "Sign up with mobile" as eyebrow %}{% translate "Sign up with mobile" as title %}{% translate "Enter your mobile number to receive a verification code." as description %}
+{% include "accounts/components/auth_header.html" with eyebrow=eyebrow title=title description=description %}
+<nav class="mb-6 grid grid-cols-2 rounded-xl bg-surface-subtle p-1" aria-label="{% trans 'Signup method' %}">
+    <a href="{% url 'accounts:register' %}" hx-get="{% url 'accounts:register' %}" hx-target="#auth-workspace" hx-swap="outerHTML" class="flex min-h-11 items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-semibold text-brand hover:bg-surface">{% trans "Standard signup" %}</a>
+    <span class="flex min-h-11 items-center justify-center rounded-lg bg-surface px-3 py-2 text-center text-sm font-semibold text-text-primary" aria-current="page">{% trans "Sign up with mobile" %}</span>
+</nav>
+<form method="post" action="{% url 'accounts:sms_signup_request' %}" class="space-y-5">{% csrf_token %}{% include "accounts/components/auth_field.html" with field=form.phone %}<button class="sf-button sf-button--primary w-full">{% trans "Send code" %}</button></form>
+</div>

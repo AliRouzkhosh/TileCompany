@@ -1,0 +1,185 @@
+{% extends "dashboard/base.html" %}
+{% load humanize pricing %}
+
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="mx-auto max-w-4xl space-y-6">
+
+    <!-- Header -->
+
+    <div>
+
+        <h1 class="text-2xl font-bold text-stone-900">
+
+            {{ page_title }}
+
+        </h1>
+
+        <p class="mt-1 text-sm text-stone-500">
+
+            Review the customer's refund request before continuing.
+
+        </p>
+
+    </div>
+
+    <!-- Customer Request -->
+
+    <div class="rounded-2xl bg-white p-6 shadow">
+
+        <h2 class="text-lg font-semibold">
+
+            Customer Request
+
+        </h2>
+
+        <dl class="mt-5 space-y-4 text-sm">
+
+            <div>
+
+                <dt class="font-medium text-stone-600">
+
+                    Order
+
+                </dt>
+
+                <dd>
+
+                    #{{ order.user_order_number }}
+
+                </dd>
+
+            </div>
+
+            <div>
+
+                <dt class="font-medium text-stone-600">
+
+                    Customer
+
+                </dt>
+
+                <dd>
+
+                    {{ order.user.username }}
+
+                </dd>
+
+            </div>
+
+            <div>
+
+                <dt class="font-medium text-stone-600">
+
+                    Refund Reason
+
+                </dt>
+
+                <dd>
+
+                    {{ order.get_refund_reason_display }}
+
+                </dd>
+
+            </div>
+
+            {% if order.refund_message %}
+
+            <div>
+
+                <dt class="font-medium text-stone-600">
+
+                    Customer Message
+
+                </dt>
+
+                <dd class="rounded-xl bg-stone-50 p-3">
+
+                    {{ order.refund_message|linebreaks }}
+
+                </dd>
+
+            </div>
+
+            {% endif %}
+
+            <div>
+
+                <dt class="font-medium text-stone-600">
+
+                    Order Total
+
+                </dt>
+
+                <dd>
+
+                    {{ order.total_amount|money:order.currency }}
+
+                </dd>
+
+            </div>
+
+        </dl>
+
+    </div>
+
+    <!-- Admin Form -->
+
+    <div class="rounded-2xl bg-white p-6 shadow">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div>
+
+                <label
+                    for="refund_response"
+                    class="mb-2 block text-sm font-medium text-stone-700">
+
+                    Admin Response
+
+                </label>
+
+                <textarea
+                    id="refund_response"
+                    name="refund_response"
+                    rows="6"
+                    required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-3 focus:border-blue-500 focus:outline-none">
+
+{{ order.refund_response }}</textarea>
+
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+
+                <a
+                    href="{% url 'dashboard:order_detail' order.id %}"
+                    class="rounded-xl border border-stone-300 px-5 py-2 hover:bg-stone-100">
+
+                    Cancel
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl {{ button_class }} px-5 py-2 font-medium text-white">
+
+                    {{ button_text }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

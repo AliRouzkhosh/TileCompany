@@ -1,0 +1,11 @@
+{% load i18n pricing %}
+<section id="inventory-alerts" class="rounded-2xl bg-white p-6 shadow-sm">
+    <div class="mb-6 flex items-center justify-between"><h2 class="text-lg font-semibold">{% trans "Notifications" %}</h2><span class="rounded-full bg-stone-100 px-3 py-1 text-sm">{{ dashboard_notifications|length|localized_number }}</span></div>
+    <div class="space-y-3">
+        {% for notification in dashboard_notifications %}
+        <a href="{{ notification.url }}" class="flex gap-4 rounded-xl border p-4 transition hover:bg-stone-50 {% if notification.level == 'danger' %}border-red-200 bg-red-50{% elif notification.level == 'warning' %}border-amber-200 bg-amber-50{% else %}border-stone-200{% endif %}"><div class="pt-0.5 text-stone-700"><i data-lucide="{{ notification.icon }}" class="sf-icon" aria-hidden="true"></i></div><div class="flex-1"><p class="font-semibold text-stone-900">{{ notification.title }}</p><p class="mt-1 text-sm text-stone-600">{{ notification.message }}</p></div></a>
+        {% empty %}
+        <div class="rounded-xl border border-dashed border-stone-300 p-8 text-center text-stone-500">{% trans "No operational notifications." %}</div>
+        {% endfor %}
+    </div>
+</section>

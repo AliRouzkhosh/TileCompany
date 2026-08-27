@@ -1,0 +1,20 @@
+<div class="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-4" data-section-header>
+    <div class="max-w-2xl">
+        {% if eyebrow %}
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand">{{ eyebrow }}</p>
+        {% endif %}
+        <h2 class="{% if eyebrow %}mt-2 {% endif %}text-2xl font-semibold tracking-[-0.025em] text-text-primary sm:text-3xl">
+            {{ title }}
+        </h2>
+        {% if subtitle %}
+            <p class="mt-1.5 max-w-xl text-sm leading-6 text-text-secondary sm:mt-2 sm:text-base">{{ subtitle }}</p>
+        {% endif %}
+    </div>
+
+    {% if link and link_text %}
+        <a href="{{ link }}" class="group inline-flex min-h-11 w-fit items-center gap-2 rounded-control px-1 text-sm font-semibold text-text-secondary transition-colors hover:text-brand-active">
+            {{ link_text }}
+            <svg class="directional-icon h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+    {% endif %}
+</div>

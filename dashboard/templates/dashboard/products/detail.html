@@ -1,0 +1,87 @@
+<!-- dashboard/templates/dashboard/products/detail.html -->
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
+{% block dashboard_content %}
+
+{% include "dashboard/components/breadcrumbs.html" with title=product.name %}
+
+<div class="space-y-8">
+
+    <!-- ===================================================== -->
+    <!-- Page Header -->
+    <!-- ===================================================== -->
+
+    <div class="flex flex-wrap gap-3">
+
+        {% if can_add_variant %}<a
+            href="{% url 'dashboard:products:variants:create' product.pk %}"
+            class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+        >
+            {% trans "Add Variant" %}
+        </a>{% endif %}
+
+        {% if can_change_product %}<a
+            href="{% url 'dashboard:products:edit' product.pk %}"
+            class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+            {% trans "Edit Product" %}
+        </a>{% endif %}
+
+        <a
+            href="{% url 'dashboard:products:catalog' %}"
+            class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+            {% trans "Back to Catalog" %}
+        </a>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- Overview -->
+    <!-- ===================================================== -->
+
+    <div class="grid gap-6 xl:grid-cols-2">
+
+        {% include "dashboard/products/components/detail/gallery.html" %}
+
+        {% include "dashboard/products/components/detail/info.html" %}
+
+        {% if can_view_pricing %}{% include "dashboard/products/components/detail/pricing.html" %}{% endif %}
+
+        {% if can_view_inventory %}{% include "dashboard/products/components/detail/inventory.html" %}{% endif %}
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- Variants -->
+    <!-- ===================================================== -->
+
+    {% include "dashboard/products/components/detail/variants.html" %}
+
+    <!-- ===================================================== -->
+    <!-- Recent Activity -->
+    <!-- ===================================================== -->
+
+    <div class="grid gap-6 xl:grid-cols-2">
+
+        {% if can_view_recent_orders %}{% include "dashboard/products/components/detail/recent_orders.html" %}{% endif %}
+
+        {% include "dashboard/products/components/detail/recent_reviews.html" %}
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- SEO -->
+    <!-- ===================================================== -->
+
+    {% include "dashboard/products/components/detail/seo.html" %}
+
+
+</div>
+
+{% endblock %}

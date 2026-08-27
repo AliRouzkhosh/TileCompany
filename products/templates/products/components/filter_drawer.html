@@ -1,0 +1,42 @@
+{% load i18n pricing %}
+<div
+    id="filterDrawer"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="filterDrawerTitle"
+    aria-hidden="true"
+    inert
+    class="catalog-filter-drawer fixed inset-0 z-[80] hidden xl:hidden"
+    data-filter-drawer>
+    <div
+        id="drawerOverlay"
+        class="catalog-filter-drawer-backdrop absolute inset-0 opacity-0"
+        aria-hidden="true"
+        data-filter-drawer-backdrop>
+    </div>
+
+    <div
+        id="drawerPanel"
+        class="catalog-filter-drawer-panel is-inline-end-closed"
+        tabindex="-1"
+        data-filter-drawer-panel>
+        <header class="catalog-filter-drawer-header">
+            <div class="flex min-w-0 items-center gap-2">
+                <h2 id="filterDrawerTitle" class="text-lg font-semibold text-text-primary">{% trans "Filters" %}</h2>
+                {% if active_filter_count %}<span class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-subtle px-1.5 py-0.5 text-xs font-semibold text-brand-active" aria-label="{% blocktrans with count=active_filter_count|localized_number %}{{ count }} active filters{% endblocktrans %}">{{ active_filter_count|localized_number }}</span>{% endif %}
+            </div>
+
+            <button
+                type="button"
+                id="closeFiltersButton"
+                aria-label="{% trans 'Close filters' %}"
+                class="sf-icon-button shrink-0">
+                <svg class="sf-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+        </header>
+
+        <div class="min-h-0 flex-1 overflow-hidden" data-filter-drawer-body>
+            {% include "products/components/filters_sidebar.html" with filter_display="drawer" %}
+        </div>
+    </div>
+</div>

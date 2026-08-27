@@ -1,0 +1,45 @@
+{% load i18n localized_dates %}<div class="rounded-2xl bg-white p-6 shadow-sm">
+
+    <div class="mb-5 flex items-center justify-between">
+
+        <h2 class="text-lg font-semibold">
+            {% trans "Recent Activity" %}
+        </h2>
+
+        <span class="text-xs text-stone-400">
+            {% trans "Latest events" %}
+        </span>
+
+    </div>
+
+    <div class="space-y-4">
+
+        {% for item in activity_feed %}
+
+        <div class="border-s-2 border-indigo-500 ps-4">
+
+            <p class="font-medium text-stone-900">
+                {{ item.title }}
+            </p>
+
+            <p class="text-sm text-stone-500">
+                {{ item.description }}
+            </p>
+
+            <p class="mt-1 text-xs text-stone-400">
+                <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|localized_datetime }}</time>
+            </p>
+
+        </div>
+
+        {% empty %}
+
+        <p class="text-sm text-stone-500">
+            {% trans "No recent activity." %}
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>

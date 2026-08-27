@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Create your account" %} | TileStore{% endblock %}
+{% block content %}
+{% include "accounts/components/auth_container_start.html" %}
+{% translate "Sign up with mobile" as eyebrow %}{% translate "Create your account" as title %}{% translate "Your mobile number has been verified. Complete your account details." as description %}
+{% include "accounts/components/auth_header.html" with eyebrow=eyebrow title=title description=description %}
+<form method="post" class="space-y-7">{% csrf_token %}{% if form.non_field_errors %}<div class="rounded-control border border-error bg-surface-subtle p-3 text-sm text-error">{{ form.non_field_errors }}</div>{% endif %}{% include "accounts/components/registration_fields.html" %}<button class="sf-button sf-button--primary w-full">{% trans "Create account" %}</button></form>
+{% include "accounts/components/auth_container_end.html" %}
+{% endblock %}

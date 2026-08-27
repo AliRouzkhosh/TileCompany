@@ -1,0 +1,25 @@
+<!-- orders/checkout_base.html -->
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="space-y-6 lg:space-y-8" data-checkout-page data-checkout-step="{{ checkout_step }}">
+    <header class="max-w-2xl" data-checkout-header>
+        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-brand">{% trans "Secure order" %}</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-[-0.03em] text-text-primary sm:text-4xl">{% trans "Checkout" %}</h1>
+        <p class="mt-2 text-sm leading-6 text-text-secondary">{% trans "Complete your delivery and payment details, then review your order." %}</p>
+    </header>
+
+    {% include "orders/components/checkout_steps.html" %}
+
+    <form method="post" class="grid items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] xl:gap-10" data-checkout-form>
+        {% csrf_token %}
+        <section class="min-w-0" aria-label="{% trans 'Current checkout step' %}" data-checkout-content>
+            {% block checkout_content %}{% endblock %}
+        </section>
+        <aside class="min-w-0 lg:sticky lg:top-24" aria-label="{% trans 'Order summary' %}" data-checkout-summary-column>
+            {% include "orders/components/checkout_summary.html" %}
+        </aside>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% load i18n localized_content %}
+<article class="catalog-result-row group relative w-full overflow-hidden rounded-surface border border-border bg-surface shadow-surface" data-mobile-product-row>
+    <a href="{{ product.get_absolute_url }}{% if product.target_variant_id %}?variant={{ product.target_variant_id }}{% endif %}" hx-boost="false"
+       class="grid h-full grid-cols-[minmax(0,1fr)_clamp(5.75rem,30vw,7.25rem)] gap-3 p-3"
+       aria-label="{{ product|localized:'name' }}">
+        <div class="flex min-w-0 flex-col">
+            <h3 class="line-clamp-2 text-sm font-semibold leading-5 text-text-primary transition-colors group-hover:text-brand-active">{{ product|localized:"name" }}</h3>
+            {% if product.catalog_presentation.card_attributes %}
+                <div class="mt-1 flex min-w-0 items-center gap-1.5 overflow-hidden text-xs text-text-muted" data-mobile-card-attributes>
+                    {% for attribute in product.catalog_presentation.card_attributes|slice:":2" %}
+                        <span class="min-w-0 truncate"><span class="sr-only">{{ attribute.label }}: </span>{% for value in attribute.values %}{{ value.display_value }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>{% if not forloop.last %}<span class="shrink-0" aria-hidden="true">&bull;</span>{% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% include "products/components/product_rating.html" with rating=product.avg_rating count=product.review_count mode="mobile" %}
+            <div class="mt-auto pt-2" data-mobile-product-price>
+                {% include "products/components/product_card_price.html" with product=product price_class="text-base" %}
+            </div>
+        </div>
+        <div class="relative aspect-square w-full self-center overflow-hidden rounded-control bg-surface-subtle" data-mobile-product-media>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product|localized:'name' }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]" loading="lazy">
+            {% else %}
+                <div class="home-media-fallback flex h-full w-full items-center justify-center text-text-muted" data-mobile-product-image-fallback>
+                    <svg class="h-9 w-9 opacity-45" aria-hidden="true" fill="none" viewBox="0 0 64 64" stroke="currentColor"><path stroke-width="1.5" d="M8 8h21v21H8zM35 8h21v21H35zM8 35h21v21H8zM35 35h21v21H35z"/></svg>
+                    <span class="sr-only">{% trans "Image coming soon" %}</span>
+                </div>
+            {% endif %}
+            <div class="absolute start-2 top-2 z-10" data-mobile-product-badge-zone>
+                {% include "products/components/product_badges.html" with product=product %}
+            </div>
+        </div>
+    </a>
+</article>

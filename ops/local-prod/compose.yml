@@ -1,0 +1,274 @@
+name: tilecompany-local-prod
+
+services:
+  postgres:
+    image: postgres:18.6-bookworm
+    environment:
+      LOCALPROD_POSTGRES_TEST_USER: ${LOCALPROD_POSTGRES_TEST_USER}
+      LOCALPROD_POSTGRES_TEST_PASSWORD: ${LOCALPROD_POSTGRES_TEST_PASSWORD}
+      POSTGRES_DB: ${LOCALPROD_POSTGRES_DB}
+      POSTGRES_USER: ${LOCALPROD_POSTGRES_BOOTSTRAP_USER}
+      POSTGRES_PASSWORD: ${LOCALPROD_POSTGRES_BOOTSTRAP_PASSWORD}
+      LOCALPROD_POSTGRES_MIGRATION_USER: ${LOCALPROD_POSTGRES_MIGRATION_USER}
+      LOCALPROD_POSTGRES_MIGRATION_PASSWORD: ${LOCALPROD_POSTGRES_MIGRATION_PASSWORD}
+      LOCALPROD_POSTGRES_RUNTIME_USER: ${LOCALPROD_POSTGRES_RUNTIME_USER}
+      LOCALPROD_POSTGRES_RUNTIME_PASSWORD: ${LOCALPROD_POSTGRES_RUNTIME_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./init-roles.sh:/docker-entrypoint-initdb.d/10-init-localprod-roles.sh:ro
+    networks:
+      - backend
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7.4.11-alpine
+    environment:
+      REDIS_PASSWORD: ${LOCALPROD_REDIS_PASSWORD}
+    command:
+      - /bin/sh
+      - -c
+      - exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    networks:
+      - backend
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli --no-auth-warning -a "$$REDIS_PASSWORD" ping | grep -q PONG
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  migrate:
+    build:
+      context: ../..
+      dockerfile: ops/local-prod/Dockerfile
+    image: tilecompany-local-prod-app:local
+    profiles:
+      - migration
+    command: ["python", "manage.py", "migrate", "--noinput"]
+    environment:
+      APP_ENV: local_production
+      DEBUG: "false"
+      DJANGO_SECRET_KEY: ${LOCALPROD_DJANGO_SECRET_KEY}
+      ALLOWED_HOSTS: ${LOCALPROD_ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${LOCALPROD_CSRF_TRUSTED_ORIGINS}
+      DB_BACKEND: postgresql
+      POSTGRES_DB: ${LOCALPROD_POSTGRES_DB}
+      POSTGRES_USER: ${LOCALPROD_POSTGRES_MIGRATION_USER}
+      POSTGRES_PASSWORD: ${LOCALPROD_POSTGRES_MIGRATION_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_SSLMODE: disable
+      CACHE_BACKEND: redis
+      REDIS_URL: ${LOCALPROD_REDIS_URL}
+      SMS_ENABLED: "false"
+      SMS_OTP_LOGIN_ENABLED: "false"
+      SMS_BACKEND: accounts.sms.DisabledSmsBackend
+      LOCAL_PAYMENT_SIMULATOR_ENABLED: ${LOCAL_PAYMENT_SIMULATOR_ENABLED:-false}
+      TRUST_PROXY_SSL_HEADER: "false"
+      TRUST_PROXY_CLIENT_IP: "false"
+      STATIC_ROOT: /app/staticfiles
+    volumes:
+      - staticfiles:/app/staticfiles
+    networks:
+      - backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  test-role-provision:
+    image: postgres:18.6-bookworm
+    profiles: ["performance"]
+    command: ["/bin/sh", "/provision-test-role.sh"]
+    environment:
+      POSTGRES_DB: ${LOCALPROD_POSTGRES_DB}
+      POSTGRES_USER: ${LOCALPROD_POSTGRES_BOOTSTRAP_USER}
+      POSTGRES_PASSWORD: ${LOCALPROD_POSTGRES_BOOTSTRAP_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      LOCALPROD_POSTGRES_TEST_USER: ${LOCALPROD_POSTGRES_TEST_USER}
+      LOCALPROD_POSTGRES_TEST_PASSWORD: ${LOCALPROD_POSTGRES_TEST_PASSWORD}
+    volumes:
+      - ./provision-test-role.sh:/provision-test-role.sh:ro
+    networks:
+      - backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  performance:
+    build:
+      context: ../..
+      dockerfile: ops/local-prod/Dockerfile
+    image: tilecompany-local-prod-app:local
+    profiles: ["performance"]
+    command: ["python", "manage.py", "test", "performance_tests", "--verbosity", "2"]
+    environment:
+      # Test-only process: PostgreSQL is authoritative; LocMem avoids touching
+      # retained Redis OTP/throttle state.
+      APP_ENV: development
+      DEBUG: "false"
+      DJANGO_SECRET_KEY: ${LOCALPROD_DJANGO_SECRET_KEY}
+      ALLOWED_HOSTS: ${LOCALPROD_ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${LOCALPROD_CSRF_TRUSTED_ORIGINS}
+      DB_BACKEND: postgresql
+      POSTGRES_DB: ${LOCALPROD_POSTGRES_DB}
+      POSTGRES_USER: ${LOCALPROD_POSTGRES_TEST_USER}
+      POSTGRES_PASSWORD: ${LOCALPROD_POSTGRES_TEST_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_SSLMODE: disable
+      CACHE_BACKEND: locmem
+      SMS_ENABLED: "false"
+      SMS_OTP_LOGIN_ENABLED: "false"
+      SMS_BACKEND: accounts.sms.DisabledSmsBackend
+      TRUST_PROXY_SSL_HEADER: "false"
+      TRUST_PROXY_CLIENT_IP: "false"
+    networks:
+      - backend
+    depends_on:
+      test-role-provision:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  test-role-verify:
+    image: postgres:18.6-bookworm
+    profiles: ["performance"]
+    command: ["/bin/sh", "/verify-role-attributes.sh"]
+    environment:
+      POSTGRES_DB: ${LOCALPROD_POSTGRES_DB}
+      POSTGRES_USER: ${LOCALPROD_POSTGRES_BOOTSTRAP_USER}
+      POSTGRES_PASSWORD: ${LOCALPROD_POSTGRES_BOOTSTRAP_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      LOCALPROD_POSTGRES_MIGRATION_USER: ${LOCALPROD_POSTGRES_MIGRATION_USER}
+      LOCALPROD_POSTGRES_RUNTIME_USER: ${LOCALPROD_POSTGRES_RUNTIME_USER}
+      LOCALPROD_POSTGRES_TEST_USER: ${LOCALPROD_POSTGRES_TEST_USER}
+    volumes:
+      - ./verify-role-attributes.sh:/verify-role-attributes.sh:ro
+    networks:
+      - backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../..
+      dockerfile: ops/local-prod/Dockerfile
+    image: tilecompany-local-prod-app:local
+    command:
+      - gunicorn
+      - --bind=0.0.0.0:8000
+      - --workers=2
+      - --access-logfile=-
+      - --error-logfile=-
+      - --capture-output
+      - --timeout=60
+      - TileCompany.wsgi:application
+    environment:
+      APP_ENV: local_production
+      DEBUG: "false"
+      DJANGO_SECRET_KEY: ${LOCALPROD_DJANGO_SECRET_KEY}
+      ALLOWED_HOSTS: ${LOCALPROD_ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${LOCALPROD_CSRF_TRUSTED_ORIGINS}
+      DB_BACKEND: postgresql
+      POSTGRES_DB: ${LOCALPROD_POSTGRES_DB}
+      POSTGRES_USER: ${LOCALPROD_POSTGRES_RUNTIME_USER}
+      POSTGRES_PASSWORD: ${LOCALPROD_POSTGRES_RUNTIME_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_SSLMODE: disable
+      CACHE_BACKEND: redis
+      REDIS_URL: ${LOCALPROD_REDIS_URL}
+      SMS_ENABLED: "false"
+      SMS_OTP_LOGIN_ENABLED: "false"
+      SMS_BACKEND: accounts.sms.DisabledSmsBackend
+      LOCAL_PAYMENT_SIMULATOR_ENABLED: ${LOCAL_PAYMENT_SIMULATOR_ENABLED:-false}
+      TRUST_PROXY_SSL_HEADER: "true"
+      TRUST_PROXY_CLIENT_IP: "true"
+      STATIC_ROOT: /app/staticfiles
+    volumes:
+      - staticfiles:/app/staticfiles:ro
+      - media_data:/app/media
+    networks:
+      - backend
+      - proxy
+    depends_on:
+      media-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import socket; connection = socket.create_connection(('127.0.0.1', 8000), 2); connection.close()
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Docker creates a fresh named-volume mount as root.  Initialize only that
+  # mount before the non-root Gunicorn service starts; this is idempotent for
+  # retained volumes and does not make /app generally writable.
+  media-init:
+    image: tilecompany-local-prod-app:local
+    user: "0:0"
+    command: ["/bin/sh", "-c", "chown 10001:10001 /app/media && chmod 0755 /app/media"]
+    volumes:
+      - media_data:/app/media
+    restart: "no"
+    network_mode: "none"
+
+  nginx:
+    image: nginx:1.28.0-alpine
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+      - staticfiles:/var/www/static:ro
+      - media_data:/var/www/media:ro
+    networks:
+      - proxy
+    depends_on:
+      media-init:
+        condition: service_completed_successfully
+      web:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - nginx -t && test -s /var/run/nginx.pid && kill -0 "$$(cat /var/run/nginx.pid)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  backend:
+    internal: true
+  proxy:
+
+volumes:
+  postgres_data:
+  staticfiles:
+  media_data:

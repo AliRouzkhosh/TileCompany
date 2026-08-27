@@ -1,0 +1,8 @@
+{% load i18n pricing %}
+<div class="rounded-2xl bg-white p-6 shadow-sm">
+    <h2 class="mb-5 text-lg font-semibold">{% trans "Inventory Overview" %}</h2>
+    <div class="space-y-5">
+        <div><h3 class="mb-2 font-medium text-yellow-700">{% trans "Low Stock" %}</h3><ul class="space-y-1 text-sm">{% for variant in low_stock_variants %}<li class="flex items-center justify-between gap-3"><span class="min-w-0"><a href="{% url 'dashboard:products:detail' variant.product.pk %}" class="font-medium text-stone-800 hover:text-indigo-700 hover:underline">{{ variant.product.name }}</a><span class="text-stone-400">—</span><a href="{% url 'dashboard:products:variants:edit' variant.product.pk variant.pk %}" class="font-mono text-xs text-stone-600 hover:text-indigo-700 hover:underline">{{ variant.sku }}</a></span><span>{{ variant.stock|localized_number }}</span></li>{% empty %}<li class="text-stone-500">{% trans "No low-stock variants." %}</li>{% endfor %}</ul></div>
+        <div><h3 class="mb-2 font-medium text-red-700">{% trans "Out of Stock" %}</h3><ul class="space-y-1 text-sm">{% for variant in out_of_stock_variants %}<li class="min-w-0"><a href="{% url 'dashboard:products:detail' variant.product.pk %}" class="font-medium text-stone-800 hover:text-indigo-700 hover:underline">{{ variant.product.name }}</a><span class="text-stone-400">—</span><a href="{% url 'dashboard:products:variants:edit' variant.product.pk variant.pk %}" class="font-mono text-xs text-stone-600 hover:text-indigo-700 hover:underline">{{ variant.sku }}</a></li>{% empty %}<li class="text-stone-500">{% trans "None" %}</li>{% endfor %}</ul></div>
+    </div>
+</div>

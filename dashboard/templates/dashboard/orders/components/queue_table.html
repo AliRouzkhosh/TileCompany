@@ -1,0 +1,157 @@
+<!-- dashboard/components/queue_table.html -->
+{% load i18n %}
+
+<div class="dashboard-table-surface overflow-hidden rounded-2xl shadow-sm">
+
+    {% if orders %}
+
+        {% if not compact %}
+
+        <form
+            method="post"
+            action="{% url 'dashboard:bulk_action' %}"
+            id="bulkActionForm"
+        >
+            {% csrf_token %}
+
+            <div
+                id="dashboard-bulk-i18n"
+                class="hidden"
+                data-select-action="{% trans 'Please select a bulk action.' %}"
+                data-select-orders="{% trans 'Please select at least one order.' %}"
+                data-confirm-action="{% trans 'Are you sure you want to apply this action to the selected orders?' %}"
+            ></div>
+
+            <div class="flex items-center justify-between border-b bg-stone-50 px-6 py-4">
+
+                <div class="flex items-center gap-3">
+
+                    <select
+                        id="bulk-action"
+                        name="action"
+                        class="rounded-lg border border-stone-300 px-3 py-2"
+                    >
+                        <option value="">
+                            {% trans "Bulk Action" %}
+                        </option>
+
+                        <option value="ship">
+                            {% trans "Mark as Shipped" %}
+                        </option>
+
+                        <option value="deliver">
+                            {% trans "Mark as Delivered" %}
+                        </option>
+
+                        <option value="approve_refund">
+                            {% trans "Approve Refund" %}
+                        </option>
+
+                        <option value="reject_refund">
+                            {% trans "Reject Refund" %}
+                        </option>
+
+                        <option value="cancel">
+                            {% trans "Cancel Order" %}
+                        </option>
+
+                    </select>
+
+                    <button
+                        id="bulk-submit"
+                        type="submit"
+                        class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+                    >
+                        {% trans "Apply" %}
+                    </button>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        <div class="dashboard-table-scroll overflow-x-auto" tabindex="0" aria-label="{% trans 'Orders table' %}">
+
+            <table class="dashboard-table dashboard-table--dense min-w-full">
+
+                <thead class="bg-stone-100">
+
+                    <tr>
+
+                        {% if not compact %}
+
+                        <th class="px-4 py-4">
+
+                            <input
+                                type="checkbox"
+                                id="select-all"
+                            >
+
+                        </th>
+
+                        {% endif %}
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Order" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Customer" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Amount" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Payment" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Status" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Refund" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-start">
+                            {% trans "Created" %}
+                        </th>
+
+                        <th class="px-6 py-4 text-center">
+                            {% trans "Operations" %}
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                        {% include "dashboard/orders/components/order_row.html" with refund_queue_mode=refund_queue_mode %}
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% if not compact %}
+
+        </form>
+
+        {% endif %}
+
+    {% else %}
+
+        {% include "dashboard/components/empty_state.html" %}
+
+    {% endif %}
+
+</div>

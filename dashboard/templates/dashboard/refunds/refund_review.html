@@ -1,0 +1,230 @@
+{% extends "dashboard/base.html" %}
+{% load i18n localized_dates %}
+
+{% block title %}
+    {% if action == "approve" %}
+        {% trans "Approve Refund" %}
+    {% elif action == "information" %}
+        {% trans "Request more information" %}
+    {% else %}
+        {% trans "Reject Refund" %}
+    {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="mx-auto max-w-5xl space-y-6">
+
+    <!-- Header -->
+    <div>
+
+        <h1 class="text-3xl font-bold text-stone-900">
+
+            {% if action == "approve" %}
+                {% trans "Approve Refund Request" %}
+            {% elif action == "information" %}
+                {% trans "Request more information for refund" %}
+            {% else %}
+                {% trans "Reject Refund Request" %}
+            {% endif %}
+
+        </h1>
+
+        <p class="mt-2 text-stone-600">
+            {% if action == "information" %}
+                {% trans "The customer will receive this question in their linked support conversation." %}
+            {% else %}
+                {% trans "Order" %} #{{ order.user_order_number }}
+            {% endif %}
+
+        </p>
+
+    </div>
+
+    {% if order.refund_support_ticket %}
+    <div class="rounded-2xl border border-stone-200 bg-white p-5 text-sm text-stone-700 shadow">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>{% trans "Linked refund conversation" %}: <a class="font-semibold text-amber-700 underline" href="{% url 'dashboard:support:detail' order.refund_support_ticket.id %}">{% blocktrans with ticket_id=order.refund_support_ticket.id %}Ticket #{{ ticket_id }}{% endblocktrans %}</a></div>
+            {% if order.refund_status == "needs_information" and order.refund_support_ticket.status == "waiting_customer" %}<span class="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-800">{% trans "Waiting for customer" %}</span>{% elif order.refund_status == "needs_information" and order.refund_support_ticket.status == "waiting_support" %}<span class="rounded-full bg-indigo-100 px-3 py-1 font-semibold text-indigo-800">{% trans "Customer replied" %}</span>{% endif %}
+        </div>
+        {% if order.refund_status == "needs_information" and order.refund_support_ticket.status == "waiting_customer" %}<p class="mt-3">{% trans "Whose turn:" %} <strong>{% trans "Customer" %}</strong></p>{% elif order.refund_status == "needs_information" and order.refund_support_ticket.status == "waiting_support" %}<p class="mt-3">{% trans "Whose turn:" %} <strong>{% trans "Support staff" %}</strong> — {% trans "Ready for staff review." %}</p>{% endif %}
+        {% if order.refund_support_ticket.last_customer_reply_at %}<p class="mt-2 text-stone-600">{% trans "Latest customer reply:" %} {{ order.refund_support_ticket.last_customer_reply_at|localized_datetime }}</p>{% elif order.refund_support_ticket.last_staff_reply_at %}<p class="mt-2 text-stone-600">{% trans "Latest staff question:" %} {{ order.refund_support_ticket.last_staff_reply_at|localized_datetime }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Customer Request -->
+    <div class="rounded-2xl bg-white p-6 shadow">
+
+        <h2 class="mb-6 text-xl font-semibold text-stone-900">
+
+            {% trans "Customer Refund Request" %}
+
+        </h2>
+
+        <div class="grid gap-6 md:grid-cols-2">
+
+            <div>
+
+                <p class="text-sm font-medium text-stone-500">
+                    {% trans "Customer" %}
+                </p>
+
+                <p class="mt-1 text-stone-900">
+                    {{ order.full_name }}
+                </p>
+
+            </div>
+
+            <div>
+
+                <p class="text-sm font-medium text-stone-500">
+                    {% trans "Requested" %}
+                </p>
+
+                <p class="mt-1 text-stone-900">
+                    <time datetime="{{ order.refund_requested_at|date:'c' }}">{{ order.refund_requested_at|localized_datetime }}</time>
+                </p>
+
+            </div>
+
+            <div>
+
+                <p class="text-sm font-medium text-stone-500">
+                    {% trans "Refund Reason" %}
+                </p>
+
+                <p class="mt-1 font-medium text-stone-900">
+                    {{ order.get_refund_reason_display }}
+                </p>
+
+            </div>
+
+            <div>
+
+                <p class="text-sm font-medium text-stone-500">
+                    {% trans "Payment" %}
+                </p>
+
+                <p class="mt-1 text-stone-900">
+                    {{ order.payment_provider }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="mt-6">
+
+            <p class="text-sm font-medium text-stone-500">
+                {% trans "Customer Message" %}
+            </p>
+
+            <div class="mt-2 rounded-xl border border-stone-200 bg-stone-50 p-4 whitespace-pre-line text-stone-800">
+
+                {% if order.refund_message %}{{ order.refund_message }}{% else %}{% trans "No additional message was provided." %}{% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% include "dashboard/orders/components/order_item_table.html" %}
+
+    <!-- Staff Response -->
+    <div class="rounded-2xl bg-white p-6 shadow">
+
+        <h2 class="mb-6 text-xl font-semibold text-stone-900">
+
+            {% if action == "information" %}{% trans "Question for customer" %}{% else %}{% trans "Response to Customer" %}{% endif %}
+
+        </h2>
+
+        <form method="post" novalidate class="js-confirm-action" data-confirm-message="{% if action == 'approve' %}{% trans 'Are you sure you want to approve this refund request?' %}{% elif action == 'information' %}{% trans 'The customer will be notified and asked to reply in the linked support conversation.' %}{% else %}{% trans 'Reject this refund request? The customer will be notified of the decision.' %}{% endif %}">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+            <div>
+
+                <label
+                    for="{{ form.refund_response.id_for_label }}"
+                    class="mb-2 block text-sm font-medium text-stone-700">
+
+                    {% if action == "information" %}{% trans "Question for customer" %}{% else %}{{ form.refund_response.label }}{% endif %}
+
+                </label>
+
+                {{ form.refund_response }}
+
+                {% if form.refund_response.errors %}
+
+                    <p class="mt-2 text-sm text-red-600">
+
+                        {{ form.refund_response.errors.0 }}
+
+                    </p>
+
+                {% endif %}
+
+                {% if form.refund_response.help_text %}
+
+                    <p class="mt-2 text-sm text-stone-500">
+
+                        {{ form.refund_response.help_text }}
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="mt-8 flex items-center justify-between">
+
+                <a
+                    href="{% url 'dashboard:order_detail' order.id %}"
+                    class="rounded-xl border border-stone-300 px-5 py-3 font-medium text-stone-700 transition hover:bg-stone-50">
+
+                    {% trans "Cancel" %}
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl px-6 py-3 font-semibold text-white transition
+                    {% if action == 'approve' %}
+                        bg-green-600 hover:bg-green-700
+                    {% elif action == 'information' %}
+                        bg-amber-600 hover:bg-amber-700
+                    {% else %}
+                        bg-red-600 hover:bg-red-700
+                    {% endif %}">
+
+                    {% if action == "approve" %}
+                        {% trans "Approve Refund" %}
+                    {% elif action == "information" %}
+                        {% trans "Request more information" %}
+                    {% else %}
+                        {% trans "Reject Refund" %}
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

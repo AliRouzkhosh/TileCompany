@@ -1,0 +1,13 @@
+# Local experiment only. The production-like default remains in ops/local-prod.
+services:
+  web:
+    command:
+      - gunicorn
+      - --bind=0.0.0.0:8000
+      - --workers=${LOADTEST_GUNICORN_WORKERS:-2}
+      - --worker-class=sync
+      - --access-logfile=-
+      - --error-logfile=-
+      - --capture-output
+      - --timeout=60
+      - TileCompany.wsgi:application

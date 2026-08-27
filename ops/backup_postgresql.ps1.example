@@ -1,0 +1,33 @@
+# Creates a timestamped PostgreSQL custom-format backup. Copy/adapt this outside
+# the repository for scheduled deployment use; it never accepts a password arg.
+# Use the PostgreSQL password-file/secret-manager mechanism supported by pg_dump.
+
+$ErrorActionPreference = 'Stop'
+
+foreach ($name in 'PGHOST', 'PGPORT', 'PGUSER', 'PGDATABASE', 'TILECOMPANY_BACKUP_DIR') {
+    if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name))) {
+        throw "$name must be supplied by the deployment environment."
+    }
+}
+
+$backupDirectory = [Environment]::GetEnvironmentVariable('TILECOMPANY_BACKUP_DIR')
+if ([IO.Path]::IsPathRooted($backupDirectory) -eq $false) {
+    throw 'TILECOMPANY_BACKUP_DIR must be an absolute deployment-owned path.'
+}
+New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
+
+$timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+$databaseName = [Environment]::GetEnvironmentVariable('PGDATABASE')
+$backupPath = Join-Path $backupDirectory "tilecompany-$databaseName-$timestamp.dump"
+
+& pg_dump --format=custom --file=$backupPath --no-owner --no-privileges
+if ($LASTEXITCODE -ne 0) {
+    throw "pg_dump failed with exit code $LASTEXITCODE."
+}
+if ((Get-Item -LiteralPath $backupPath).Length -le 0) {
+    throw 'pg_dump produced an empty backup file.'
+}
+
+Write-Output "Backup created: $backupPath"
+# Store the output only in deployment-owned encrypted, access-controlled backup
+# storage. Never use a public static/media directory or commit backup files.

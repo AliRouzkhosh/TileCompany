@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "description": "Pinned, locally served frontend runtime dependencies.",
+  "dependencies": {
+    "htmx.org": "2.0.4"
+  }
+}

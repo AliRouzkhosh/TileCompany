@@ -1,0 +1,86 @@
+<!--products/components/product_table.html-->
+{% load i18n pricing %}
+<div class="dashboard-table-surface overflow-hidden rounded-2xl shadow-sm">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+
+        <div>
+            <h2 class="text-lg font-semibold text-slate-900">
+                {% trans "Products" %}
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                {% blocktrans count count=page_obj.paginator.count with display_count=page_obj.paginator.count|localized_number %}{{ display_count }} product{% plural %}{{ display_count }} products{% endblocktrans %}
+            </p>
+        </div>
+
+    </div>
+
+    {% if products %}
+
+        <div class="dashboard-table-scroll overflow-x-auto" tabindex="0" aria-label="{% trans 'Products table' %}">
+
+            <table class="dashboard-table dashboard-table--dense min-w-full divide-y divide-slate-200">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Product" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Category" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Price" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Stock" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Status" %}
+                        </th>
+
+                        <th class="px-6 py-3 text-end text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {% trans "Actions" %}
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-100 bg-white">
+
+                    {% for product in products %}
+
+                        {% include "dashboard/products/components/product_row.html" %}
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="border-t border-slate-200 px-6 py-4">
+
+            {% include "dashboard/components/pagination.html" with page_obj=page_obj %}
+
+        </div>
+
+    {% else %}
+
+        {% trans "No products found" as empty_title %}
+        {% trans "Try adjusting your filters or create your first product." as empty_message %}
+        {% include "dashboard/components/empty_state.html" with title=empty_title message=empty_message %}
+
+    {% endif %}
+
+</div>

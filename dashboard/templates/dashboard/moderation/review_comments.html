@@ -1,0 +1,35 @@
+<!-- dashboard/moderation/review_comments.html -->
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Review Replies" %}{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    {% trans "Review Replies" as page_title %}{% trans "Pending replies to product reviews awaiting moderation." as page_subtitle %}{% include "dashboard/moderation/components/moderation_header.html" with title=page_title subtitle=page_subtitle %}
+
+    {% include "dashboard/moderation/components/moderation_filters.html" %}
+
+    {% if review_comments %}
+
+        <div class="space-y-4">
+
+            {% for comment in review_comments %}
+                {% include "dashboard/moderation/components/review_comment_card.html" %}
+            {% endfor %}
+
+        </div>
+
+        {% include "dashboard/moderation/components/moderation_pagination.html" %}
+
+    {% else %}
+
+        {% trans "No pending review replies" as empty_title %}{% trans "There are currently no review replies awaiting moderation." as empty_message %}{% include "dashboard/components/empty_state.html" with title=empty_title message=empty_message %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

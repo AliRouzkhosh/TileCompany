@@ -1,0 +1,16 @@
+{% if messages %}
+<div class="mb-6 space-y-3" aria-live="polite">
+
+    {% for message in messages %}
+
+        <div class="ts-callout ts-callout--{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}" role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}">
+            <i data-lucide="{% if message.tags == 'success' %}circle-check{% elif message.tags == 'error' %}circle-alert{% elif message.tags == 'warning' %}triangle-alert{% else %}info{% endif %}" class="sf-icon shrink-0" aria-hidden="true"></i>
+            <p class="min-w-0 flex-1 text-sm leading-6">{{ message }}</p>
+            <button type="button" class="ts-callout-dismiss sf-icon-button -m-1 shrink-0" aria-label="Dismiss message"><i data-lucide="x" class="sf-icon" aria-hidden="true"></i></button>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+{% endif %}

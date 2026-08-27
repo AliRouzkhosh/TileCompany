@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n localized_content pricing %}
+
+{% block title %}{% if category %}{{ category|localized:"name" }}{% elif query %}{% blocktrans %}Search: {{ query }}{% endblocktrans %}{% else %}{% trans "All Products" %}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="space-y-6 md:space-y-7 xl:space-y-8" hx-history="false">
+    {% include "components/breadcrumbs.html" %}
+
+    <header class="max-w-3xl space-y-2 md:max-w-4xl" data-catalog-header>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand">{% if query %}{% trans "Search" %}{% elif category %}{% trans "Category" %}{% else %}{% trans "Catalog" %}{% endif %}</p>
+        <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl lg:text-4xl">
+            {% if category %}{{ category|localized:"name" }}{% elif query %}{% trans "Search Results" %}{% else %}{% trans "All Products" %}{% endif %}
+        </h1>
+        <div class="flex flex-col gap-1 text-sm text-text-secondary sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+            <p>
+                {% if query %}{% trans "Results for" %} <span class="break-words font-medium text-text-primary">“{{ query|localized_digits }}”</span>
+                {% elif category %}{% blocktrans with category_name=category|localized:"name" %}Browse products in {{ category_name }}.{% endblocktrans %}
+                {% else %}{% trans "Browse the complete product collection." %}{% endif %}
+            </p>
+            <p class="shrink-0 text-xs font-medium text-text-muted md:hidden" data-catalog-result-count data-result-count-mode="compact">{% include "products/components/result_count.html" %}</p>
+        </div>
+    </header>
+
+    {% include "products/components/catalog_workspace.html" %}
+</div>
+{% endblock %}

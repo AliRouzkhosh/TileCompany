@@ -1,0 +1,26 @@
+{% load pricing i18n %}
+<fieldset aria-describedby="shipping-method-help{% if form.shipping_method.errors %} shipping-method-errors{% endif %}" data-checkout-shipping-methods>
+    <legend class="sr-only">{% trans "Delivery method" %}</legend>
+    <div class="border-b border-border pb-3">
+        <h3 class="text-base font-semibold text-text-primary">{% trans "Delivery method" %}</h3>
+        <p id="shipping-method-help" class="mt-1 text-sm text-text-secondary">{% trans "Compare the available delivery options." %}</p>
+    </div>
+
+    {% if form.shipping_method.errors %}<div id="shipping-method-errors" class="checkout-error mt-3" role="alert">{{ form.shipping_method.errors }}</div>{% endif %}
+
+    <div class="mt-3 grid gap-3 xl:grid-cols-3">
+        {% for method in checkout.shipping_methods %}
+            <label for="shipping-method-{{ method.code }}" class="checkout-choice h-full" {% if form.shipping_method.errors %}data-invalid="true"{% endif %} data-shipping-method-choice>
+                <input id="shipping-method-{{ method.code }}" type="radio" name="{{ form.shipping_method.name }}" value="{{ method.code }}" class="checkout-choice__control mt-0.5 h-5 w-5 shrink-0 accent-brand" {% if form.shipping_method.value == method.code or not form.shipping_method.value and forloop.first %}checked{% endif %} {% if form.shipping_method.errors %}aria-invalid="true" aria-describedby="shipping-method-errors"{% endif %}>
+                <span class="flex min-w-0 flex-1 flex-col">
+                    <span class="flex items-start justify-between gap-3">
+                        <span class="font-semibold text-text-primary">{{ method.name }}</span>
+                        <span class="shrink-0 text-sm font-semibold tabular-nums {% if method.amount %}text-text-primary{% else %}text-success{% endif %}">{% if method.amount %}{{ method.amount|money:checkout.currency }}{% else %}{% trans "Free" %}{% endif %}</span>
+                    </span>
+                    <span class="mt-1 text-sm leading-5 text-text-secondary">{{ method.description }}</span>
+                    <span class="mt-2 text-xs text-text-muted">{% trans "Estimated delivery:" %} {{ method.estimated_days }}</span>
+                </span>
+            </label>
+        {% endfor %}
+    </div>
+</fieldset>

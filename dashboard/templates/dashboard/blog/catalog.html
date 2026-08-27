@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+{% load i18n localized_dates localized_content pricing %}
+{% block dashboard_content %}
+<div class="space-y-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div><h1 class="text-2xl font-bold">{% trans "Articles" %}</h1><p class="text-sm text-stone-500">{% trans "Editorial content, publishing and resources." %}</p></div>
+        <a class="rounded-xl bg-slate-900 px-4 py-2 text-white" href="{% url 'dashboard:blog:create' %}">{% trans "New Article" %}</a>
+    </div>
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {% for stat in stats %}<div class="rounded-xl bg-white p-4 shadow-sm"><p class="text-stone-500">{{ stat.label }}</p><p class="text-2xl font-bold">{{ stat.count|localized_number }}</p></div>{% endfor %}
+    </div>
+    <form class="grid gap-3 rounded-xl bg-white p-4 md:grid-cols-5">
+        <input class="rounded border p-2" name="search" value="{{ filters.search }}" placeholder="{% trans 'Search articles' %}">
+        <select class="rounded border p-2" name="status"><option value="">{% trans "All states" %}</option><option value="draft" {% if filters.status == 'draft' %}selected{% endif %}>{% trans "Draft" %}</option><option value="published" {% if filters.status == 'published' %}selected{% endif %}>{% trans "Published" %}</option><option value="scheduled" {% if filters.status == 'scheduled' %}selected{% endif %}>{% trans "Scheduled" %}</option></select>
+        <select class="rounded border p-2" name="category"><option value="">{% trans "All categories" %}</option>{% for category in categories %}<option value="{{ category.pk }}" {% if filters.category == category.pk|stringformat:'s' %}selected{% endif %}>{{ category|localized:'name' }}</option>{% endfor %}</select>
+        <select class="rounded border p-2" name="author"><option value="">{% trans "All authors" %}</option>{% for author in authors %}<option value="{{ author.pk }}" {% if filters.author == author.pk|stringformat:'s' %}selected{% endif %}>{% if author.get_full_name %}{{ author.get_full_name }} (@{{ author.username }}){% else %}{{ author.username }}{% endif %}</option>{% endfor %}</select>
+        <button class="rounded bg-stone-800 p-2 text-white">{% trans "Filter" %}</button>
+    </form>
+    <div class="overflow-x-auto rounded-xl bg-white shadow-sm"><table class="w-full text-start text-sm"><thead class="border-b text-stone-500"><tr><th class="p-4">{% trans "Article" %}</th><th>{% trans "Author" %}</th><th>{% trans "State" %}</th><th>{% trans "Updated" %}</th><th></th></tr></thead><tbody>
+        {% for article in articles %}<tr class="border-b"><td class="p-4"><a class="font-semibold" href="{% url 'dashboard:blog:edit' article.pk %}">{{ article|localized:'title' }}</a>{% if article.title_fa %}<p dir="rtl" class="text-stone-500">{{ article.title_fa }}</p>{% endif %}</td><td>{{ article.author_display_name|default:"—" }}</td><td><span class="rounded-full bg-stone-100 px-2 py-1">{% if article.editorial_state == 'draft' %}{% trans "Draft" %}{% elif article.editorial_state == 'scheduled' %}{% trans "Scheduled" %}{% else %}{% trans "Published" %}{% endif %}</span></td><td><time datetime="{{ article.updated_at|date:'c' }}">{{ article.updated_at|localized_date }}</time></td><td><a class="text-indigo-700" href="{% url 'dashboard:blog:preview' article.pk %}">{% trans "Preview" %}</a></td></tr>
+        {% empty %}<tr><td class="p-8 text-center text-stone-500" colspan="5">{% trans "No articles yet. Create the first editorial article." %}</td></tr>{% endfor %}
+    </tbody></table></div>
+    {% if page_obj.has_other_pages %}<nav class="flex gap-3" aria-label="{% trans 'Pagination' %}">{% if page_obj.has_previous %}<a href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}<span>{% trans "Page" %} {{ page_obj.number|localized_number }} {% trans "of" %} {{ page_obj.paginator.num_pages|localized_number }}</span>{% if page_obj.has_next %}<a href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

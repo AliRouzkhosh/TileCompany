@@ -1,0 +1,9 @@
+{% load i18n %}
+<section class="border-t border-border px-5 py-4" aria-labelledby="checkout-confidence-heading" data-checkout-confidence>
+    <h3 id="checkout-confidence-heading" class="sr-only">{% trans "Checkout confidence" %}</h3>
+    <ul class="space-y-2.5 text-xs text-text-secondary">
+        <li class="flex items-center gap-2"><i data-lucide="lock-keyhole" class="sf-icon h-4 w-4 shrink-0 text-brand" aria-hidden="true"></i><span>{% trans "Secure checkout" %}</span></li>
+        <li class="flex items-center gap-2"><i data-lucide="package-check" class="sf-icon h-4 w-4 shrink-0 text-brand" aria-hidden="true"></i><span>{% trans "Stock is reserved after the order is placed" %}</span></li>
+        <li class="flex items-center gap-2"><i data-lucide="messages-square" class="sf-icon h-4 w-4 shrink-0 text-brand" aria-hidden="true"></i><span>{% trans "Customer support before and after purchase" %}</span></li>
+    </ul>
+</section>

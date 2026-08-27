@@ -1,0 +1,177 @@
+<!-- dashboard/products/components/detail/info.html -->
+{% load i18n localized_content localized_dates %}{% get_current_language as LANGUAGE_CODE %}
+
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="border-b border-slate-200 px-6 py-4">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            {% trans "General Information" %}
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            {% trans "Product identity, specifications and catalog information." %}
+        </p>
+
+    </div>
+
+    <div class="p-6">
+
+        <div class="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+
+            <!-- =========================================== -->
+            <!-- Catalog Information -->
+            <!-- =========================================== -->
+
+            <div>
+
+                <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                    {% trans "Catalog" %}
+                </h3>
+
+                <dl class="space-y-4">
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">{% trans "Categories" %}</dt>
+                        <dd class="font-medium text-slate-900">
+                            {% for category in product.categories.all %}
+                                {{ category|localized:"name" }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                —
+                            {% endfor %}
+                        </dd>
+                    </div>
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">{% trans "Brand" %}</dt>
+                        <dd class="font-medium text-slate-900">
+                            {% if product.brand %}{% if LANGUAGE_CODE == "fa" and product.brand.name_fa %}{{ product.brand.name_fa }}{% else %}{{ product.brand.name }}{% endif %}{% else %}—{% endif %}
+                        </dd>
+                    </div>
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">{% trans "Series" %}</dt>
+                        <dd class="font-medium text-slate-900">
+                            {% if LANGUAGE_CODE == "fa" and product.series_name_fa %}{{ product.series_name_fa }}{% else %}{{ product.series_name|default:"—" }}{% endif %}
+                        </dd>
+                    </div>
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">{% trans "Designs" %}</dt>
+                        <dd class="font-medium text-slate-900">
+                            {% for design in product.designs.all %}
+                                {{ design|localized:"name" }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                —
+                            {% endfor %}
+                        </dd>
+                    </div>
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">SKU</dt>
+                        <dd class="font-mono font-semibold text-slate-900">
+                            <span dir="ltr">{{ product.sku }}</span>
+                        </dd>
+                    </div>
+
+                </dl>
+
+            </div>
+
+
+            <!-- =========================================== -->
+            <!-- Specifications -->
+            <!-- =========================================== -->
+
+            <div>
+
+                <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                    {% trans "Specifications" %}
+                </h3>
+
+                <dl class="space-y-4">
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">{% trans "Material" %}</dt>
+                        <dd class="font-medium text-slate-900">
+                            {% for material in product.materials.all %}
+                                {{ material|localized:"name" }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                —
+                            {% endfor %}
+                        </dd>
+                    </div>
+
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-slate-500">{% trans "Usage" %}</dt>
+                        <dd class="max-w-[14rem] text-end font-medium text-slate-900">
+                            {% for usage in product.usages.all %}
+                                {{ usage|localized:"name" }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                —
+                            {% endfor %}
+                        </dd>
+                    </div>
+
+                </dl>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================== -->
+        <!-- Dates -->
+        <!-- =========================================== -->
+
+        <div class="mt-8 border-t border-slate-200 pt-6">
+
+            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                {% trans "Lifecycle" %}
+            </h3>
+
+            <div class="grid gap-4 md:grid-cols-3">
+
+                <div class="rounded-lg border border-slate-200 p-4">
+
+                    <p class="text-xs uppercase tracking-wide text-slate-500">
+                        {% trans "Created" %}
+                    </p>
+
+                    <p class="mt-2 font-medium text-slate-900">
+                        {{ product.created_at|localized_date }}
+                    </p>
+
+                </div>
+
+                <div class="rounded-lg border border-slate-200 p-4">
+
+                    <p class="text-xs uppercase tracking-wide text-slate-500">
+                        {% trans "Updated" %}
+                    </p>
+
+                    <p class="mt-2 font-medium text-slate-900">
+                        {{ product.updated_at|localized_date }}
+                    </p>
+
+                </div>
+
+                <div class="rounded-lg border border-slate-200 p-4">
+
+                    <p class="text-xs uppercase tracking-wide text-slate-500">
+                        {% trans "Price Updated" %}
+                    </p>
+
+                    <p class="mt-2 font-medium text-slate-900">
+                        {% trans "Variant prices are maintained independently." %}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

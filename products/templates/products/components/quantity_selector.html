@@ -1,0 +1,25 @@
+{% load i18n pricing %}
+<div class="space-y-2.5 lg:space-y-2" data-quantity>
+    <label for="quantityInput" class="block text-sm font-semibold text-text-primary">{% trans "Quantity" %}</label>
+    <div class="flex flex-wrap items-center gap-3">
+        <div class="inline-flex h-11 overflow-hidden rounded-control border border-border-strong bg-surface shadow-surface">
+            <button type="button" data-quantity-minus class="flex h-11 w-11 items-center justify-center text-xl text-text-secondary transition hover:bg-surface-subtle hover:text-brand-active disabled:cursor-not-allowed disabled:opacity-40" aria-label="{% trans 'Decrease quantity' %}">
+                <svg class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-linecap="round" stroke-width="1.75" d="M3 8h10"/></svg>
+            </button>
+            <input
+                id="quantityInput"
+                data-quantity-input
+                name="quantity"
+                type="number"
+                inputmode="numeric"
+                value="{% if selected_variant and selected_variant.stock > 0 %}1{% else %}0{% endif %}"
+                min="{% if selected_variant and selected_variant.stock > 0 %}1{% else %}0{% endif %}"
+                max="{% if selected_variant %}{{ selected_variant.stock }}{% else %}0{% endif %}"
+                class="h-11 w-14 border-x border-border bg-surface text-center text-base font-semibold tabular-nums text-text-primary focus:outline-none">
+            <button type="button" data-quantity-plus class="flex h-11 w-11 items-center justify-center text-xl text-text-secondary transition hover:bg-surface-subtle hover:text-brand-active disabled:cursor-not-allowed disabled:opacity-40" aria-label="{% trans 'Increase quantity' %}">
+                <svg class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-linecap="round" stroke-width="1.75" d="M8 3v10M3 8h10"/></svg>
+            </button>
+        </div>
+        <span class="text-sm font-medium text-text-muted" data-quantity-unit>{% if initial_selling_unit %}{{ initial_selling_unit.singular_noun }}{% endif %}</span>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<!-- dashboard/products/components/product_form.html -->
+
+<form
+    method="post"
+    enctype="multipart/form-data"
+    class="space-y-8"
+>
+
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+
+        <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+
+            {{ form.non_field_errors }}
+
+        </div>
+
+    {% endif %}
+
+    {% include "dashboard/products/components/forms/basic_fields.html" %}
+
+    {% include "dashboard/products/components/forms/catalog_fields.html" %}
+
+    {% include "dashboard/products/components/forms/pricing_fields.html" %}
+
+    {% include "dashboard/products/components/forms/inventory_fields.html" %}
+
+    {% include "dashboard/products/components/forms/merchandising_fields.html" %}
+
+    {% include "dashboard/products/components/forms/actions.html" %}
+
+</form>

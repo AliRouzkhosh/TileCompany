@@ -1,0 +1,56 @@
+# Environment and secrets (the documented templates remain versionable)
+.env
+.env.*
+!.env.example
+*.secret
+
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Django/runtime
+staticfiles/
+media/
+private_inventory_price_import_sources/
+/messages.mo
+
+# Databases and local state
+db.sqlite3
+*.sqlite
+*.sqlite3
+*.dump
+*.backup
+*.bak
+*.sql
+
+# TLS (generated local material; the directory's .gitignore is versionable)
+*.key
+*.p12
+*.pfx
+ops/local-prod/certs/*
+!ops/local-prod/certs/.gitignore
+
+# Frontend/generated
+static/vendor/node_modules/
+
+# Tests/performance
+performance_tests/load/results/
+
+# Logs and debug output
+*.log
+logs/
+*.prof
+*.trace
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,82 @@
+{% load i18n localized_dates pricing %}
+<article id="review-{{ review.id }}" class="review-card rounded-surface border border-border bg-surface px-4 py-4 shadow-surface sm:px-5 sm:py-5" data-review-id="{{ review.id }}">
+    <header class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
+        <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-sm font-semibold text-text-primary sm:text-base">{{ review.user.username }}</h3>
+                <span class="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-1 text-xs font-medium text-success">
+                    <svg class="h-3.5 w-3.5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6"/></svg>
+                    {% trans "Verified buyer" %}
+                </span>
+            </div>
+            <p class="review-date mt-1 text-xs text-text-muted">{{ review.created_at|localized_date }}{% if review.updated_at > review.created_at %} <span aria-hidden="true">·</span> {% trans "Edited" %}{% endif %}</p>
+        </div>
+
+        <div class="review-stars flex shrink-0 items-center gap-0.5 text-warning" aria-label="{% blocktrans with rating_value=review.rating|localized_number %}Rated {{ rating_value }} out of 5{% endblocktrans %}">
+            {% for i in "12345" %}
+                <svg class="h-4 w-4 {% if forloop.counter <= review.rating %}fill-current{% else %}fill-none opacity-35{% endif %}" aria-hidden="true" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="1.5" d="m12 2.8 2.82 5.71 6.3.92-4.56 4.44 1.08 6.27L12 17.18l-5.64 2.96 1.08-6.27-4.56-4.44 6.3-.92L12 2.8Z"/></svg>
+            {% endfor %}
+        </div>
+    </header>
+
+    <div class="mt-4">
+        <div class="review-display">
+            <p class="review-text max-w-[75ch] whitespace-pre-line text-sm leading-7 text-text-secondary sm:text-base">{{ review.comment }}</p>
+        </div>
+
+        {% if request.user == review.user %}
+            <form action="{% url 'products:edit_review' review.id %}" method="post" class="review-edit-form mt-4 hidden space-y-3" hx-post="{% url 'products:edit_review' review.id %}" hx-target="#product-reviews-region" hx-swap="outerHTML">
+                {% csrf_token %}
+                <label class="block text-sm font-medium text-text-secondary">
+                    <span class="mb-1.5 block">{% trans "Rating" %}</span>
+                    <select name="rating" class="min-h-11 w-full rounded-control border border-border-strong bg-surface px-3 py-2 text-text-primary focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25 sm:max-w-xs">
+                        {% for i in "12345" %}<option value="{{ forloop.counter }}"{% if review.rating == forloop.counter %} selected{% endif %}>{{ forloop.counter|localized_number }}</option>{% endfor %}
+                    </select>
+                </label>
+                <label class="block text-sm font-medium text-text-secondary">
+                    <span class="mb-1.5 block">{% trans "Your review" %}</span>
+                    <textarea name="comment" rows="4" class="w-full rounded-control border border-border-strong bg-surface px-3 py-2.5 text-text-primary focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25">{{ review.comment }}</textarea>
+                </label>
+                <div class="flex flex-wrap gap-3">
+                    <button class="sf-button sf-button--primary min-h-11 px-4 py-2 text-sm">{% trans "Save" %}</button>
+                    <button type="button" class="review-cancel sf-button sf-button--secondary min-h-11 px-4 py-2 text-sm">{% trans "Cancel" %}</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+    {% if request.user == review.user %}
+        <div class="mt-3 flex flex-wrap items-center gap-4 text-sm">
+            <button type="button" class="review-edit-btn min-h-11 font-medium text-text-secondary transition-colors hover:text-brand-active">{% trans "Edit" %}</button>
+            <form method="post" action="{% url 'products:delete_review' review.id %}" data-destructive-confirm data-confirm-title="{% trans 'Delete review?' %}" data-confirm-body="{% trans 'This review will be permanently deleted. Are you sure?' %}" data-confirm-label="{% trans 'Delete review' %}" hx-post="{% url 'products:delete_review' review.id %}" hx-target="#product-reviews-region" hx-swap="outerHTML">{% csrf_token %}<button type="submit" class="review-delete-btn min-h-11 font-medium text-error transition-colors hover:opacity-80">{% trans "Delete" %}</button></form>
+        </div>
+    {% endif %}
+
+    <section class="mt-4 border-t border-border pt-4" aria-labelledby="review-discussion-{{ review.id }}" data-review-discussion>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div><h4 id="review-discussion-{{ review.id }}" class="text-sm font-semibold text-text-primary">{% trans "Discussion about this review" %}</h4><p class="mt-1 text-xs text-text-muted">{% blocktrans count counter=review.reply_count %}{{ counter }} reply{% plural %}{{ counter }} replies{% endblocktrans %}</p></div>
+            {% if request.user.is_authenticated %}
+                <button type="button" class="review-comment-open sf-button sf-button--secondary min-h-11 px-4 text-sm text-brand-active"><i data-lucide="message-square-plus" class="sf-icon" aria-hidden="true"></i>{% trans "Reply to review" %}</button>
+            {% endif %}
+        </div>
+
+        {% if request.user.is_authenticated %}
+            {% if review.id in pending_comments %}
+                <div class="comment-pending-panel mt-3 rounded-control border border-warning/35 bg-warning/10 px-4 py-3">
+                    <h5 class="text-sm font-semibold text-text-primary">{% trans "Comment awaiting approval" %}</h5>
+                    <p class="mt-1 text-sm text-text-secondary">{% trans "Your comment has been submitted and is waiting for moderation." %}</p>
+                </div>
+            {% else %}
+                <div class="comment-success-panel mt-3 hidden rounded-control border border-success/30 bg-success/10 px-4 py-3">
+                    <h5 class="text-sm font-semibold text-success">{% trans "Comment submitted" %}</h5>
+                    <p class="mt-1 text-sm text-text-secondary">{% trans "Your comment has been submitted for moderation." %}</p>
+                </div>
+                <div class="review-comment-create mt-3 hidden">{% include "products/components/reviews/comment_form.html" with review=review %}</div>
+            {% endif %}
+        {% else %}
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-control border border-border bg-surface-subtle px-4 py-3"><p class="text-sm text-text-secondary">{% trans "Sign in to join the conversation." %}</p><a href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}%23review-{{ review.id }}" class="sf-button sf-button--secondary min-h-11 px-4 text-sm text-brand-active"><i data-lucide="message-square" class="sf-icon" aria-hidden="true"></i>{% trans "Sign in and reply" %}</a></div>
+        {% endif %}
+
+        <div class="mt-3">{% include "products/components/reviews/comment_list.html" with review=review %}</div>
+    </section>
+</article>

@@ -1,0 +1,28 @@
+{% load i18n pricing %}
+{% if user.is_authenticated %}
+<section class="border-t border-border pt-5 sm:pt-6" aria-labelledby="comment-form-title">
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 id="comment-form-title" class="text-lg font-semibold text-text-primary">{% trans "Join the discussion" %}</h3>
+        <p class="text-xs text-text-muted">{% blocktrans with name=user.get_full_name|default:user.username %}Posting as {{ name }}. Comments are reviewed before publication.{% endblocktrans %}</p>
+    </div>
+    <div id="replying-container" data-replying-container class="mt-3 {% if not reply_to %}hidden {% endif %}rounded-xl bg-brand-subtle px-3 py-2">
+        <div class="flex items-center justify-between gap-3"><p id="replying-to" data-replying-to class="text-sm font-medium text-brand-active">{% if reply_to %}{% trans "Replying to a comment" %}{% endif %}</p><button type="button" data-clear-comment-reply class="inline-flex min-h-10 items-center text-sm font-semibold text-brand-active hover:underline">{% trans "Cancel" %}</button></div>
+    </div>
+    {% if cooldown_seconds %}
+    <div class="ts-callout ts-callout--warning mt-4" role="status" data-comment-cooldown-feedback>
+        <i data-lucide="clock-3" aria-hidden="true"></i>
+        <div><p class="font-semibold">{% trans "Please wait a moment" %}</p><p>{% blocktrans with seconds=cooldown_seconds|localized_number %}You can post again in {{ seconds }} seconds.{% endblocktrans %}</p></div>
+    </div>
+    {% endif %}
+    <form method="post" action="{{ article.get_absolute_url }}" class="mt-4" hx-post="{{ article.get_absolute_url }}" hx-target="#comments" hx-swap="outerHTML" data-comment-form data-replying-to-label="{% trans 'Replying to' %}" data-comment-cooldown="{{ cooldown_seconds }}">
+        {% csrf_token %}
+        <input type="hidden" name="reply_to" id="reply_to_id" data-reply-to-id value="{{ reply_to }}">
+        {% if comment_form.non_field_errors %}<div class="ts-callout ts-callout--warning mt-3" role="status">{{ comment_form.non_field_errors }}</div>{% endif %}
+        {{ comment_form.body.label_tag }}{{ comment_form.body }}
+        {% if comment_form.body.errors %}<div class="mt-2 text-sm text-error">{{ comment_form.body.errors }}</div>{% endif %}
+        <div class="mt-3 flex justify-end"><button type="submit" data-comment-submit data-default-label="{% trans 'Post comment' %}" data-reply-label="{% trans 'Post reply' %}" data-current-label="{% if reply_to %}{% trans 'Post reply' %}{% else %}{% trans 'Post comment' %}{% endif %}" class="min-h-11 rounded-xl bg-brand px-5 text-sm font-semibold text-white transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60">{% if reply_to %}{% trans "Post reply" %}{% else %}{% trans "Post comment" %}{% endif %}</button></div>
+    </form>
+</section>
+{% else %}
+<section class="border-t border-border pt-5 sm:pt-6"><h3 class="text-lg font-semibold text-text-primary">{% trans "Join the discussion" %}</h3><p class="mt-1 text-sm leading-6 text-text-secondary">{% trans "Sign in to add a comment. Comments are reviewed before publication." %}</p><a href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}" class="mt-4 inline-flex min-h-11 items-center rounded-xl bg-brand px-5 text-sm font-semibold text-white transition hover:bg-brand-hover">{% trans "Log in to comment" %}</a></section>
+{% endif %}

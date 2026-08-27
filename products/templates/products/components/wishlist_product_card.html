@@ -1,0 +1,40 @@
+{% load i18n localized_content %}
+<article class="wishlist-product-card group relative flex h-full min-h-40 min-w-0 overflow-hidden rounded-surface border border-border bg-surface shadow-surface" data-wishlist-compact-card>
+    {% if product.is_active %}
+        <a href="{{ product.get_absolute_url }}" hx-boost="false" class="flex min-w-0 flex-1 gap-3 p-3 sm:gap-4 sm:p-4" aria-label="{{ product|localized:'name' }}">
+    {% else %}
+        <div class="flex min-w-0 flex-1 gap-3 p-3 sm:gap-4 sm:p-4">
+    {% endif %}
+            <div class="relative h-28 w-28 shrink-0 overflow-hidden rounded-control bg-surface-subtle sm:h-36 sm:w-36" data-wishlist-card-media>
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product|localized:'name' }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]" loading="lazy">
+                {% else %}
+                    <div class="home-media-fallback flex h-full w-full items-center justify-center text-text-muted" data-wishlist-card-image-fallback>
+                        <svg class="h-9 w-9 opacity-45" aria-hidden="true" fill="none" viewBox="0 0 64 64" stroke="currentColor"><path stroke-width="1.5" d="M8 8h21v21H8zM35 8h21v21H35zM8 35h21v21H8zM35 35h21v21H35z"/></svg>
+                        <span class="sr-only">{% trans "Image coming soon" %}</span>
+                    </div>
+                {% endif %}
+                <div class="absolute start-2 top-2" data-wishlist-card-badge>
+                    {% include "products/components/product_badges.html" with product=product %}
+                </div>
+            </div>
+            <div class="flex min-w-0 flex-1 flex-col">
+                <div>
+                    <h2 class="line-clamp-2 text-sm font-semibold leading-5 text-text-primary transition-colors group-hover:text-brand-active sm:text-base sm:leading-6">{{ product|localized:"name" }}</h2>
+                    {% if product.catalog_presentation.card_attributes %}
+                        <p class="mt-1 line-clamp-1 text-xs leading-5 text-text-muted" data-wishlist-card-facts>{% for attribute in product.catalog_presentation.card_attributes|slice:":2" %}{% for value in attribute.values %}{{ value.display_value }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if not forloop.last %}<span aria-hidden="true"> · </span>{% endif %}{% endfor %}</p>
+                    {% endif %}
+                </div>
+                <div class="mt-auto pt-2" data-wishlist-card-price>
+                    {% if product.is_active %}
+                        {% include "products/components/product_card_price.html" with product=product price_class="text-base sm:text-lg" %}
+                    {% endif %}
+                    <p class="mt-1 flex min-h-5 items-center gap-1.5 text-xs font-medium {% if product.is_wishlist_available %}text-success{% else %}text-text-secondary{% endif %}" data-wishlist-card-status><span class="h-1.5 w-1.5 rounded-full {% if product.is_wishlist_available %}bg-success{% else %}bg-text-muted{% endif %}" aria-hidden="true"></span>{% if product.is_wishlist_available %}{% trans "Available" context "wishlist page" %}{% else %}{% trans "Unavailable" context "wishlist page" %}{% endif %}</p>
+                </div>
+            </div>
+    {% if product.is_active %}</a>{% else %}</div>{% endif %}
+    <form action="{% url 'products:wishlist_toggle' product.id %}" method="post" class="absolute end-2 top-2 z-20">
+        {% csrf_token %}<input type="hidden" name="next" value="{% url 'products:wishlist' %}{% if page_obj.number != 1 %}?page={{ page_obj.number }}{% endif %}">
+        <button type="submit" class="sf-icon-button border border-border bg-surface/95 text-text-secondary shadow-surface backdrop-blur transition hover:border-error hover:bg-error/5 hover:text-error" aria-label="{% trans 'Remove from wishlist' context 'wishlist page' %}" title="{% trans 'Remove from wishlist' context 'wishlist page' %}"><svg class="h-5 w-5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </form>
+</article>

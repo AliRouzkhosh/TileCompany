@@ -1,0 +1,20 @@
+{% load i18n account_navigation %}
+{% account_navigation_items request as account_navigation_items %}
+{% account_navigation_current account_navigation_items as current_account_navigation_item %}
+<div class="min-w-0" data-account-navigation>
+    <nav class="hidden rounded-card border border-border bg-surface p-2 lg:block" aria-label="{% trans 'Account navigation' %}" data-account-nav-desktop>
+        <ul class="flex min-w-0 flex-col gap-1">
+            {% include "accounts/components/account_nav_links.html" %}
+        </ul>
+    </nav>
+    <div class="relative lg:hidden" data-account-nav-selector>
+        <button type="button" class="account-nav-selector w-full" aria-expanded="false" aria-controls="accountNavSelectorMenu" data-account-nav-selector-button>
+            <span class="account-nav-selector__eyebrow">{% trans "Account" %}</span>
+            <span class="account-nav-selector__value"><i data-lucide="{{ current_account_navigation_item.icon }}" class="sf-icon" aria-hidden="true"></i><span>{{ current_account_navigation_item.label }}</span></span>
+            <i data-lucide="chevron-down" class="sf-icon shrink-0" aria-hidden="true"></i>
+        </button>
+        <nav id="accountNavSelectorMenu" class="account-nav-selector__menu sf-surface-raised absolute inset-x-0 z-30 mt-2 p-2" aria-label="{% trans 'Account navigation' %}" role="menu" hidden data-account-nav-selector-menu>
+            <ul class="space-y-1">{% include "accounts/components/account_nav_links.html" with menu_mode=True %}</ul>
+        </nav>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if auth_cross_footer == "login" %}
+<p class="mt-6 border-t border-border pt-5 text-center text-sm text-text-secondary">{% trans "Don't have an account?" %} <a href="{% url 'accounts:register' %}" class="font-semibold text-brand hover:text-brand-hover">{% trans "Create account" %}</a></p>
+{% elif auth_cross_footer == "register" %}
+<p class="mt-6 border-t border-border pt-5 text-center text-sm text-text-secondary">{% trans "Already have an account?" %} <a href="{% url 'accounts:login' %}" class="font-semibold text-brand hover:text-brand-hover">{% trans "Login" %}</a></p>
+{% endif %}

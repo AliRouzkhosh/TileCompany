@@ -1,0 +1,53 @@
+<!-- dashboard/base.html  !-->
+
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Operations Dashboard" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-shell min-h-screen bg-page text-text-primary">
+
+    <div class="flex">
+
+        {% if can_access_dashboard %}
+            {% include "dashboard/components/sidebar.html" %}
+            <div id="dashboard-mobile-overlay" class="fixed inset-0 z-30 hidden bg-stone-900/40 lg:hidden" aria-hidden="true"></div>
+            <div id="dashboard-mobile-menu" class="fixed inset-y-0 start-0 z-40 hidden w-72 lg:hidden" role="dialog" aria-modal="true" aria-label="{% trans 'Dashboard navigation' %}" tabindex="-1">
+                {% include "dashboard/components/sidebar.html" with mobile=True %}
+            </div>
+        {% endif %}
+
+        <!-- Main -->
+        <div class="flex min-h-screen flex-1 flex-col">
+
+            <!-- Topbar -->
+            {% include "dashboard/components/topbar.html" %}
+
+            <!-- Content -->
+            <main class="dashboard-main min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+
+                {% if readiness %}
+                    <div class="mb-6">
+                        {% include "dashboard/components/publication_readiness.html" %}
+                    </div>
+                {% endif %}
+
+                {% block dashboard_content %}
+                {% endblock %}
+
+            </main>
+
+        </div>
+
+    </div>
+
+</div>
+{% if form %}{{ form.media }}{% endif %}
+<script src="{% static 'js/dashboard-shell.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% block dashboard_scripts %}{% endblock %}
+{% endblock %}

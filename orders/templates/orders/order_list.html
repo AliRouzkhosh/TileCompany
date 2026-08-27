@@ -1,0 +1,4 @@
+{% extends "accounts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "My orders" %}{% endblock %}
+{% block account_content %}{% include "orders/components/orders_workspace.html" %}{% endblock %}

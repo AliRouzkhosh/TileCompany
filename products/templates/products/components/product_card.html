@@ -1,0 +1,53 @@
+{% load i18n pricing localized_content %}
+{% if card_mode == "article" %}
+    {% include "products/components/product_card_article.html" with product=product %}
+{% else %}
+<article class="product-discovery-card{% if card_mode == 'home' %} product-discovery-card--home{% endif %} group relative flex h-full w-full flex-col overflow-hidden rounded-feature border border-border bg-surface shadow-surface" data-product-card>
+    <a href="{{ product.get_absolute_url }}{% if product.target_variant_id %}?variant={{ product.target_variant_id }}{% endif %}" hx-boost="false"
+       class="flex h-full flex-col"
+       aria-label="{{ product|localized:'name' }}">
+        <div class="relative {% if card_mode == 'home' %}aspect-[4/3]{% else %}aspect-[4/5]{% endif %} w-full shrink-0 overflow-hidden bg-surface-subtle" data-product-media>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product|localized:'name' }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]" loading="lazy">
+            {% else %}
+                <div class="home-media-fallback flex h-full w-full flex-col items-center justify-center gap-3 px-5 text-center text-text-muted" data-product-image-fallback>
+                    <svg class="h-12 w-12 opacity-45" aria-hidden="true" fill="none" viewBox="0 0 64 64" stroke="currentColor"><path stroke-width="1.5" d="M8 8h21v21H8zM35 8h21v21H35zM8 35h21v21H8zM35 35h21v21H35z"/></svg>
+                    <span class="text-xs font-medium">{% trans "Image coming soon" %}</span>
+                </div>
+            {% endif %}
+            {% if card_mode != "minimal" %}
+                <div class="absolute start-3 top-3 z-10 flex flex-wrap gap-2" data-product-badge-zone>
+                    {% include "products/components/product_badges.html" with product=product %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex flex-1 flex-col {% if card_mode == 'home' %}p-3.5 sm:p-4{% else %}p-4 sm:p-5{% endif %}">
+            <div>
+                {% if product.catalog_presentation.brand_label %}
+                    <p class="mb-1 text-xs font-medium text-text-muted">{{ product.catalog_presentation.brand_label }}</p>
+                {% endif %}
+                <h3 class="line-clamp-2 {% if card_mode == 'home' %}text-sm leading-5 sm:text-base sm:leading-5{% else %}text-base leading-6 sm:text-lg{% endif %} font-semibold text-text-primary transition-colors group-hover:text-brand-active">{{ product|localized:"name" }}</h3>
+
+                {% if card_mode != "compact" and product.catalog_presentation.card_attributes %}
+                    <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted" data-card-attributes>
+                        {% for attribute in product.catalog_presentation.card_attributes|slice:":2" %}
+                            <span><span class="sr-only">{{ attribute.label }}: </span>{% for value in attribute.values %}{{ value.display_value }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>{% if not forloop.last %}<span aria-hidden="true">•</span>{% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {% include "products/components/product_rating.html" with rating=product.avg_rating count=product.review_count mode="compact" %}
+
+            <div class="mt-auto {% if card_mode == 'home' %}pt-3{% else %}pt-4{% endif %}" data-product-price>
+                {% if card_mode == "home" %}
+                    {% include "products/components/product_card_price.html" with product=product price_class="text-base sm:text-lg" %}
+                {% else %}
+                    {% include "products/components/product_card_price.html" with product=product %}
+                {% endif %}
+            </div>
+        </div>
+    </a>
+</article>
+{% endif %}

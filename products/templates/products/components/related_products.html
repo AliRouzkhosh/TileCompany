@@ -1,0 +1,22 @@
+{% load i18n %}
+{% if related_products %}
+    <section data-related-products>
+        {% url "products:product_list" as product_list_url %}
+        {% trans "You May Also Like" as related_title %}
+        {% trans "View More" as related_link_text %}
+        {% include "products/components/section_header.html" with title=related_title link=product_list_url link_text=related_link_text %}
+
+        <div class="swiper product-swiper related-product-swiper">
+            <div class="swiper-wrapper">
+                {% for product in related_products %}
+                    <div class="swiper-slide" data-related-product-slide>
+                        {% include "products/components/product_card.html" with product=product card_mode="related" %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="swiper-button-prev discovery-swiper-button" aria-label="{% trans 'Previous products' %}"></button>
+            <button type="button" class="swiper-button-next discovery-swiper-button" aria-label="{% trans 'Next products' %}"></button>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+{% endif %}

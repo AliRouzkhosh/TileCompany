@@ -1,0 +1,68 @@
+<!-- dashboard/moderation/index.html -->
+{% extends "dashboard/base.html" %}
+{% load i18n pricing %}
+
+{% block title %}
+{% trans "Moderation" %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+{% trans "Content Moderation" as title %}{% trans "Review pending community content." as subtitle %}{% include "dashboard/moderation/components/moderation_header.html" with title=title subtitle=subtitle %}
+
+<div class="grid gap-6 lg:grid-cols-3">
+
+    {% if can_moderate_blog %}<a href="{% url 'dashboard:blog_comment_queue' %}"
+       class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            {% trans "Blog Comments" %}
+        </h2>
+
+        <p class="mt-3 text-4xl font-bold text-emerald-600">
+            {{ blog_comments.count|localized_number }}
+        </p>
+
+        <p class="mt-2 text-sm text-slate-500">
+            {% trans "Pending approval" %}
+        </p>
+
+    </a>{% endif %}
+
+    {% if can_moderate_reviews %}<a href="{% url 'dashboard:review_queue' %}"
+       class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            {% trans "Product Reviews" %}
+        </h2>
+
+        <p class="mt-3 text-4xl font-bold text-violet-600">
+            {{ reviews.count|localized_number }}
+        </p>
+
+        <p class="mt-2 text-sm text-slate-500">
+            {% trans "Pending approval" %}
+        </p>
+
+    </a>{% endif %}
+
+    {% if can_moderate_reviews %}<a href="{% url 'dashboard:review_comment_queue' %}"
+       class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md">
+
+        <h2 class="text-lg font-semibold text-slate-900">
+            {% trans "Review Replies" %}
+        </h2>
+
+        <p class="mt-3 text-4xl font-bold text-sky-600">
+            {{ review_comments.count|localized_number }}
+        </p>
+
+        <p class="mt-2 text-sm text-slate-500">
+            {% trans "Pending approval" %}
+        </p>
+
+    </a>{% endif %}
+
+</div>
+
+{% endblock %}

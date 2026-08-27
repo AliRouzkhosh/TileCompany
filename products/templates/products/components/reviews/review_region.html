@@ -1,0 +1,15 @@
+{% load i18n %}
+<div id="product-reviews-region" aria-live="polite">
+    {% if not user.is_authenticated %}
+        <div class="mb-5 flex items-start gap-3 rounded-control border border-border bg-surface-subtle px-4 py-3 text-sm text-text-secondary" data-review-status="anonymous"><p>{% trans "Please sign in to leave a review." %}</p></div>
+    {% elif not user_has_purchased %}
+        <div class="mb-5 flex items-start gap-3 rounded-control border border-border bg-surface-subtle px-4 py-3 text-sm text-text-secondary" data-review-status="ineligible"><p>{% trans "Only customers who purchased this product can leave a review." %}</p></div>
+    {% elif pending_review %}
+        <div class="mb-5 rounded-control border border-warning/35 bg-warning/10 px-4 py-3" data-review-status="pending"><h3 class="text-sm font-semibold text-text-primary">{% trans "Review Awaiting Approval" %}</h3><p class="mt-1 text-sm text-text-secondary">{% trans "Your review has been submitted and is waiting for moderation." %}</p></div>
+    {% elif user_has_review %}
+        <div class="ts-callout ts-callout--success mb-5" data-review-status="reviewed"><i data-lucide="circle-check" class="sf-icon shrink-0" aria-hidden="true"></i><div class="min-w-0 flex-1"><p class="font-medium">{% trans "You have already reviewed this product." %}</p></div><button type="button" class="review-own-edit sf-button sf-button--primary min-h-11 shrink-0 px-4 text-sm" data-review-id="{{ user_review.id }}"><i data-lucide="pencil" class="sf-icon" aria-hidden="true"></i>{% trans "Edit your review" %}</button></div>
+    {% else %}
+        {% include "products/components/reviews/review_form.html" %}
+    {% endif %}
+    {% include "products/components/reviews/review_list.html" %}
+</div>

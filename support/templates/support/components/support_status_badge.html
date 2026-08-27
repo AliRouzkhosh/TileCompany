@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if status == "waiting_customer" %}<span class="support-status support-status--waiting-customer"><i data-lucide="circle-alert" class="h-4 w-4" aria-hidden="true"></i>{% trans "Waiting for you" %}</span>
+{% elif status == "waiting_support" %}<span class="support-status support-status--waiting-support"><i data-lucide="headset" class="h-4 w-4" aria-hidden="true"></i>{% trans "Waiting for support" %}</span>
+{% elif status == "resolved" %}<span class="support-status support-status--resolved"><i data-lucide="circle-check" class="h-4 w-4" aria-hidden="true"></i>{% trans "Resolved" %}</span>
+{% elif status == "closed" %}<span class="support-status support-status--closed"><i data-lucide="circle-x" class="h-4 w-4" aria-hidden="true"></i>{% trans "Closed" %}</span>
+{% else %}<span class="support-status support-status--open"><i data-lucide="circle-dot" class="h-4 w-4" aria-hidden="true"></i>{% trans "Open" %}</span>{% endif %}

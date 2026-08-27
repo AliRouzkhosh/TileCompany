@@ -1,0 +1,27 @@
+<!--support/components/support_priority_badge.html!-->
+{% load i18n %}
+{% if priority == "low" %}
+
+<span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700">
+    {% trans "Low" %}
+</span>
+
+{% elif priority == "medium" %}
+
+<span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
+    {% trans "Medium" %}
+</span>
+
+{% elif priority == "high" %}
+
+<span class="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-1 text-xs font-medium text-orange-700">
+    {% trans "High" %}
+</span>
+
+{% elif priority == "urgent" %}
+
+<span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
+    {% trans "Urgent" %}
+</span>
+
+{% endif %}

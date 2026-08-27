@@ -1,0 +1,29 @@
+{% extends "dashboard/base.html" %}
+{% load i18n localized_content localized_dates pricing %}
+{% block dashboard_content %}
+<div class="space-y-6">
+    <div class="flex flex-wrap items-center justify-between gap-4"><div><h1 class="text-3xl font-bold">{% trans "Support Inbox" %}</h1><p class="text-stone-500">{% trans "Tickets needing a response are ordered by priority, then by longest wait." %}</p></div><a href="{% url 'dashboard:support:articles' %}" class="rounded-xl border px-4 py-2">{% trans "Help Articles" %}</a></div>
+    <nav class="flex flex-wrap gap-2" aria-label="{% trans 'Support queues' %}">
+        <a href="?queue=needs_response" class="rounded-full bg-amber-100 px-3 py-2">{% trans "Needs Response" %} {{ counts.needs_response|localized_number }}</a>
+        <a href="?queue=mine" class="rounded-full bg-stone-100 px-3 py-2">{% trans "My Tickets" %} {{ counts.mine|localized_number }}</a>
+        <a href="?queue=unassigned" class="rounded-full bg-stone-100 px-3 py-2">{% trans "Unassigned" %} {{ counts.unassigned|localized_number }}</a>
+        <a href="?queue=urgent" class="rounded-full bg-red-100 px-3 py-2">{% trans "Urgent" %} {{ counts.urgent|localized_number }}</a>
+        <a href="?queue=waiting_customer" class="rounded-full bg-stone-100 px-3 py-2">{% trans "Waiting for Customer" %}</a>
+        <a href="?queue=resolved" class="rounded-full bg-stone-100 px-3 py-2">{% trans "Resolved" %}</a>
+        <a href="{% url 'dashboard:support:inbox' %}" class="rounded-full bg-stone-100 px-3 py-2">{% trans "All Tickets" %}</a>
+    </nav>
+    <form class="grid gap-3 rounded-2xl bg-white p-4 md:grid-cols-5">
+        {% if filters.queue %}<input type="hidden" name="queue" value="{{ filters.queue }}">{% endif %}
+        <input name="search" value="{{ filters.search }}" class="rounded border p-2" placeholder="{% trans 'Search tickets' %}">
+        <select name="status" class="rounded border p-2"><option value="">{% trans "All statuses" %}</option><option value="open" {% if filters.status == 'open' %}selected{% endif %}>{% trans "Open" %}</option><option value="waiting_support" {% if filters.status == 'waiting_support' %}selected{% endif %}>{% trans "Waiting for Support" %}</option><option value="waiting_customer" {% if filters.status == 'waiting_customer' %}selected{% endif %}>{% trans "Waiting for Customer" %}</option><option value="resolved" {% if filters.status == 'resolved' %}selected{% endif %}>{% trans "Resolved" %}</option><option value="closed" {% if filters.status == 'closed' %}selected{% endif %}>{% trans "Closed" %}</option></select>
+        <select name="priority" class="rounded border p-2"><option value="">{% trans "All priorities" %}</option><option value="urgent" {% if filters.priority == 'urgent' %}selected{% endif %}>{% trans "Urgent" %}</option><option value="high" {% if filters.priority == 'high' %}selected{% endif %}>{% trans "High" %}</option></select>
+        <select name="category" class="rounded border p-2"><option value="">{% trans "All categories" %}</option>{% for c in categories %}<option value="{{ c.pk }}" {% if filters.category == c.pk|stringformat:'s' %}selected{% endif %}>{{ c|localized:'name' }}</option>{% endfor %}</select>
+        <button class="rounded bg-slate-900 px-4 py-2 text-white">{% trans "Filter" %}</button>
+    </form>
+    <div class="overflow-x-auto rounded-2xl bg-white"><table class="w-full text-sm"><thead class="border-b text-start text-stone-500"><tr><th class="p-4">{% trans "Ticket" %}</th><th>{% trans "Customer" %}</th><th>{% trans "Priority" %}</th><th>{% trans "Status" %}</th><th>{% trans "Assignee" %}</th><th>{% trans "Waiting since" %}</th></tr></thead><tbody>
+        {% for ticket in tickets %}<tr class="border-b hover:bg-stone-50"><td class="p-4"><a class="font-semibold" href="{% url 'dashboard:support:detail' ticket.pk %}">#{{ ticket.pk }} {{ ticket.subject }}</a><div class="text-stone-500">{{ ticket.category|localized:'name' }} {% if ticket.order %}· {% trans "Order" %} #{{ ticket.order.user_order_number|default:ticket.order.pk }}{% endif %}</div></td><td>{{ ticket.user.get_full_name|default:ticket.user.username }}</td><td>{% if ticket.priority == 'urgent' %}<span class="font-bold text-red-600">{% trans "Urgent" %}</span>{% elif ticket.priority == 'high' %}{% trans "High" %}{% elif ticket.priority == 'medium' %}{% trans "Medium" %}{% else %}{% trans "Low" %}{% endif %}</td><td>{% if ticket.status == 'open' %}{% trans "Open" %}{% elif ticket.status == 'waiting_support' %}{% trans "Waiting for Support" %}{% elif ticket.status == 'waiting_customer' %}{% trans "Waiting for Customer" %}{% elif ticket.status == 'resolved' %}{% trans "Resolved" %}{% else %}{% trans "Closed" %}{% endif %}</td><td>{% if ticket.assigned_to %}{{ ticket.assigned_to.username }}{% else %}<span class="text-amber-600">{% trans "Unassigned" %}</span>{% endif %}</td><td>{% if ticket.response_started_at %}<time datetime="{{ ticket.response_started_at|date:'c' }}" class="{% if ticket.response_state == 'overdue' %}font-bold text-red-600{% endif %}">{{ ticket.response_started_at|localized_datetime }}</time>{% else %}—{% endif %}</td></tr>
+        {% empty %}<tr><td colspan="6" class="p-10 text-center text-stone-500">{% trans "No tickets match this queue." %}</td></tr>{% endfor %}
+    </tbody></table></div>
+    {% include 'dashboard/components/pagination.html' with page_obj=tickets %}
+</div>
+{% endblock %}

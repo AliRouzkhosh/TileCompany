@@ -1,0 +1,7 @@
+{% load i18n pricing %}{% if product.catalog_pricing_is_scoped %}
+    {% if product.catalog_sale_percent %}
+        <span class="inline-flex rounded-full bg-error px-2.5 py-1 text-xs font-semibold text-white shadow-sm" data-sale-badge>{% blocktrans with discount=product.catalog_sale_percent|localized_integer %}Save {{ discount }}%{% endblocktrans %}</span>
+    {% endif %}
+{% elif product.has_requested_currency_sale %}
+    <span class="inline-flex rounded-full bg-error px-2.5 py-1 text-xs font-semibold text-white shadow-sm" data-sale-badge>{% blocktrans with discount=product.requested_currency_sale_percent|localized_integer %}Save {{ discount }}%{% endblocktrans %}</span>
+{% endif %}

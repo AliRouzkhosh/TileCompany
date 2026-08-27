@@ -1,0 +1,20 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+    <input name="language" type="hidden" value="{% if LANGUAGE_CODE == 'fa' %}en{% else %}fa{% endif %}">
+    <button
+        type="submit"
+        class="{{ button_class|default:'sf-button sf-button--quiet min-w-11 px-2 text-sm' }}"
+        aria-label="{% if LANGUAGE_CODE == 'fa' %}{% trans 'Switch to English' %}{% else %}{% trans 'Switch to Persian' %}{% endif %}"
+        title="{% if LANGUAGE_CODE == 'fa' %}{% trans 'Switch to English' %}{% else %}{% trans 'Switch to Persian' %}{% endif %}"
+    >
+        {% if long_label %}
+            <i data-lucide="languages" class="sf-icon" aria-hidden="true"></i>
+            <span>{% if LANGUAGE_CODE == 'fa' %}EN{% else %}فارسی{% endif %}</span>
+        {% else %}
+            {% if LANGUAGE_CODE == 'fa' %}EN{% else %}فا{% endif %}
+        {% endif %}
+    </button>
+</form>

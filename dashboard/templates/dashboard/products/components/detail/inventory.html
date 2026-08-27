@@ -1,0 +1,19 @@
+{% load i18n pricing %}
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 px-6 py-4">
+        <h2 class="text-lg font-semibold text-slate-900">{% trans "Inventory" %}</h2>
+        <p class="mt-1 text-sm text-slate-500">{% trans "All inventory is derived from active product variants." %}</p>
+    </div>
+    <div class="space-y-6 p-6">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="rounded-lg border border-slate-200 p-4"><p class="text-xs font-medium uppercase tracking-wide text-slate-500">{% trans "Total Active Stock" %}</p><p class="mt-2 text-2xl font-bold text-slate-900">{{ inventory.total_stock|localized_number }}</p></div>
+            <div class="rounded-lg border border-slate-200 p-4"><p class="text-xs font-medium uppercase tracking-wide text-slate-500">{% trans "In-Stock Variants" %}</p><p class="mt-2 text-2xl font-bold text-slate-900">{{ inventory.in_stock_variants|localized_number }}</p></div>
+        </div>
+        <dl class="space-y-4">
+            <div class="flex items-center justify-between"><dt class="text-slate-500">{% trans "Variants" %}</dt><dd class="font-medium text-slate-900">{{ statistics.variants|localized_number }}</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-slate-500">{% trans "Active Variants" %}</dt><dd class="font-medium text-slate-900">{{ inventory.active_variants|localized_number }}</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-slate-500">{% trans "Low-Stock Variants" %}</dt><dd class="font-medium text-amber-700">{{ inventory.low_stock_variants|localized_number }}</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-slate-500">{% trans "Out-of-Stock Variants" %}</dt><dd class="font-medium text-red-700">{{ inventory.out_of_stock_variants|localized_number }}</dd></div>
+        </dl>
+    </div>
+</div>

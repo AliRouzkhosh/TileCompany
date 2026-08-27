@@ -1,0 +1,9 @@
+{% load i18n %}
+<section class="rounded-2xl border bg-white p-6" data-publication-readiness>
+  <div class="flex items-center justify-between gap-4"><h2 class="text-xl font-bold">{% trans "Publication readiness" %}</h2>{% if readiness.ready %}<span class="rounded-full bg-emerald-100 px-3 py-1 text-sm text-emerald-800">{% trans "Ready" %}</span>{% else %}<span class="rounded-full bg-red-100 px-3 py-1 text-sm text-red-800">{% trans "Blocked" %}</span>{% endif %}</div>
+  {% if readiness.ready_variant_count != None %}<div class="mt-3 grid gap-2 text-sm sm:grid-cols-2"><p>{% trans "Ready variants" %}: {{ readiness.ready_variant_count }}</p><p>{% trans "Active ready variants" %}: {{ readiness.active_ready_variant_count }}</p></div>{% endif %}
+  {% if readiness.blockers %}<div class="mt-4"><h3 class="font-semibold text-red-800">{% trans "Blockers" %}</h3><ul class="mt-2 list-disc space-y-1 ps-5 text-sm text-red-700">{% for issue in readiness.blockers %}<li data-issue-code="{{ issue.code }}">{{ issue.message }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if readiness.warnings %}<div class="mt-4"><h3 class="font-semibold text-amber-800">{% trans "Warnings" %}</h3><ul class="mt-2 list-disc space-y-1 ps-5 text-sm text-amber-700">{% for issue in readiness.warnings %}<li data-issue-code="{{ issue.code }}">{{ issue.message }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if readiness.info %}<div class="mt-4"><h3 class="font-semibold text-slate-700">{% trans "Information" %}</h3><ul class="mt-2 list-disc space-y-1 ps-5 text-sm text-slate-600">{% for issue in readiness.info %}<li data-issue-code="{{ issue.code }}">{{ issue.message }}</li>{% endfor %}</ul></div>{% endif %}
+  <p class="mt-4 text-xs text-slate-500">{% trans "Readiness is read-only. No catalog state is changed here." %}</p>
+</section>

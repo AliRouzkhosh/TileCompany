@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% block dashboard_content %}
+<div class="mx-auto max-w-6xl space-y-6">
+  <div class="flex items-start justify-between">
+    <div>
+      <p class="text-sm font-semibold text-emerald-700">{{ product.product_type.name }} · <code>{{ product.product_type.code }}</code></p>
+      <h1 class="text-3xl font-bold">{{ product.name }}</h1>
+      <p class="mt-2 text-sm text-slate-500">{{ product.sku }} · {% if product.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive draft" %}{% endif %}</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a href="{% url 'dashboard:products:generic_variant_catalog' product.pk %}" class="rounded-xl border px-5 py-2.5">{% trans "Variants" %}</a>
+      <a href="{% url 'dashboard:products:generic_variant_create' product.pk %}" class="rounded-xl bg-emerald-700 px-5 py-2.5 text-white">{% trans "Add Variant" %}</a>
+      <a href="{% url 'dashboard:products:generic_edit' product.pk %}" class="rounded-xl bg-slate-900 px-5 py-2.5 text-white">{% trans "Edit Product" %}</a>
+      <form method="post" action="{% if product.is_active %}{% url 'dashboard:products:generic_unpublish' product.pk %}{% else %}{% url 'dashboard:products:generic_publish' product.pk %}{% endif %}">
+        {% csrf_token %}
+        <button class="rounded-xl border border-amber-600 px-5 py-2.5 text-amber-800">{% if product.is_active %}{% trans "Unpublish Product" %}{% else %}{% trans "Publish Product" %}{% endif %}</button>
+      </form>
+    </div>
+  </div>
+  <div class="grid gap-6 lg:grid-cols-2">
+    <section class="rounded-2xl border bg-white p-6"><h2 class="text-xl font-bold">{% trans "Core Product" %}</h2><dl class="mt-4 space-y-3 text-sm"><div><dt class="text-slate-500">{% trans "Categories" %}</dt><dd>{% for category in product.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</dd></div><div><dt class="text-slate-500">{% trans "Primary category" %}</dt><dd>{{ product.primary_category|default:'—' }}</dd></div></dl></section>
+    <section class="rounded-2xl border bg-white p-6"><h2 class="text-xl font-bold">{% trans "Generic Product Attributes" %}</h2><dl class="mt-4 space-y-3">{% for attribute in attributes.attributes %}<div><dt class="text-sm text-slate-500">{{ attribute.label }}</dt><dd>{% for value in attribute.values %}{{ value.display_value }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>{% empty %}<p class="text-sm text-slate-500">{% trans "No configured values." %}</p>{% endfor %}</dl></section>
+  </div>
+  <section class="rounded-2xl border bg-white p-6"><h2 class="text-xl font-bold">{% trans "Generic Variants" %}</h2><div class="mt-4 space-y-3">{% for variant in generic_detail.variants %}<a class="block rounded-xl border p-4" href="{% url 'dashboard:products:generic_variant_edit' product.pk variant.id %}"><span class="font-mono">{{ variant.sku }}</span><span class="ms-3 text-sm text-slate-600">{% for value in variant.attribute_values %}{% if value.is_variant_dimension %}{{ value.display_value }} · {% endif %}{% empty %}{% trans "Base variant" %}{% endfor %}</span></a>{% empty %}<p class="text-sm text-slate-500">{% trans "No generic Variants yet." %}</p>{% endfor %}</div></section>
+</div>
+{% endblock %}

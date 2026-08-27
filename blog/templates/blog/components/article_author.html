@@ -1,0 +1,82 @@
+<!-- ========================================== -->
+<!-- Article Author                             -->
+<!-- ========================================== -->
+{% load i18n pricing %}
+
+<!-- ========================================== -->
+<!-- Article Author                             -->
+<!-- ========================================== -->
+
+<section class="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+
+    <div class="flex flex-col items-center text-center">
+
+        <!-- Avatar -->
+
+        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-700">
+
+            {% if article.author %}
+                {{ article.author_display_name|slice:":1"|upper }}
+            {% else %}
+                T
+            {% endif %}
+
+        </div>
+
+        <!-- Name -->
+
+        <p class="mt-5 text-xs font-semibold uppercase tracking-widest text-emerald-600">
+            {% trans "Author" %}
+        </p>
+
+        <h3 class="mt-1 text-xl font-semibold text-stone-900">
+
+            {% if article.author %}
+                {{ article.author_display_name }}
+            {% else %}
+                {% trans "TileCompany Editorial Team" %}
+            {% endif %}
+
+        </h3>
+
+        <p class="mt-2 text-sm text-stone-500">
+            {% trans "Tile & Interior Design Expert" %}
+        </p>
+
+        <!-- Divider -->
+
+        <div class="my-6 h-px w-full bg-stone-200"></div>
+
+        <!-- Stats -->
+
+        <div class="grid w-full grid-cols-2 gap-4 text-center">
+
+            <div>
+
+                <p class="text-2xl font-bold text-stone-900">
+                    {{ article.author.articles.count|default:"0"|localized_number }}
+                </p>
+
+                <p class="mt-1 text-xs uppercase tracking-wide text-stone-500">
+                    {% trans "Articles" %}
+                </p>
+
+            </div>
+
+            <div>
+
+                <p class="text-2xl font-bold text-stone-900">
+                    {{ article.reading_time }}
+                </p>
+
+                <p class="mt-1 text-xs uppercase tracking-wide text-stone-500">
+                    {% trans "Min Read" %}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,35 @@
+<!-- dashboard/moderation/components/moderation_header.html -->
+{% load i18n pricing %}
+
+<div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+    <div>
+
+        <h1 class="text-3xl font-bold text-slate-900">
+            {{ title }}
+        </h1>
+
+        {% if subtitle %}
+        <p class="mt-2 text-sm text-slate-500">
+            {{ subtitle }}
+        </p>
+        {% endif %}
+
+    </div>
+
+    <div class="flex items-center gap-3">
+
+        {% if pending_count %}
+
+        <span
+            class="inline-flex items-center rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+
+            {{ pending_count|localized_number }} {% trans "Pending" %}
+
+        </span>
+
+        {% endif %}
+
+    </div>
+
+</div>

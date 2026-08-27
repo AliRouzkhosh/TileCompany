@@ -1,0 +1,6 @@
+{% load i18n pricing %}
+<section id="comments" aria-labelledby="discussion-heading" aria-live="polite">
+    <header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between"><div><p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-active">{% trans "Discussion" %}</p><h2 id="discussion-heading" class="mt-1 text-2xl font-semibold text-text-primary sm:text-3xl">{% trans "Comments" %}</h2></div><p class="inline-flex w-fit rounded-full border border-border bg-surface px-3 py-1 text-sm text-text-secondary">{% with comment_count=comments|length %}{% blocktrans count counter=comment_count with display_count=comment_count|localized_number %}{{ display_count }} comment{% plural %}{{ display_count }} comments{% endblocktrans %}{% endwith %}</p></header>
+    {% if comments %}<div class="mt-5 space-y-3 sm:mt-6">{% for comment in comments %}{% include "blog/components/comment_card.html" with comment=comment %}{% endfor %}</div>{% else %}<div class="mt-5 border-s-2 border-brand bg-surface px-4 py-5 sm:mt-6"><h3 class="text-base font-semibold text-text-primary">{% trans "No comments yet" %}</h3><p class="mt-1 text-sm text-text-secondary">{% trans "Start the discussion." %}</p></div>{% endif %}
+    <div class="mt-6 sm:mt-8">{% include "blog/components/comment_form.html" %}</div>
+</section>

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% get_current_language as LANGUAGE_CODE %}
+  {% if LANGUAGE_CODE == 'fa' and article.title_fa %}{{ article.title_fa }}{% else %}{{ article.title }}{% endif %}
+{% endblock %}
+
+{% block content %}
+  {% get_current_language as LANGUAGE_CODE %}
+  {% include "components/breadcrumbs.html" %}
+  <article class="help-article mx-auto max-w-3xl">
+    <p class="text-sm font-semibold text-brand">{{ article_topic.1 }}</p>
+    <h1>{% if LANGUAGE_CODE == 'fa' and article.title_fa %}{{ article.title_fa }}{% else %}{{ article.title }}{% endif %}</h1>
+    <p class="help-article__lead">{% if LANGUAGE_CODE == 'fa' and article.summary_fa %}{{ article.summary_fa }}{% else %}{{ article.summary }}{% endif %}</p>
+    <div class="help-article__body">{% if LANGUAGE_CODE == 'fa' and article.content_fa %}{{ article.content_fa|linebreaks }}{% else %}{{ article.content|linebreaks }}{% endif %}</div>
+    {% if related_articles %}
+      <section class="mt-10" aria-labelledby="related-guides-heading">
+        <h2 id="related-guides-heading">{% trans "Related guides" %}</h2>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          {% for related in related_articles %}
+            <a class="help-guide-card" href="{% url 'support:help_detail' related.slug %}">
+              <h3>{% if LANGUAGE_CODE == 'fa' and related.title_fa %}{{ related.title_fa }}{% else %}{{ related.title }}{% endif %}</h3>
+              <p>{% if LANGUAGE_CODE == 'fa' and related.summary_fa %}{{ related.summary_fa }}{% else %}{{ related.summary }}{% endif %}</p>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+    <section class="help-article__cta">
+      <h2>{% trans "Still need help?" %}</h2>
+      <p>{% trans "Create a support ticket and keep the conversation with your account." %}</p>
+      <div>
+        <a class="sf-button sf-button--primary" href="{% url 'support:ticket_create' %}">{% trans "Create support ticket" %}</a>
+        {% if request.user.is_authenticated %}<a class="sf-button sf-button--secondary" href="{% url 'support:ticket_list' %}">{% trans "My Support Tickets" %}</a>{% endif %}
+      </div>
+    </section>
+  </article>
+{% endblock %}

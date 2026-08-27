@@ -1,0 +1,42 @@
+{% load i18n %}
+<fieldset aria-describedby="address-help{% if form.address_id.errors %} address-errors{% endif %}" data-checkout-addresses>
+    <legend class="sr-only">{% trans "Delivery address" %}</legend>
+    <div class="flex flex-wrap items-end justify-between gap-3 border-b border-border pb-3">
+        <div>
+            <h3 class="text-base font-semibold text-text-primary">{% trans "Delivery address" %}</h3>
+            <p id="address-help" class="mt-1 text-sm text-text-secondary">{% trans "Choose one of your saved addresses." %}</p>
+        </div>
+        <a href="{% url 'accounts:address_create' %}?next={% url 'orders:checkout_shipping' %}" class="sf-button sf-button--quiet text-sm">
+            <i data-lucide="plus" class="sf-icon" aria-hidden="true"></i>
+            {% trans "Add new address" %}
+        </a>
+    </div>
+
+    {% if form.address_id.errors %}<div id="address-errors" class="checkout-error mt-3" role="alert">{{ form.address_id.errors }}</div>{% endif %}
+
+    {% if checkout.addresses %}
+        <div class="mt-3 grid max-h-[32rem] gap-3 overflow-y-auto overscroll-contain pe-1 sm:grid-cols-2" tabindex="0" aria-label="{% trans 'Saved delivery addresses' %}" data-address-list>
+            {% for address in checkout.addresses %}
+                <label for="checkout-address-{{ address.id }}" class="checkout-choice" {% if form.address_id.errors %}data-invalid="true"{% endif %} data-address-choice>
+                    <input id="checkout-address-{{ address.id }}" type="radio" name="address_id" value="{{ address.id }}" class="checkout-choice__control mt-0.5 h-5 w-5 shrink-0 accent-brand" {% if form.address_id.value|stringformat:"s" == address.id|stringformat:"s" %}checked{% endif %} {% if form.address_id.errors %}aria-invalid="true" aria-describedby="address-errors"{% endif %}>
+                    <span class="min-w-0 flex-1">
+                        <span class="flex flex-wrap items-center gap-2">
+                            <span class="font-semibold text-text-primary">{{ address.first_name }} {{ address.last_name }}</span>
+                            {% if address.is_default_shipping %}<span class="rounded-full bg-brand-subtle px-2 py-0.5 text-xs font-medium text-brand-active">{% trans "Default" %}</span>{% endif %}
+                        </span>
+                        {% if address.company_name %}<span class="mt-1 block text-xs text-text-muted">{{ address.company_name }}</span>{% endif %}
+                        <span class="mt-2 block text-sm leading-6 text-text-secondary">{{ address.street_address }}</span>
+                        <span class="block text-sm leading-6 text-text-secondary">{{ address.city }}, {{ address.province }}{% if address.postal_code %} {{ address.postal_code }}{% endif %}</span>
+                        <span class="block text-sm leading-6 text-text-secondary">{{ address.country }}</span>
+                        <span class="mt-2 block text-xs text-text-muted" dir="ltr">{{ address.phone }}</span>
+                    </span>
+                </label>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="mt-3 rounded-control border border-dashed border-border-strong bg-surface-subtle px-5 py-6 text-center" data-address-empty>
+            <p class="text-sm text-text-secondary">{% trans "You don't have any saved addresses yet." %}</p>
+            <a href="{% url 'accounts:address_create' %}?next={% url 'orders:checkout_shipping' %}" class="sf-button sf-button--secondary mt-4 text-sm">{% trans "Add delivery address" %}</a>
+        </div>
+    {% endif %}
+</fieldset>

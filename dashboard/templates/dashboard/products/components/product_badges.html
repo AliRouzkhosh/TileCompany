@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="flex flex-wrap gap-2">
+
+    {% if product.is_active %}
+        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
+            {% trans "Active" %}
+        </span>
+    {% else %}
+        <span class="inline-flex items-center rounded-full bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600">
+            {% trans "Inactive" %}
+        </span>
+    {% endif %}
+
+    {% if product.is_featured %}
+        <span class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">
+            {% trans "Featured" %}
+        </span>
+    {% endif %}
+
+</div>

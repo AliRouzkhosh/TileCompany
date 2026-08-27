@@ -1,0 +1,8 @@
+{% load i18n pricing %}<div class="rounded-2xl bg-white p-6 shadow-sm">
+    <h2 class="mb-5 text-lg font-semibold">{% trans "Customer Support" %}</h2>
+    <div class="space-y-4 text-sm">
+        <div class="flex justify-between"><span>{% trans "Pending Refunds" %}</span><strong>{{ stats.refund_queue|localized_number }}</strong></div>
+        <div class="flex justify-between"><span>{% trans "Attention Queue" %}</span><strong>{{ attention_orders|length|localized_number }}</strong></div>
+        <div class="flex justify-between"><span>{% trans "Open Orders" %}</span><strong>{{ stats.pending_orders|localized_number }}</strong></div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+{% load i18n %}
+{% if presentation.variant_sku %}
+<p class="mt-1 text-xs text-stone-500">{% trans "SKU" %}: {{ presentation.variant_sku }}</p>
+{% endif %}
+{% if presentation.product_type_label %}
+<p class="mt-1 text-xs text-stone-500">{% trans "Product type" %}: {{ presentation.product_type_label }}</p>
+{% endif %}
+{% if presentation.product_attributes %}
+<dl class="mt-2 space-y-1 text-sm">
+    {% for attribute in presentation.product_attributes %}
+    <div class="flex flex-wrap gap-1"><dt class="font-medium text-stone-600">{{ attribute.label }}:</dt><dd class="text-stone-700">{% for value in attribute.values %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>
+    {% endfor %}
+</dl>
+{% endif %}
+{% if presentation.variant_attributes %}
+<dl class="mt-2 space-y-1 text-sm">
+    {% for attribute in presentation.variant_attributes %}
+    <div class="flex flex-wrap gap-1"><dt class="font-medium text-stone-600">{{ attribute.label }}:</dt><dd class="text-stone-700">{% for value in attribute.values %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>
+    {% endfor %}
+</dl>
+{% endif %}
+{% if presentation.operational_facts %}
+<dl class="mt-2 space-y-1 text-sm">
+    {% for fact in presentation.operational_facts %}
+    <div class="flex flex-wrap gap-1"><dt class="font-medium text-stone-600">{{ fact.label }}:</dt><dd class="text-stone-700">{{ fact.value }}</dd></div>
+    {% endfor %}
+</dl>
+{% endif %}
+{% if presentation.has_diagnostic %}
+<p class="mt-2 text-sm text-amber-700">{% if operator %}{{ presentation.operator_diagnostic }}{% else %}{{ presentation.customer_diagnostic }}{% endif %}</p>
+{% endif %}

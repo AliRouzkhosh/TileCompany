@@ -1,0 +1,28 @@
+{% load i18n pricing %}
+{% if has_active_criteria %}
+    {% if filter_display == "mobile" %}
+        {% for chip in active_filter_chips %}
+        <a href="{{ chip.remove_url }}"
+           aria-label="{{ chip.remove_label|localized_digits }}"
+           class="catalog-toolbar-chip">
+            <span class="max-w-44 truncate"><span class="font-medium">{{ chip.label }}{% if chip.display_value %}:</span> {{ chip.display_value|localized_digits }}{% else %}</span>{% endif %}</span>
+            <svg class="h-3.5 w-3.5 shrink-0 text-text-muted" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+        </a>
+        {% endfor %}
+    {% else %}
+        <section class="space-y-3 border-b border-border pb-4" aria-labelledby="active-filters-title" data-desktop-active-filters>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h2 id="active-filters-title" class="text-sm font-semibold text-text-primary">{% trans "Active search and filters" %}</h2>
+                <a href="{{ clear_all_url }}" class="rounded-chip px-2 py-1 text-sm font-medium text-text-secondary underline-offset-4 hover:text-brand-active hover:underline">{% trans "Clear all" %}</a>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                {% for chip in active_filter_chips %}
+                <a href="{{ chip.remove_url }}" aria-label="{{ chip.remove_label|localized_digits }}" class="inline-flex min-h-9 max-w-full items-center gap-2 rounded-full border border-border bg-surface-subtle px-3 py-1 text-sm text-text-secondary transition hover:border-brand-mid hover:bg-brand-subtle hover:text-brand-active">
+                    <span class="min-w-0 break-words"><span class="font-medium">{{ chip.label }}{% if chip.display_value %}:</span> {{ chip.display_value|localized_digits }}{% else %}</span>{% endif %}</span>
+                    <svg class="h-3.5 w-3.5 shrink-0 text-text-muted" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+{% endif %}

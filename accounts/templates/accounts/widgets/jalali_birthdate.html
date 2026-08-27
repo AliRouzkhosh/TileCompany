@@ -1,0 +1,11 @@
+{% load i18n %}
+<div class="jalali-birthdate-shell">
+  <div class="jalali-birthdate" role="group" aria-label="{% trans 'Birth date' %}" data-jalali-birthdate{% include "django/forms/widgets/attrs.html" %}>
+    {% with year=widget.subwidgets.0 month=widget.subwidgets.1 day=widget.subwidgets.2 %}
+      <div class="jalali-birthdate__segment jalali-birthdate__segment--day"><label class="jalali-birthdate__label" for="{{ day.attrs.id }}">{% trans "Day" %}</label>{% include day.template_name with widget=day %}</div>
+      <div class="jalali-birthdate__segment jalali-birthdate__segment--month"><label class="jalali-birthdate__label" for="{{ month.attrs.id }}">{% trans "Month" %}</label>{% include month.template_name with widget=month %}</div>
+      <div class="jalali-birthdate__segment jalali-birthdate__segment--year"><label class="jalali-birthdate__label" for="{{ year.attrs.id }}">{% trans "Year" %}</label>{% include year.template_name with widget=year %}</div>
+    {% endwith %}
+  </div>
+  {% if widget.preview %}<p class="jalali-birthdate__preview" data-jalali-birthdate-preview>{{ widget.preview }}</p>{% endif %}
+</div>

@@ -1,0 +1,63 @@
+{% load pricing i18n %}
+<div class="sf-surface overflow-hidden divide-y divide-border" data-review-confirmations>
+    <section class="p-5 sm:p-6" aria-labelledby="review-shipping-title" data-review-shipping>
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <h3 id="review-shipping-title" class="text-base font-semibold text-text-primary">{% trans "Shipping" %}</h3>
+                <p class="mt-1 text-sm text-text-secondary">{% trans "Where and how this order will be delivered." %}</p>
+            </div>
+            <a href="{% url 'orders:checkout_shipping' %}" class="sf-button sf-button--quiet min-h-0 px-2 py-1 text-sm">{% trans "Change" %}</a>
+        </div>
+
+        <dl class="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+            <div>
+                <dt class="text-xs font-medium text-text-muted">{% trans "Delivery address" %}</dt>
+                <dd class="mt-1 font-medium text-text-primary">{{ selected_address.first_name }} {{ selected_address.last_name }}</dd>
+                {% if selected_address.company_name %}<dd class="mt-0.5 text-text-secondary">{{ selected_address.company_name }}</dd>{% endif %}
+                <dd class="mt-1 leading-6 text-text-secondary">{{ selected_address.street_address }}<br>{{ selected_address.city }}, {{ selected_address.province }} {{ selected_address.postal_code }}<br>{{ selected_address.country }}</dd>
+                <dd class="mt-1 text-xs text-text-muted" dir="ltr">{{ selected_address.phone }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-medium text-text-muted">{% trans "Delivery method" %}</dt>
+                <dd class="mt-1 font-medium text-text-primary">{% if selected_shipping_method %}{{ selected_shipping_method.name }}{% else %}{{ shipping.shipping_method }}{% endif %}</dd>
+                {% if selected_shipping_method %}
+                    <dd class="mt-1 text-text-secondary">{{ selected_shipping_method.description }}</dd>
+                    <dd class="mt-1 text-xs text-text-muted">{% trans "Estimated delivery:" %} {{ selected_shipping_method.estimated_days }}</dd>
+                {% endif %}
+            </div>
+            {% if shipping.delivery_slot %}
+                <div class="sm:col-span-2">
+                    <dt class="text-xs font-medium text-text-muted">{% trans "Delivery slot" %}</dt>
+                    <dd class="mt-1 text-text-secondary">{{ shipping.delivery_slot }}</dd>
+                </div>
+            {% endif %}
+        </dl>
+    </section>
+
+    <section class="p-5 sm:p-6" aria-labelledby="review-payment-title" data-review-payment>
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <h3 id="review-payment-title" class="text-base font-semibold text-text-primary">{% trans "Payment" %}</h3>
+                <p class="mt-1 text-sm text-text-secondary">{% trans "How this order will be paid." %}</p>
+            </div>
+            <a href="{% url 'orders:checkout_payment' %}" class="sf-button sf-button--quiet min-h-0 px-2 py-1 text-sm">{% trans "Change" %}</a>
+        </div>
+
+        <dl class="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+            <div>
+                <dt class="text-xs font-medium text-text-muted">{% trans "Payment method" %}</dt>
+                <dd class="mt-1 font-medium text-text-primary">{{ payment_method_label }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-medium text-text-muted">{% trans "Email receipt" %}</dt>
+                <dd class="mt-1 text-text-secondary">{% if payment.email_receipt_requested %}{% blocktrans with email=payment.receipt_email %}Requested for {{ email }}{% endblocktrans %}{% else %}{% trans "Not requested" %}{% endif %}</dd>
+            </div>
+            {% if payment.coupon_code %}
+                <div class="sm:col-span-2">
+                    <dt class="text-xs font-medium text-text-muted">{% trans "Coupon code" %}</dt>
+                    <dd class="mt-1 font-medium text-text-primary" dir="ltr">{{ payment.coupon_code }}</dd>
+                </div>
+            {% endif %}
+        </dl>
+    </section>
+</div>

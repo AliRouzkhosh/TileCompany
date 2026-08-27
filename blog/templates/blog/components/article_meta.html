@@ -1,0 +1,69 @@
+<!-- blog/components/article_meta.html -->
+{% load i18n localized_dates %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
+
+    {% if show_category and article.category %}
+        <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+            {% if LANGUAGE_CODE == "fa" and article.category.name_fa %}{{ article.category.name_fa }}{% else %}{{ article.category.name }}{% endif %}
+        </span>
+    {% endif %}
+
+    {% if article.author %}
+        <div class="flex items-center gap-2">
+
+            <svg class="h-4 w-4 text-slate-400"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5.121 17.804A9 9 0 1118.88 17.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+
+            <span>
+                {{ article.author_display_name }}
+            </span>
+
+        </div>
+    {% endif %}
+
+    {% if article.published_at %}
+        <div class="flex items-center gap-2">
+
+            <svg class="h-4 w-4 text-slate-400"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+
+            <time datetime="{{ article.published_at|date:'c' }}">
+                {{ article.published_at|localized_date }}
+            </time>
+
+        </div>
+    {% endif %}
+
+    <div class="flex items-center gap-2">
+
+        <svg class="h-4 w-4 text-slate-400"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+
+        <span>{% if LANGUAGE_CODE == "fa" %}{{ article.reading_time_fa }}{% else %}{{ article.reading_time }}{% endif %} {% trans "min read" %}</span>
+
+    </div>
+
+</div>

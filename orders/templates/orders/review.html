@@ -1,0 +1,59 @@
+{% extends "orders/checkout_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Review order" %}{% endblock %}
+
+{% block checkout_content %}
+<div class="space-y-6" data-checkout-step-panel="review">
+    <input type="hidden" name="checkout_attempt_token" value="{{ checkout_attempt_token }}">
+
+    <header>
+        <h2 id="review-step-title" class="text-2xl font-semibold tracking-[-0.02em] text-text-primary">{% trans "Review your order" %}</h2>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-text-secondary">{% trans "Confirm the delivery and payment details before placing your order." %}</p>
+    </header>
+
+    {% include "orders/components/order_review.html" %}
+
+    {% if payment_conflict %}
+    <section class="rounded-control border border-warning-mid bg-warning-subtle px-5 py-4" aria-labelledby="payment-conflict-title" data-payment-conflict>
+        <div class="flex items-start gap-3">
+            <i data-lucide="circle-alert" class="sf-icon mt-0.5 text-warning" aria-hidden="true"></i>
+            <div>
+                <h3 id="payment-conflict-title" class="font-semibold text-text-primary">{% trans "You already have an order awaiting payment." %}</h3>
+                <p class="mt-1 text-sm leading-6 text-text-secondary">
+                    {% blocktrans with reference=payment_conflict.user_order_number %}Complete or cancel payment for Order #{{ reference }} before placing another online order.{% endblocktrans %}
+                </p>
+                <div class="mt-3 flex flex-wrap gap-3">
+                    <a href="{% url 'orders:payment_start' payment_conflict.pk %}" class="sf-button sf-button--primary">{% trans "Complete payment" %}</a>
+                    <a href="{% url 'orders:order_detail' payment_conflict.pk %}" class="sf-button sf-button--secondary">{% trans "View order" %}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% else %}
+    <section class="rounded-control border border-brand-mid bg-brand-subtle px-5 py-4" aria-labelledby="place-order-confirmation-title" data-review-confirmation>
+        <div class="flex items-start gap-3">
+            <i data-lucide="circle-check" class="sf-icon mt-0.5 text-brand" aria-hidden="true"></i>
+            <div>
+                <h3 id="place-order-confirmation-title" class="font-semibold text-text-primary">{% trans "Ready to place your order?" %}</h3>
+                <p class="mt-1 text-sm leading-6 text-text-secondary">
+                    {% if payment.payment_method == "cod" %}{% trans "Placing the order confirms it for payment on delivery." %}
+                    {% else %}{% trans "Placing the order creates it and continues to payment." %}{% endif %}
+                </p>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="checkout-actions" data-checkout-actions>
+        <a href="{% url 'orders:checkout_payment' %}" class="sf-button sf-button--secondary">
+            <i data-lucide="arrow-left" class="sf-icon directional-icon" aria-hidden="true"></i>
+            {% trans "Back to payment" %}
+        </a>
+        {% if not payment_conflict %}<button type="submit" class="sf-button sf-button--primary">
+            <i data-lucide="shopping-bag-check" class="sf-icon" aria-hidden="true"></i>
+            {% trans "Place order" %}
+        </button>{% endif %}
+    </div>
+</div>
+{% endblock %}

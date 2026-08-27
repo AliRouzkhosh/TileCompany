@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n pricing %}
+
+{% block title %}{{ simulator_title }}{% endblock %}
+
+{% block content %}
+<main class="store-container py-8 sm:py-12 lg:py-16">
+    <section class="sf-surface mx-auto max-w-2xl overflow-hidden" aria-labelledby="mock-payment-title">
+        <header class="border-b border-border bg-page-subtle px-5 py-6 sm:px-8">
+            <h1 id="mock-payment-title" class="text-2xl font-semibold text-text-primary">{{ simulator_title }}</h1>
+            <p class="mt-2 text-sm leading-6 text-text-secondary">
+                {% blocktrans with number=order.user_order_number %}Development-only payment simulation for Order #{{ number }}.{% endblocktrans %}
+            </p>
+        </header>
+        <dl class="divide-y divide-border px-5 sm:px-8">
+            <div class="commerce-result__row"><dt>{% trans "Order number" %}</dt><dd dir="ltr">#{{ order.user_order_number }}</dd></div>
+            <div class="commerce-result__row"><dt>{% trans "Total" %}</dt><dd class="font-semibold text-text-primary">{{ order.total_amount|money:order.currency }}</dd></div>
+        </dl>
+        <form method="post" class="grid gap-3 border-t border-border px-5 py-5 sm:grid-cols-3 sm:px-8">
+            {% csrf_token %}
+            <button name="outcome" value="success" class="sf-button sf-button--primary min-h-11">{% trans "Simulate successful payment" %}</button>
+            <button name="outcome" value="failed" class="sf-button sf-button--secondary min-h-11">{% trans "Simulate failed payment" %}</button>
+            <button name="outcome" value="cancelled" class="sf-button sf-button--quiet min-h-11">{% trans "Simulate customer cancellation" %}</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

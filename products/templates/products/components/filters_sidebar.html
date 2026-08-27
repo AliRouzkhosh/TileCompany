@@ -1,0 +1,388 @@
+{% if filter_source == "generic" %}
+    {% include "products/components/generic_filters_sidebar.html" %}
+{% else %}
+{% load i18n localized_content %}<!-- filter_sidebar.html !-->
+<form
+    method="get"
+    class="flex h-full min-h-0 flex-col overflow-hidden bg-white xl:rounded-2xl xl:border xl:border-stone-200 xl:shadow-sm">
+
+    {% if query %}
+        <input type="hidden" name="q" value="{{ query }}">
+    {% endif %}
+    {% if current_filters.sort %}
+        <input type="hidden" name="sort" value="{{ current_filters.sort }}">
+    {% endif %}
+
+    <div class="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 pb-8 pt-6">
+
+    <!-- Categories -->
+    <details open class="group border-b border-stone-200 pb-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Categories" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for c in categories %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="categories"
+                    value="{{ c.slug }}"
+                    {% if c.slug in selected_categories %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ c|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+
+    <!-- Brand -->
+    {% if filter_options.brands %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Brand" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2 max-h-56 overflow-y-auto">
+
+            {% for brand in filter_options.brands %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="brands"
+                    value="{{ brand.slug }}"
+                    {% if brand.slug in selected_brands %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ brand|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Material -->
+    {% if filter_options.materials %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Material" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for material in filter_options.materials %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="materials"
+                    value="{{ material.slug }}"
+                    {% if material.slug in selected_materials %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ material|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Finish -->
+    {% if filter_options.finishes %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Finish" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for finish in filter_options.finishes %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="finishes"
+                    value="{{ finish.slug }}"
+                    {% if finish.slug in selected_finishes %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ finish|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Color -->
+    {% if filter_options.colors %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Color" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for color in filter_options.colors %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="colors"
+                    value="{{ color.slug }}"
+                    {% if color.slug in selected_colors %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ color|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Size -->
+    {% if filter_options.sizes %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Size" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for size in filter_options.sizes %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="sizes"
+                    value="{{ size.slug }}"
+                    {% if size.slug in selected_sizes %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ size|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Usage -->
+    {% if filter_options.usages %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Usage" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for usage in filter_options.usages %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="usages"
+                    value="{{ usage.slug }}"
+                    {% if usage.slug in selected_usages %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ usage|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Design -->
+    {% if filter_options.designs %}
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Design" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-2">
+
+            {% for design in filter_options.designs %}
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="designs"
+                    value="{{ design.slug }}"
+                    {% if design.slug in selected_designs %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm">{{ design|localized:"name" }}</span>
+            </label>
+            {% endfor %}
+
+        </div>
+    </details>
+    {% endif %}
+
+    <!-- Price -->
+    <details class="group border-b border-stone-200 py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Price" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 grid grid-cols-2 gap-3">
+
+            <input
+                type="number"
+                name="min_price"
+                value="{{ current_filters.min_price }}"
+                min="0"
+                placeholder="{% trans 'Min' %}"
+                class="rounded-lg border border-stone-300 px-3 py-2 text-sm">
+
+            <input
+                type="number"
+                name="max_price"
+                value="{{ current_filters.max_price }}"
+                min="0"
+                max="{{ max_price }}"
+                placeholder="{% trans 'Max' %}"
+                class="rounded-lg border border-stone-300 px-3 py-2 text-sm">
+
+        </div>
+    </details>
+
+    <!-- Availability -->
+    <details class="group py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold uppercase tracking-wide text-stone-700">
+            {% trans "Availability" %}
+            <svg class="h-4 w-4 transition group-open:rotate-180"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+            </svg>
+        </summary>
+
+        <div class="mt-4 space-y-3">
+
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="in_stock"
+                    value="1"
+                    {% if current_filters.in_stock == "1" %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600">
+                <span class="text-sm">{% trans "In Stock" %}</span>
+            </label>
+
+            <label class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    name="on_sale"
+                    value="1"
+                    {% if current_filters.on_sale == "1" %}checked{% endif %}
+                    class="rounded border-stone-300 text-amber-600">
+                <span class="text-sm">{% trans "On Sale" %}</span>
+            </label>
+
+        </div>
+    </details>
+
+    </div>
+
+    <div class="shrink-0 space-y-3 border-t border-stone-200 bg-white px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-8px_20px_-18px_rgba(0,0,0,0.5)]">
+
+        <button
+            type="submit"
+            class="w-full rounded-xl bg-stone-900 py-3 font-medium text-white transition hover:bg-stone-800">
+
+            {% trans "Apply Filters" %}
+
+        </button>
+
+        {% if has_active_criteria %}<a
+            href="{{ clear_all_url }}"
+            class="block rounded-xl border border-stone-300 py-3 text-center font-medium text-stone-700 transition hover:bg-stone-100">
+
+            {% trans "Clear Filters" %}
+
+        </a>{% endif %}
+
+    </div>
+
+</form>
+{% endif %}

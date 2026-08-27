@@ -1,0 +1,119 @@
+<!-- dashboard/templates/dashboard/components/action_buttons.html !-->
+<!-- dashboard/templates/dashboard/components/action_buttons.html -->
+{% load i18n %}
+
+<div class="flex flex-wrap gap-3">
+
+    {# -------------------------------------------------- #}
+    {# Refund Requested                                  #}
+    {# -------------------------------------------------- #}
+
+    {% if is_owner and order.is_refund_under_review %}
+
+        <a href="{% url 'dashboard:approve_refund' order.id %}" class="rounded-xl bg-green-600 px-5 py-2 font-medium text-white transition hover:bg-green-700">{% trans "Approve Refund" %}</a>
+        <a href="{% url 'dashboard:request_refund_information' order.id %}" class="rounded-xl bg-amber-600 px-5 py-2 font-medium text-white transition hover:bg-amber-700">{% trans "Request more information" %}</a>
+        <a href="{% url 'dashboard:reject_refund' order.id %}" class="rounded-xl bg-red-600 px-5 py-2 font-medium text-white transition hover:bg-red-700">{% trans "Reject Refund" %}</a>
+
+    {# -------------------------------------------------- #}
+    {# Refund Approved                                   #}
+    {# -------------------------------------------------- #}
+
+    {% elif is_owner and order.is_refund_approved %}
+
+        <form method="post"
+              action="{% url 'dashboard:process_refund' order.id %}">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="rounded-xl bg-emerald-700 px-5 py-2 font-medium text-white transition hover:bg-emerald-800">
+                {% trans "Mark Refund Processed" %}
+            </button>
+        </form>
+
+    {# -------------------------------------------------- #}
+    {# Confirmed Orders                                  #}
+    {# -------------------------------------------------- #}
+
+    {% elif can_manage_fulfillment and order.can_ship %}
+
+        <form method="post"
+              action="{% url 'dashboard:ship_order' order.id %}">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="rounded-xl bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-700">
+                {% trans "Mark as Shipped" %}
+            </button>
+        </form>
+
+        <form method="post"
+              action="{% url 'dashboard:hold_order' order.id %}">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="rounded-xl bg-amber-600 px-5 py-2 font-medium text-white transition hover:bg-amber-700">
+                {% trans "Place on Hold" %}
+            </button>
+        </form>
+
+    {# -------------------------------------------------- #}
+    {# Orders On Hold                                    #}
+    {# -------------------------------------------------- #}
+
+    {% elif can_manage_fulfillment and order.status == "on_hold" %}
+
+        <form method="post"
+              action="{% url 'dashboard:resume_order' order.id %}">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="rounded-xl bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-700">
+                {% trans "Resume Order" %}
+            </button>
+        </form>
+
+    {# -------------------------------------------------- #}
+    {# Shipping                                           #}
+    {# -------------------------------------------------- #}
+
+    {% elif can_manage_fulfillment and order.status == "shipped" %}
+
+        <form method="post"
+              action="{% url 'dashboard:deliver_order' order.id %}">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="rounded-xl bg-green-600 px-5 py-2 font-medium text-white transition hover:bg-green-700">
+                {% trans "Mark as Delivered" %}
+            </button>
+        </form>
+
+    {# -------------------------------------------------- #}
+    {# Pending Unpaid                                     #}
+    {# -------------------------------------------------- #}
+
+    {% elif can_manage_fulfillment and order.can_cancel %}
+
+        <form method="post"
+              action="{% url 'dashboard:cancel_order' order.id %}">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="rounded-xl bg-red-600 px-5 py-2 font-medium text-white transition hover:bg-red-700">
+                {% trans "Cancel Order" %}
+            </button>
+        </form>
+
+    {# -------------------------------------------------- #}
+    {# No Available Actions                               #}
+    {# -------------------------------------------------- #}
+
+    {% else %}
+
+        <span class="rounded-xl bg-stone-100 px-5 py-2 text-stone-500">
+            {% trans "No actions available" %}
+        </span>
+
+    {% endif %}
+
+</div>

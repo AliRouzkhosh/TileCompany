@@ -1,0 +1,54 @@
+{% load i18n %}
+{% if breadcrumbs %}
+<nav
+    class="mb-4 flex max-w-full min-w-0 items-center gap-2 overflow-x-hidden text-sm sm:mb-6"
+    aria-label="{% trans 'Breadcrumb' %}"
+>
+
+    <a
+        href="{% url 'products:home' %}"
+        class="shrink-0 whitespace-nowrap text-stone-500 transition hover:text-amber-700"
+    >
+        {% trans "Home" %}
+    </a>
+
+    {% for crumb in breadcrumbs %}
+
+        <svg
+            class="rtl-flip h-4 w-4 shrink-0 text-stone-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+            />
+        </svg>
+
+        {% if crumb.url %}
+
+            <a
+                href="{{ crumb.url }}"
+                class="max-w-28 shrink-0 truncate whitespace-nowrap text-stone-500 transition hover:text-amber-700 sm:max-w-64"
+            >
+                <bdi>{{ crumb.label }}</bdi>
+            </a>
+
+        {% else %}
+
+            <span
+                class="max-w-28 shrink-0 truncate whitespace-nowrap font-semibold text-stone-900 sm:max-w-64"
+                aria-current="page"
+            >
+                <bdi>{{ crumb.label }}</bdi>
+            </span>
+
+        {% endif %}
+
+    {% endfor %}
+
+</nav>
+{% endif %}

@@ -1,0 +1,50 @@
+<!-- orders/templates/orders/order_detail.html !-->
+{% extends "accounts/base.html" %}
+{% load localized_dates pricing %}
+{% load humanize i18n %}
+
+{% block title %}{% blocktrans context "order detail" with number=order.user_order_number %}Order #{{ number }}{% endblocktrans %}{% endblock %}
+
+{% block account_content %}
+<section class="order-detail" aria-labelledby="order-detail-title">
+    <header class="order-detail__header">
+        <div>
+            <h1 id="order-detail-title">{% blocktrans context "order detail" with number=order.user_order_number %}Order #{{ number }}{% endblocktrans %}</h1>
+            <p>{% blocktrans context "order detail" with date=order.created_at|localized_date %}Placed on {{ date }}{% endblocktrans %}</p>
+        </div>
+        <p class="order-detail__reference"><span>{% trans "Order reference" %}</span> <bdi>{{ order.user_order_number }}</bdi></p>
+    </header>
+
+    {% include "orders/components/order_status_surface.html" %}
+
+    {% if order.can_start_online_payment %}
+    <section class="order-detail__payment-required" aria-labelledby="payment-recovery-title" data-order-payment-recovery>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 id="payment-recovery-title" class="font-semibold text-text-primary">{% trans "Payment required" %}</h2>
+                <p>
+                    {% blocktrans with reference=order.user_order_number %}Order #{{ reference }} is awaiting payment.{% endblocktrans %}
+                    <span class="font-semibold text-text-primary">{{ order.total_amount|money:order.currency }}</span>
+                </p>
+            </div>
+            <a href="{% url 'orders:payment_start' order.id %}" class="sf-button sf-button--primary shrink-0">
+                {% trans "Complete payment" %}
+            </a>
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="order-detail__layout">
+        <div class="order-detail__primary">
+            {% include "orders/components/order_items.html" %}
+            {% include "orders/components/order_timeline.html" %}
+        </div>
+        <aside class="order-detail__support">
+            {% include "orders/components/order_summary_card.html" %}
+            {% include "orders/components/shipping_information_card.html" %}
+            {% include "orders/components/payment_information_card.html" %}
+            {% include "orders/components/refund_status.html" %}
+        </aside>
+    </div>
+</section>
+{% endblock %}

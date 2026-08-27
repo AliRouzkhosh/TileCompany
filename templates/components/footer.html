@@ -1,0 +1,90 @@
+{% load i18n %}
+<footer class="mt-12 border-t border-border bg-surface-subtle sm:mt-16" data-storefront-footer>
+    <div class="store-container py-8 lg:py-14">
+        <div class="lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1.85fr)] lg:gap-16 xl:gap-24">
+            <div class="max-w-md" data-footer-brand>
+                {% include "components/brand.html" %}
+                <p class="mt-4 text-sm leading-6 text-text-secondary sm:text-base sm:leading-7">
+                    {% trans "Discover tiles for floors, walls, and every space, with straightforward online shopping and support when you need it." %}
+                </p>
+            </div>
+
+            <nav class="mt-6 border-t border-border lg:hidden" aria-label="{% trans 'Footer navigation' %}" data-footer-mobile-navigation>
+                <details class="footer-disclosure" data-footer-disclosure>
+                    <summary>
+                        <span>{% trans "Shop" %}</span>
+                        <svg class="footer-disclosure-chevron" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <div class="footer-disclosure-content">
+                        <a href="{{ storefront_navigation.view_all_url }}" class="footer-link">{% trans "All Products" %}</a>
+                        {% for section in storefront_navigation.sections %}
+                            {% if section.code == "categories" %}
+                                {% for item in section.items|slice:":6" %}
+                                    <a href="{{ item.url }}" class="footer-link">{{ item.label }}</a>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </details>
+
+                <details class="footer-disclosure" data-footer-disclosure>
+                    <summary>
+                        <span>{% trans "Explore" %}</span>
+                        <svg class="footer-disclosure-chevron" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <div class="footer-disclosure-content">
+                        <a href="{% url 'blog:article_list' %}" class="footer-link">{% trans "Articles" %}</a>
+                        {% for item in footer_site_page_links %}<a href="{{ item.url }}" hx-boost="false" class="footer-link" data-site-page-link="{{ item.key }}">{{ item.label }}</a>{% endfor %}
+                    </div>
+                </details>
+
+                <details class="footer-disclosure" data-footer-disclosure>
+                    <summary>
+                        <span>{% trans "Support" %}</span>
+                        <svg class="footer-disclosure-chevron" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <div class="footer-disclosure-content">
+                        <a href="{% url 'support:support_home' %}" class="footer-link">{% trans "Support center" %}</a>
+                        <a href="{% url 'support:help_list' %}" class="footer-link">{% trans "Help articles" %}</a>
+                    </div>
+                </details>
+            </nav>
+
+            <nav class="hidden grid-cols-3 gap-8 lg:grid" aria-label="{% trans 'Footer navigation' %}" data-footer-desktop-navigation>
+                <section aria-labelledby="footer-shop-heading">
+                    <h2 id="footer-shop-heading" class="footer-heading">{% trans "Shop" %}</h2>
+                    <div class="mt-4 space-y-2">
+                        <a href="{{ storefront_navigation.view_all_url }}" class="footer-link">{% trans "All Products" %}</a>
+                        {% for section in storefront_navigation.sections %}
+                            {% if section.code == "categories" %}
+                                {% for item in section.items|slice:":6" %}
+                                    <a href="{{ item.url }}" class="footer-link">{{ item.label }}</a>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section aria-labelledby="footer-explore-heading">
+                    <h2 id="footer-explore-heading" class="footer-heading">{% trans "Explore" %}</h2>
+                    <div class="mt-4 space-y-2">
+                        <a href="{% url 'blog:article_list' %}" class="footer-link">{% trans "Articles" %}</a>
+                        {% for item in footer_site_page_links %}<a href="{{ item.url }}" hx-boost="false" class="footer-link" data-site-page-link="{{ item.key }}">{{ item.label }}</a>{% endfor %}
+                    </div>
+                </section>
+
+                <section aria-labelledby="footer-support-heading">
+                    <h2 id="footer-support-heading" class="footer-heading">{% trans "Support" %}</h2>
+                    <div class="mt-4 space-y-2">
+                        <a href="{% url 'support:support_home' %}" class="footer-link">{% trans "Support center" %}</a>
+                        <a href="{% url 'support:help_list' %}" class="footer-link">{% trans "Help articles" %}</a>
+                    </div>
+                </section>
+            </nav>
+        </div>
+
+        <div class="mt-6 border-t border-border pt-5 text-sm text-text-muted lg:mt-10 lg:pt-6" data-footer-bottom>
+            <p>&copy; {% now "Y" %} TileStore. {% trans "All rights reserved." %}</p>
+        </div>
+    </div>
+</footer>

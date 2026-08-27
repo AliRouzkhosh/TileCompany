@@ -1,0 +1,27 @@
+{% load i18n %}
+<header class="dashboard-topbar sticky top-0 z-20">
+    <div class="flex items-center justify-between gap-4 px-4 py-5 sm:px-8">
+        <div class="flex items-start gap-3">
+            <button type="button" data-dashboard-menu-toggle aria-controls="dashboard-mobile-menu" aria-expanded="false" aria-label="{% trans 'Open dashboard navigation' %}" class="mt-1 rounded-xl border border-stone-200 bg-stone-50 p-2 lg:hidden">
+                <i data-lucide="menu" class="sf-icon" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="text-xl font-bold text-text-primary sm:text-2xl">
+                    {% block dashboard_title %}{% trans "Operations Dashboard" %}{% endblock %}
+                </h1>
+                <p class="mt-1 text-sm text-text-secondary">{% trans "Internal Order Management System" %}</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+            {% include "dashboard/components/notification_bell.html" %}
+            <button type="button" data-theme-toggle aria-pressed="false" data-light-mode-label="{% trans 'Light mode' %}" data-dark-mode-label="{% trans 'Dark mode' %}" data-switch-to-light-label="{% trans 'Switch to light mode' %}" data-switch-to-dark-label="{% trans 'Switch to dark mode' %}" class="rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm font-medium transition hover:bg-stone-100 sm:px-4"><span data-theme-icon>☾</span> <span data-theme-label>{% trans "Dark mode" %}</span></button>
+
+            <div class="hidden rounded-xl border border-stone-200 bg-stone-50 px-4 py-2 sm:block">
+                <p class="text-sm font-medium">{{ request.user.username }}</p>
+            </div>
+
+            <a href="/" class="rounded-xl bg-stone-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-stone-700 sm:px-5">{% trans "View Store" %}</a>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,46 @@
+{% load pricing i18n localized_dates %}
+<article class="account-order-card" aria-labelledby="order-{{ order.pk }}-title">
+    <header class="account-order-card__topline">
+        <div class="account-order-card__status-stack">
+            {% if order.can_start_online_payment %}
+                <p class="account-order-card__status account-order-card__status--payment-required"><i data-lucide="credit-card" class="sf-icon" aria-hidden="true"></i>{% trans "Payment required" %}</p>
+            {% else %}
+                <p class="account-order-card__status account-order-card__status--{{ order.status }}"><i data-lucide="{% if order.status == 'delivered' %}circle-check{% elif order.status == 'cancelled' %}circle-x{% elif order.status == 'shipped' %}truck{% else %}package-check{% endif %}" class="sf-icon" aria-hidden="true"></i>{{ order.get_status_display }}</p>
+            {% endif %}
+            {% if order.refund_status != "none" %}
+                <p class="account-order-card__refund-badge account-order-card__refund-badge--{{ order.refund_status }}"><i data-lucide="{% if order.refund_status == 'approved' or order.refund_status == 'processed' %}circle-check{% elif order.refund_status == 'rejected' %}circle-x{% elif order.refund_status == 'needs_information' %}circle-alert{% else %}rotate-ccw{% endif %}" class="sf-icon" aria-hidden="true"></i>{% if order.refund_status == "requested" %}{% trans "Refund requested" %}{% elif order.refund_status == "needs_information" %}{% trans "More information required" %}{% elif order.refund_status == "approved" %}{% trans "Refund approved" %}{% elif order.refund_status == "rejected" %}{% trans "Refund rejected" %}{% elif order.refund_status == "processed" %}{% trans "Refund processed" %}{% endif %}</p>
+            {% endif %}
+        </div>
+        <time class="account-order-card__date" datetime="{{ order.created_at|date:'c' }}">{{ order.created_at|localized_date }}</time>
+    </header>
+
+    <div class="account-order-card__identity">
+        <h2 id="order-{{ order.pk }}-title">{% blocktrans with number=order.user_order_number|default:order.pk %}Order #{{ number }}{% endblocktrans %}</h2>
+        <p class="account-order-card__secondary-state {% if order.can_start_online_payment %}account-order-card__secondary-state--payment-required{% endif %}">{% if order.can_start_online_payment %}{% trans "Awaiting payment" %}{% else %}{{ order.payment_status_display }}{% endif %}</p>
+    </div>
+
+    <section class="account-order-card__items" aria-label="{% trans 'Purchased items' %}">
+        <p class="account-order-card__items-label">{% trans "Purchased items" %}</p>
+        {% for item in order.order_preview_items %}
+            <div class="account-order-card__item">
+                {% if item.order_history_thumbnail_url %}
+                    <div class="account-order-card__item-thumbnail">
+                        <img src="{{ item.order_history_thumbnail_url }}" alt="{{ item.display_product_name }}" loading="lazy">
+                    </div>
+                {% else %}
+                    <div class="account-order-card__item-thumbnail" aria-hidden="true">
+                        <i data-lucide="package" class="sf-icon"></i>
+                    </div>
+                {% endif %}
+                <div class="min-w-0"><p class="account-order-card__item-name" title="{{ item.display_product_name }}">{{ item.display_product_name }}</p>{% if item.display_specification_chips %}<p class="account-order-card__item-config" title="{{ item.display_specification_chips|join:' · ' }}">{{ item.display_specification_chips|join:" · " }}</p>{% endif %}</div>
+                <p class="account-order-card__item-quantity" dir="auto">{% trans "Quantity" %} <span dir="ltr">{{ item.quantity|localized_number }}</span></p>
+            </div>
+        {% endfor %}
+        {% if order.preview_extra_count %}<p class="account-order-card__more-items" dir="auto">{% blocktrans with count=order.preview_extra_count|localized_number %}+{{ count }} more items{% endblocktrans %}</p>{% endif %}
+    </section>
+
+    <footer class="account-order-card__footer">
+        <p class="account-order-card__total">{{ order.total_amount|money:order.currency }}</p>
+        <a class="account-overview__quiet-action" href="{% url 'orders:order_detail' order.id %}" hx-boost="false">{% if order.can_start_online_payment %}{% trans "Review and pay" %}{% else %}{% trans "View order" %}{% endif %}</a>
+    </footer>
+</article>

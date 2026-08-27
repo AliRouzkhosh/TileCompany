@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Permission denied" %}{% endblock %}
+{% block content %}
+<main class="mx-auto flex min-h-[60vh] max-w-3xl items-center px-4 py-12 sm:px-6">
+  <section class="w-full rounded-2xl border border-border bg-surface p-6 text-center shadow-sm sm:p-10">
+    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-subtle text-brand-active"><i data-lucide="shield-alert" class="sf-icon h-7 w-7" aria-hidden="true"></i></span>
+    <h1 class="mt-6 text-2xl font-bold text-text-primary sm:text-3xl">{% trans "You don't have permission to access this page" %}</h1>
+    <p class="mx-auto mt-3 max-w-xl text-text-secondary">{% trans "If you think this is an error, please contact your store administrator." %}</p>
+    <a href="{% url 'products:home' %}" class="mt-7 inline-flex rounded-lg bg-brand px-5 py-3 font-medium text-white transition hover:bg-brand-active">{% trans "Return to store" %}</a>
+  </section>
+</main>
+{% endblock %}

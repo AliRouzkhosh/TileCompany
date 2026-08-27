@@ -1,0 +1,31 @@
+{% load i18n localized_content %}
+<section class="mx-auto max-w-2xl rounded-surface border border-dashed border-border-strong bg-surface px-6 py-10 text-center sm:px-10 sm:py-12" data-catalog-empty-state>
+    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-surface bg-surface-subtle text-text-muted" aria-hidden="true">
+        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4 6h16M7 6V4h10v2m-1 0v14H8V6m2 4h4m-4 4h4"/></svg>
+    </div>
+
+    {% if query %}
+        <h2 class="mt-5 text-xl font-semibold text-text-primary">{% blocktrans %}No results for “{{ query }}”{% endblocktrans %}</h2>
+        <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-text-secondary">
+            {% if active_filter_count %}{% trans "Try clearing the active filters or changing your search terms." %}{% else %}{% trans "Check the spelling or try a broader search." %}{% endif %}
+        </p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+            {% if active_filter_count %}<a href="{{ clear_all_url }}" class="sf-button sf-button--primary">{% trans "Clear all" %}</a>{% else %}<a href="{% url 'products:product_list' %}" class="sf-button sf-button--primary">{% trans "Browse all products" %}</a>{% endif %}
+        </div>
+    {% elif active_filter_count %}
+        <h2 class="mt-5 text-xl font-semibold text-text-primary">{% trans "No products match these filters" %}</h2>
+        <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-text-secondary">{% trans "Clear the active filters and try another combination." %}</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+            <a href="{{ clear_all_url }}" class="sf-button sf-button--primary">{% trans "Clear filters" %}</a>
+        </div>
+    {% elif category %}
+        <h2 class="mt-5 text-xl font-semibold text-text-primary">{% trans "No products in this category" %}</h2>
+        <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-text-secondary">{% blocktrans with category_name=category|localized:"name" %}There are no available products in {{ category_name }} right now.{% endblocktrans %}</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+            <a href="{% url 'products:product_list' %}" class="sf-button sf-button--primary">{% trans "Browse all products" %}</a>
+        </div>
+    {% else %}
+        <h2 class="mt-5 text-xl font-semibold text-text-primary">{% trans "No products available" %}</h2>
+        <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-text-secondary">{% trans "The catalog does not have any products to show yet." %}</p>
+    {% endif %}
+</section>

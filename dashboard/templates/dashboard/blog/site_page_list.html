@@ -1,0 +1,23 @@
+{% extends "dashboard/base.html" %}
+{% load i18n localized_dates %}
+{% block dashboard_content %}
+<div class="space-y-6">
+    <header>
+        <p class="text-sm font-semibold text-slate-500">{% trans "Content" %}</p>
+        <h1 class="text-2xl font-bold text-slate-900">{% trans "Pages" %}</h1>
+        <p class="mt-1 text-sm text-slate-500">{% trans "Manage the six fixed public company and policy pages." %}</p>
+    </header>
+    <div class="overflow-x-auto rounded-xl bg-white shadow-sm">
+        <table class="w-full text-start text-sm">
+            <thead class="border-b text-stone-500"><tr><th class="p-4">{% trans "Page" %}</th><th>{% trans "State" %}</th><th>{% trans "Updated" %}</th><th>{% trans "Published at" %}</th><th class="p-4"></th></tr></thead>
+            <tbody>{% for page in site_pages %}<tr class="border-b" data-site-page-row="{{ page.key }}">
+                <td class="p-4"><p class="font-semibold text-stone-900">{{ page.identity_label }}</p><code class="mt-1 block text-xs text-stone-500">{{ page.key }}</code></td>
+                <td>{% if page.is_published %}<span class="rounded-full bg-emerald-100 px-2 py-1 text-emerald-800">{% trans "Published" %}</span>{% else %}<span class="rounded-full bg-stone-100 px-2 py-1">{% trans "Draft" %}</span>{% endif %}</td>
+                <td><time datetime="{{ page.updated_at|date:'c' }}">{{ page.updated_at|localized_date }}</time></td>
+                <td>{% if page.published_at %}<time datetime="{{ page.published_at|date:'c' }}">{{ page.published_at|localized_date }}</time>{% else %}—{% endif %}</td>
+                <td class="p-4 text-end"><a class="font-semibold text-indigo-700" href="{% url 'dashboard:blog:page_edit' page.pk %}">{% trans "Edit" %}</a> · <a class="font-semibold text-indigo-700" href="{% url 'dashboard:blog:page_preview' page.pk %}" hx-boost="false">{% trans "Preview" %}</a></td>
+            </tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

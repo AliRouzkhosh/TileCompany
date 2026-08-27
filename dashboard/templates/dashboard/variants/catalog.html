@@ -1,0 +1,33 @@
+{% extends "dashboard/base.html" %}
+{% load pricing i18n %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block dashboard_content %}
+{% include "dashboard/components/breadcrumbs.html" with title=page_title %}
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold">{% trans "Variants" %}</h1>
+            <p class="text-sm text-slate-500">{% trans "Manage SKU-level inventory, selling unit, and independent currency prices." %}</p>
+        </div>
+        <a href="{% url 'dashboard:products:variants:create' product.pk %}" class="rounded-xl bg-slate-900 px-5 py-2.5 text-sm text-white">{% trans "Add Variant" %}</a>
+    </div>
+    <div class="overflow-x-auto rounded-xl border bg-white">
+        <table class="min-w-full divide-y">
+            <thead><tr><th class="px-6 py-3 text-start">{% trans "SKU" %}</th><th class="px-6 py-3 text-start">{% trans "Attributes" %}</th><th class="px-6 py-3 text-start">{% trans "Prices" %}</th><th class="px-6 py-3 text-end">{% trans "Stock" %}</th><th></th></tr></thead>
+            <tbody>
+                {% for variant in variants %}
+                    <tr>
+                        <td class="px-6 py-4 font-mono">{{ variant.sku }}</td>
+                        <td class="px-6 py-4">{{ variant.display_size|default:"—" }} {{ variant.color|default:"" }}</td>
+                        <td class="px-6 py-4">{% for price in variant.prices.all %}<div>{{ price.currency }}: {{ price.amount|money:price.currency }}{% if price.compare_at_amount %} <span class="line-through text-slate-400">{{ price.compare_at_amount|money:price.currency }}</span>{% endif %}</div>{% empty %}{% trans "No prices" %}{% endfor %}</td>
+                        <td class="px-6 py-4 text-end">{{ variant.stock|localized_number }}</td>
+                        <td class="px-6 py-4 text-end"><a href="{% url 'dashboard:products:variants:edit' product.pk variant.pk %}">{% trans "Edit" %}</a></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5" class="p-8 text-center">{% trans "No variants yet." %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% load pricing i18n %}
+<section class="overflow-hidden rounded-surface border border-border bg-surface shadow-surface" data-checkout-summary>
+    <header class="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
+        <div>
+            <h2 class="text-lg font-semibold text-text-primary">{% trans "Order summary" %}</h2>
+            <p class="mt-1 text-xs text-text-muted">{% blocktrans count counter=checkout.cart_quantity with display_count=checkout.cart_quantity|localized_number %}{{ display_count }} item{% plural %}{{ display_count }} items{% endblocktrans %}</p>
+        </div>
+        <span class="text-base font-semibold tabular-nums text-text-primary">{{ checkout.summary.total|money:checkout.currency }}</span>
+    </header>
+
+    <div class="max-h-72 divide-y divide-border overflow-y-auto overscroll-contain" data-checkout-lines tabindex="0" aria-label="{% trans 'Products in this order' %}">
+        {% for item in checkout.items %}
+            <article class="grid grid-cols-[4rem_minmax(0,1fr)] gap-3 px-5 py-4" data-checkout-line data-variant-id="{{ item.presentation.variant_id }}">
+                <a href="{{ item.presentation.product_url }}" class="block aspect-square h-16 w-16 overflow-hidden rounded-control border border-border bg-surface-subtle" aria-label="{{ item.presentation.product_name }}" data-checkout-line-media>
+                    {% if item.presentation.image_url %}
+                        <img src="{{ item.presentation.image_url }}" alt="{{ item.presentation.product_name }}" class="h-full w-full object-cover" loading="lazy" data-checkout-line-image>
+                    {% else %}
+                        <span class="home-media-fallback flex h-full w-full items-center justify-center text-text-muted" data-checkout-line-fallback><svg class="h-7 w-7 opacity-45" aria-hidden="true" fill="none" viewBox="0 0 48 48" stroke="currentColor"><path stroke-width="1.5" d="M6 6h15v15H6zM27 6h15v15H27zM6 27h15v15H6zM27 27h15v15H27z"/></svg></span>
+                    {% endif %}
+                </a>
+                <div class="min-w-0">
+                    <h3 class="line-clamp-2 text-sm font-semibold leading-5 text-text-primary"><a href="{{ item.presentation.product_url }}" class="hover:text-brand-active">{{ item.presentation.product_name }}</a></h3>
+                    {% if item.presentation.variant_attributes %}
+                        <p class="mt-1 line-clamp-2 text-xs leading-5 text-text-muted" data-checkout-configuration>
+                            {% for attribute in item.presentation.variant_attributes %}
+                                <span>{{ attribute.label }}: {% for value in attribute.values %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+                                {% if not forloop.last %} <span class="mx-1" aria-hidden="true">•</span> {% endif %}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    <div class="mt-2 flex items-end justify-between gap-3 text-xs">
+                        <span class="text-text-muted">{{ item.quantity|localized_number }} {{ item.presentation.quantity_noun }}</span>
+                        <span class="flex min-w-0 flex-col items-end gap-1 text-end" data-sale-price-group>
+                            <span class="font-semibold tabular-nums text-text-primary">{{ item.subtotal|money:checkout.currency }}</span>
+                            {% if item.presentation.unit_reference_price %}
+                                <span class="inline-flex max-w-full flex-nowrap items-center gap-2 whitespace-nowrap">
+                                    <s class="tabular-nums text-text-muted">{{ item.presentation.unit_reference_price|money:checkout.currency }}</s>
+                                    <span class="rounded-chip bg-brand-subtle px-2 py-0.5 font-semibold text-brand-active">{% blocktrans with percent=item.presentation.discount_percent|localized_number %}{{ percent }}% off{% endblocktrans %}</span>
+                                </span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% if item.quantity > item.presentation.stock %}
+                        <p class="mt-2 text-xs font-medium text-error" data-checkout-stock-change>{% blocktrans with requested=item.quantity|localized_number available=item.presentation.stock|localized_number unit=item.presentation.stock_noun %}Requested {{ requested }}; only {{ available }} {{ unit }} available{% endblocktrans %}</p>
+                    {% endif %}
+                </div>
+            </article>
+        {% empty %}
+            <p class="px-5 py-8 text-center text-sm text-text-muted">{% trans "Your cart is empty." %}</p>
+        {% endfor %}
+    </div>
+
+    <dl class="space-y-3 border-t border-border bg-surface-subtle px-5 py-4 text-sm" data-checkout-financials>
+        {% if checkout.summary.product_savings %}<div class="flex justify-between gap-4"><dt class="text-text-secondary">{% trans "Items at original price" %}</dt><dd class="font-medium tabular-nums text-text-primary">{{ checkout.summary.reference_subtotal|money:checkout.currency }}</dd></div><div class="flex justify-between gap-4"><dt class="text-text-secondary">{% trans "Product discounts" %}</dt><dd class="font-medium tabular-nums text-success">-{{ checkout.summary.product_savings|money:checkout.currency }}</dd></div>{% endif %}
+        <div class="flex justify-between gap-4"><dt class="text-text-secondary">{% trans "Subtotal" %}</dt><dd class="font-medium tabular-nums text-text-primary">{{ checkout.summary.subtotal|money:checkout.currency }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-text-secondary">{% trans "Shipping" %}</dt><dd class="text-end text-text-muted">{% if checkout_step == "shipping" and not checkout.summary.shipping %}{% trans "Confirmed after this step" %}{% elif checkout.summary.shipping %}{{ checkout.summary.shipping|money:checkout.currency }}{% else %}{% trans "No charge" %}{% endif %}</dd></div>
+        {% if checkout.summary.discount %}<div class="flex justify-between gap-4"><dt class="text-text-secondary">{% trans "Discount" %}</dt><dd class="font-medium tabular-nums text-success">-{{ checkout.summary.discount|money:checkout.currency }}</dd></div>{% endif %}
+        <div class="flex justify-between gap-4"><dt class="text-text-secondary">{% trans "Tax" %}</dt><dd class="text-text-muted">{% if checkout.summary.tax %}{{ checkout.summary.tax|money:checkout.currency }}{% else %}{% trans "Included" %}{% endif %}</dd></div>
+        <div class="flex items-end justify-between gap-4 border-t border-border pt-4"><dt><span class="block font-semibold text-text-primary">{% trans "Total" %}</span><span class="mt-0.5 block text-xs text-text-muted">{% trans "Includes applicable taxes" %}</span></dt><dd class="text-xl font-semibold tabular-nums text-text-primary">{{ checkout.summary.total|money:checkout.currency }}</dd></div>
+    </dl>
+
+    {% include "orders/components/trust_badges.html" %}
+</section>

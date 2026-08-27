@@ -1,0 +1,49 @@
+-- TileCompany production PostgreSQL role template. Do not run against local
+-- development databases. Replace quoted __PLACEHOLDERS__ in deployment tooling;
+-- credentials are supplied separately and never belong in this file.
+--
+-- Execute as an existing PostgreSQL cluster/database administrator. Scope all
+-- schema grants below to the TileCompany application database.
+
+CREATE ROLE "__TILECOMPANY_MIGRATION_ROLE__"
+    LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "__TILECOMPANY_RUNTIME_ROLE__"
+    LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+
+-- The migration role owns the dedicated application database and schema. It is
+-- injected only for a controlled migration job, never into Gunicorn workers.
+ALTER DATABASE "__TILECOMPANY_DATABASE__" OWNER TO "__TILECOMPANY_MIGRATION_ROLE__";
+\connect "__TILECOMPANY_DATABASE__"
+ALTER SCHEMA public OWNER TO "__TILECOMPANY_MIGRATION_ROLE__";
+
+-- Do not inherit broad public-schema mutation rights. This is scoped to this
+-- application database/schema, not a speculative cluster-wide policy.
+REVOKE ALL ON DATABASE "__TILECOMPANY_DATABASE__" FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT CONNECT ON DATABASE "__TILECOMPANY_DATABASE__" TO "__TILECOMPANY_MIGRATION_ROLE__", "__TILECOMPANY_RUNTIME_ROLE__";
+GRANT USAGE, CREATE ON SCHEMA public TO "__TILECOMPANY_MIGRATION_ROLE__";
+GRANT USAGE ON SCHEMA public TO "__TILECOMPANY_RUNTIME_ROLE__";
+
+-- Existing Django tables/sequences: normal DML and SELECT FOR UPDATE require
+-- table SELECT/INSERT/UPDATE/DELETE plus sequence USAGE/SELECT. Runtime gets no
+-- schema ownership, CREATE, ALTER, DROP, or database/role administration.
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO "__TILECOMPANY_RUNTIME_ROLE__";
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO "__TILECOMPANY_RUNTIME_ROLE__";
+
+-- Future migration-created objects receive equivalent runtime access. Run these
+-- as the migration role after it owns the schema; retain an explicit release
+-- grant review for migrations that create objects in other schemas.
+ALTER DEFAULT PRIVILEGES FOR ROLE "__TILECOMPANY_MIGRATION_ROLE__" IN SCHEMA public
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO "__TILECOMPANY_RUNTIME_ROLE__";
+ALTER DEFAULT PRIVILEGES FOR ROLE "__TILECOMPANY_MIGRATION_ROLE__" IN SCHEMA public
+    GRANT USAGE, SELECT ON SEQUENCES TO "__TILECOMPANY_RUNTIME_ROLE__";
+
+-- Release validation (run while connected as the runtime role):
+--   SELECT has_table_privilege(current_user, 'public.django_migrations', 'SELECT');
+--   SELECT has_table_privilege(current_user, 'public.django_migrations', 'INSERT');
+--   SELECT has_sequence_privilege(current_user, 'public.django_migrations_id_seq', 'USAGE');
+--   SELECT rolcreatedb, rolcreaterole, rolsuper, rolreplication, rolbypassrls
+--     FROM pg_roles WHERE rolname = current_user;
+-- Verify a representative normal application transaction, including SELECT FOR
+-- UPDATE, in a production-like non-live environment. Also verify CREATE TABLE,
+-- ALTER TABLE, DROP TABLE, CREATE ROLE, and CREATE DATABASE fail for runtime.

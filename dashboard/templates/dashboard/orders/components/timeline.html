@@ -1,0 +1,45 @@
+{% load i18n localized_dates %}
+
+<div class="rounded-2xl bg-white p-6 shadow">
+
+    <h3 class="mb-6 text-lg font-semibold">
+
+        {% trans "Timeline" %}
+
+    </h3>
+
+    <div class="space-y-5">
+
+        {% for event in order.status_history.all %}
+
+        <div class="border-s-2 border-stone-300 ps-4">
+
+            <p class="font-medium">
+
+                {{ event.get_status_display }}
+
+            </p>
+
+            <p class="text-sm text-stone-500">
+
+                <time datetime="{{ event.changed_at|date:'c' }}">{{ event.changed_at|localized_datetime }}</time>
+
+            </p>
+
+            {% if event.note %}
+
+            <p class="mt-1 text-sm">
+
+                {{ event.display_note }}
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>

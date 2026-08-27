@@ -1,0 +1,30 @@
+{% load i18n pricing %}
+{% if user.is_authenticated and notification_unread_count %}
+    {% blocktrans count unread=notification_unread_count asvar mobile_menu_label %}Open navigation, {{ unread }} unread notification{% plural %}Open navigation, {{ unread }} unread notifications{% endblocktrans %}
+{% else %}
+    {% trans "Open navigation" as mobile_menu_label %}
+{% endif %}
+<nav class="mobile-header relative flex h-16 items-center justify-between border-b border-border bg-surface/95 px-4 backdrop-blur-md lg:hidden" aria-label="{% trans 'Mobile navigation' %}">
+    <button id="mobileMenuButton" type="button" class="sf-icon-button relative" aria-label="{{ mobile_menu_label }}" aria-expanded="false" aria-controls="mobileDrawer" data-mobile-menu-open>
+        <i data-lucide="menu" class="sf-icon" aria-hidden="true"></i>
+        {% if user.is_authenticated and notification_unread_count %}
+        <span data-mobile-menu-notification-count aria-hidden="true" class="absolute -top-0.5 -end-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[9px] font-bold leading-none text-white">
+            {% if notification_unread_count > 99 %}{{ 99|localized_number }}+{% else %}{{ notification_unread_count|localized_number }}{% endif %}
+        </span>
+        {% endif %}
+    </button>
+
+    <div class="mobile-brand-center absolute">
+        {% include "components/brand.html" with compact=True hide_wordmark_on_narrow=True %}
+    </div>
+
+    <div class="flex items-center gap-1">
+        <button id="mobileSearchButton" type="button" class="sf-icon-button" aria-label="{% trans 'Open search' %}" aria-expanded="false" aria-controls="mobileSearchPanel" data-mobile-search-open>
+            <i data-lucide="search" class="sf-icon" aria-hidden="true"></i>
+        </button>
+        <a href="{% url 'orders:cart_detail' %}" class="sf-icon-button relative" aria-label="{% trans 'Cart' %}" title="{% trans 'Cart' %}">
+            <i data-lucide="shopping-bag" class="sf-icon" aria-hidden="true"></i>
+            {% if cart_count %}<span data-cart-count class="absolute -top-1 -end-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold leading-none text-white">{{ cart_count|localized_number }}</span>{% endif %}
+        </a>
+    </div>
+</nav>

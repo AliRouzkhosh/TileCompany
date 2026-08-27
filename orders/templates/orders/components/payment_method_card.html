@@ -1,0 +1,58 @@
+{% load i18n %}
+<div class="space-y-5" data-checkout-payment-options>
+    <fieldset aria-describedby="payment-method-help{% if form.payment_method.errors %} payment-method-errors{% endif %}">
+        <legend class="sr-only">{% trans "Payment method" %}</legend>
+        <div class="border-b border-border pb-3">
+            <h3 class="text-base font-semibold text-text-primary">{% trans "Payment method" %}</h3>
+            <p id="payment-method-help" class="mt-1 text-sm text-text-secondary">{% trans "Select the payment option for this order." %}</p>
+        </div>
+
+        {% if form.payment_method.errors %}<div id="payment-method-errors" class="checkout-error mt-3" role="alert">{{ form.payment_method.errors }}</div>{% endif %}
+
+        <div class="mt-3 grid gap-3 sm:grid-cols-2" data-payment-method-list>
+            {% for radio in form.payment_method %}
+                <label for="{{ radio.id_for_label }}" class="checkout-choice h-full" {% if form.payment_method.errors %}data-invalid="true"{% endif %} data-payment-method-choice data-payment-method="{{ radio.data.value }}">
+                    {{ radio.tag }}
+                    <span class="min-w-0 flex-1">
+                        <span class="flex items-center gap-2 font-semibold text-text-primary">
+                            {% if radio.data.value == "cod" %}<i data-lucide="hand-coins" class="sf-icon text-brand" aria-hidden="true"></i>{% else %}<i data-lucide="credit-card" class="sf-icon text-brand" aria-hidden="true"></i>{% endif %}
+                            {{ radio.choice_label }}
+                        </span>
+                        <span class="mt-2 block text-sm leading-5 text-text-secondary">
+                            {% if radio.data.value == "zarinpal" %}{% trans "Continue to the online payment provider after review." %}
+                            {% elif radio.data.value == "mock" %}{% trans "Use the development payment simulation after review." %}
+                            {% elif radio.data.value == "cod" %}{% trans "Pay when your order is delivered." %}
+                            {% endif %}
+                        </span>
+                    </span>
+                </label>
+            {% endfor %}
+        </div>
+    </fieldset>
+
+    <section class="rounded-control border border-border bg-surface-subtle" aria-labelledby="payment-options-title" data-payment-secondary-options>
+        <h3 id="payment-options-title" class="sr-only">{% trans "Optional payment details" %}</h3>
+
+        <details class="group border-b border-border" {% if form.coupon_code.value or form.coupon_code.errors %}open{% endif %} data-coupon-disclosure>
+            <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-medium text-text-primary [&::-webkit-details-marker]:hidden">
+                <span class="flex items-center gap-2"><i data-lucide="ticket-percent" class="sf-icon text-text-muted" aria-hidden="true"></i>{% trans "Have a coupon code?" %}</span>
+                <i data-lucide="chevron-down" class="sf-icon transition-transform group-open:rotate-180" aria-hidden="true"></i>
+            </summary>
+            <div class="border-t border-border px-4 py-4">
+                <label for="{{ form.coupon_code.id_for_label }}" class="text-sm font-medium text-text-primary">{{ form.coupon_code.label }}</label>
+                <p id="coupon-code-help" class="mt-1 text-xs text-text-muted">{% trans "Enter the code exactly as provided." %}</p>
+                <div class="mt-2 max-w-md">{{ form.coupon_code }}</div>
+                {% if form.coupon_code.errors %}<div id="coupon-code-errors" class="checkout-error mt-2" role="alert">{{ form.coupon_code.errors }}</div>{% endif %}
+            </div>
+        </details>
+
+        <label for="{{ form.email_receipt_requested.id_for_label }}" class="flex min-h-14 cursor-pointer items-start gap-3 px-4 py-3" data-email-receipt-option>
+            {{ form.email_receipt_requested }}
+            <span class="min-w-0">
+                <span class="block text-sm font-medium text-text-primary">{% trans "Send order receipt by email" %}</span>
+                <span class="mt-1 block text-xs leading-5 text-text-muted">{% blocktrans with email=request.user.email %}Receipt will be sent to {{ email }}{% endblocktrans %} <a href="{% url 'accounts:profile' %}" class="underline">{% trans "Update email" %}</a></span>
+            </span>
+        </label>
+        {% if form.email_receipt_requested.errors %}<div id="email-receipt-errors" class="checkout-error mx-4 mb-4" role="alert">{{ form.email_receipt_requested.errors }}</div>{% endif %}
+    </section>
+</div>

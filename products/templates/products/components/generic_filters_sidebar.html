@@ -1,0 +1,126 @@
+{% load i18n localized_content pricing %}
+<form method="get" class="catalog-filter-form" data-generic-filter-form data-filter-display="{{ filter_display|default:'drawer' }}">
+    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+    {% if current_filters.sort %}<input type="hidden" name="sort" value="{{ current_filters.sort }}">{% endif %}
+
+    <div class="catalog-filter-scroll">
+        <details open class="catalog-filter-group group" data-filter-group="categories">
+            <summary class="catalog-filter-summary">
+                <span>{% trans "Categories" %}</span>
+                <svg class="catalog-filter-chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="catalog-filter-options">
+                {% for c in categories %}
+                <label class="catalog-filter-option {% if c.slug in selected_categories %}is-selected{% endif %}">
+                    <input type="checkbox" name="categories" value="{{ c.slug }}" {% if c.slug in selected_categories %}checked{% endif %} class="catalog-filter-checkbox">
+                    <span class="min-w-0 flex-1 break-words">{{ c|localized:"name" }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </details>
+
+        {% if product_type_options %}
+        <details {% if selected_product_types %}open{% endif %} class="catalog-filter-group group" data-filter-group="product-type">
+            <summary class="catalog-filter-summary">
+                <span class="capitalize">{% trans "Product type" %}</span>
+                {% if selected_product_types %}<span class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-subtle px-1.5 py-0.5 text-xs font-semibold text-brand-active">{{ selected_product_types|length|localized_number }}</span>{% endif %}
+                <svg class="catalog-filter-chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="catalog-filter-options catalog-filter-options--bounded">
+                {% for product_type in product_type_options %}
+                <label class="catalog-filter-option {% if product_type.selected %}is-selected{% endif %}">
+                    <input type="checkbox" name="product_type" value="{{ product_type.code }}" {% if product_type.selected %}checked{% endif %} class="catalog-filter-checkbox">
+                    <span class="min-w-0 flex-1 break-words">{{ product_type.label }}</span>
+                    <span class="shrink-0 text-xs tabular-nums text-text-muted">{{ product_type.count|localized_number }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </details>
+        {% endif %}
+
+        {% if brand_options %}
+        <details {% if selected_brands %}open{% endif %} class="catalog-filter-group group" data-filter-group="brand">
+            <summary class="catalog-filter-summary">
+                <span>{% trans "Brand" %}</span>
+                {% if selected_brands %}<span class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-subtle px-1.5 py-0.5 text-xs font-semibold text-brand-active">{{ selected_brands|length|localized_number }}</span>{% endif %}
+                <svg class="catalog-filter-chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="catalog-filter-options catalog-filter-options--bounded">
+                {% for brand in brand_options %}
+                <label class="catalog-filter-option {% if brand.selected %}is-selected{% endif %}">
+                    <input type="checkbox" name="brand" value="{{ brand.slug }}" {% if brand.selected %}checked{% endif %} class="catalog-filter-checkbox">
+                    <span class="min-w-0 flex-1 break-words">{{ brand.label }}</span>
+                    <span class="shrink-0 text-xs tabular-nums text-text-muted">{{ brand.count|localized_number }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </details>
+        {% endif %}
+
+        {% for facet in filter_facets %}
+        <details {% if facet.selected_count %}open{% endif %} class="catalog-filter-group group" data-filter-group="{{ facet.definition_code }}">
+            <summary class="catalog-filter-summary">
+                <span class="min-w-0 flex-1 break-words">{{ facet.label }}{% if facet.unit %} <span class="font-normal text-text-muted">({{ facet.unit }})</span>{% endif %}</span>
+                {% if facet.selected_count %}<span class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-subtle px-1.5 py-0.5 text-xs font-semibold text-brand-active">{{ facet.selected_count|localized_number }}</span>{% endif %}
+                <svg class="catalog-filter-chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            {% if facet.facet_mode == "range" %}
+                <div class="catalog-filter-range">
+                    <label class="catalog-filter-field" for="filter-{{ filter_display|default:'drawer' }}-{{ facet.definition_code }}-min">
+                        <span>{% trans "Minimum" %}</span>
+                        <input id="filter-{{ filter_display|default:'drawer' }}-{{ facet.definition_code }}-min" type="number" step="any" name="attr_{{ facet.definition_code }}_min" value="{{ facet.selected_min|default_if_none:'' }}" {% if facet.available_min is not None %}min="{{ facet.available_min }}"{% endif %} class="catalog-filter-input">
+                    </label>
+                    <label class="catalog-filter-field" for="filter-{{ filter_display|default:'drawer' }}-{{ facet.definition_code }}-max">
+                        <span>{% trans "Maximum" %}</span>
+                        <input id="filter-{{ filter_display|default:'drawer' }}-{{ facet.definition_code }}-max" type="number" step="any" name="attr_{{ facet.definition_code }}_max" value="{{ facet.selected_max|default_if_none:'' }}" {% if facet.available_max is not None %}max="{{ facet.available_max }}"{% endif %} class="catalog-filter-input">
+                    </label>
+                </div>
+            {% else %}
+                <div class="catalog-filter-options catalog-filter-options--bounded">
+                    {% for choice in facet.choices %}
+                    <label class="catalog-filter-option {% if choice.selected %}is-selected{% endif %} {% if choice.disabled %}is-disabled{% endif %}">
+                        <input type="checkbox" name="attr_{{ facet.definition_code }}" value="{{ choice.code }}" {% if choice.selected %}checked{% endif %} {% if choice.disabled %}disabled{% endif %} class="catalog-filter-checkbox">
+                        <span class="min-w-0 flex-1 break-words">{{ choice.label }}{% if choice.is_retired %} <span class="text-xs text-text-muted">({% trans "Retired" %})</span>{% endif %}</span>
+                        <span class="shrink-0 text-xs tabular-nums text-text-muted" aria-label="{% blocktrans with count=choice.count|localized_number %}{{ count }} products{% endblocktrans %}">{{ choice.count|localized_number }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </details>
+        {% endfor %}
+
+        <details {% if current_filters.min_price or current_filters.max_price %}open{% endif %} class="catalog-filter-group group" data-filter-group="price">
+            <summary class="catalog-filter-summary">
+                <span>{% trans "Price" %}</span>
+                <span class="ms-auto text-[0.6875rem] font-medium uppercase tracking-wide text-text-muted">{{ storefront_currency }}</span>
+                <svg class="catalog-filter-chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="catalog-filter-range">
+                <label class="catalog-filter-field" for="filter-{{ filter_display|default:'drawer' }}-price-min">
+                    <span>{% trans "Minimum" %}</span>
+                    <input id="filter-{{ filter_display|default:'drawer' }}-price-min" type="number" name="min_price" value="{{ current_filters.min_price }}" min="0" class="catalog-filter-input">
+                </label>
+                <label class="catalog-filter-field" for="filter-{{ filter_display|default:'drawer' }}-price-max">
+                    <span>{% trans "Maximum" %}</span>
+                    <input id="filter-{{ filter_display|default:'drawer' }}-price-max" type="number" name="max_price" value="{{ current_filters.max_price }}" min="0" class="catalog-filter-input">
+                </label>
+            </div>
+        </details>
+
+        <details {% if current_filters.in_stock == "1" or current_filters.on_sale == "1" %}open{% endif %} class="catalog-filter-group group" data-filter-group="availability">
+            <summary class="catalog-filter-summary">
+                <span>{% trans "Availability" %}</span>
+                <svg class="catalog-filter-chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="catalog-filter-options">
+                <label class="catalog-filter-option {% if current_filters.in_stock == '1' %}is-selected{% endif %}"><input type="checkbox" name="in_stock" value="1" {% if current_filters.in_stock == "1" %}checked{% endif %} class="catalog-filter-checkbox"><span>{% trans "In Stock" %}</span></label>
+                <label class="catalog-filter-option {% if current_filters.on_sale == '1' %}is-selected{% endif %}"><input type="checkbox" name="on_sale" value="1" {% if current_filters.on_sale == "1" %}checked{% endif %} class="catalog-filter-checkbox"><span>{% trans "On Sale" %}</span></label>
+            </div>
+        </details>
+    </div>
+
+    <div class="catalog-filter-actions">
+        <button type="submit" class="catalog-filter-apply">{% trans "Apply Filters" %}</button>
+        {% if active_filter_count and filter_display != "desktop" %}<a href="{{ clear_all_url }}" class="sf-button sf-button--secondary w-full">{% trans "Clear Filters" %}</a>{% endif %}
+    </div>
+</form>

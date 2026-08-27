@@ -1,0 +1,8 @@
+{% load i18n pricing %}
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="flex flex-wrap items-center justify-center gap-2 pt-1" aria-label="{% trans 'Pagination' %}">
+    {% if page_obj.has_previous %}<a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ page_obj.previous_page_number }}" data-pagination-link class="inline-flex min-h-11 items-center justify-center rounded-control border border-border bg-surface px-4 text-sm font-semibold text-text-primary transition hover:border-brand-mid hover:bg-brand-subtle focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-mid">{% trans "Previous" %}</a>{% endif %}
+    <span class="inline-flex min-h-11 items-center rounded-control bg-surface-subtle px-3 text-sm text-text-secondary">{% blocktrans with current=page_obj.number|localized_number total=page_obj.paginator.num_pages|localized_number %}Page {{ current }} of {{ total }}{% endblocktrans %}</span>
+    {% if page_obj.has_next %}<a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ page_obj.next_page_number }}" data-pagination-link class="inline-flex min-h-11 items-center justify-center rounded-control border border-border bg-surface px-4 text-sm font-semibold text-text-primary transition hover:border-brand-mid hover:bg-brand-subtle focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-mid">{% trans "Next" %}</a>{% endif %}
+</nav>
+{% endif %}

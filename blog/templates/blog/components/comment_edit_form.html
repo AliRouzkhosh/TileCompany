@@ -1,0 +1,7 @@
+{% load i18n %}
+<form method="post" action="{% url 'blog:comment_edit' comment.id %}" class="comment-edit-form mt-3 space-y-3{% if editing_comment_id|stringformat:'s' != comment.id|stringformat:'s' %} hidden{% endif %}" hx-post="{% url 'blog:comment_edit' comment.id %}" hx-target="#comments" hx-swap="outerHTML">
+    {% csrf_token %}
+    <label class="sr-only" for="comment-edit-{{ comment.id }}">{% trans "Edit comment" %}</label>
+    <textarea id="comment-edit-{{ comment.id }}" name="body" rows="3" class="w-full rounded-control border border-border-strong bg-surface px-3 py-2.5 text-text-primary focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25" required>{% if form and editing_comment_id == comment.id %}{{ form.body.value }}{% else %}{{ comment.body }}{% endif %}</textarea>{% if form and editing_comment_id == comment.id and form.body.errors %}<div class="mt-2 text-sm text-error">{{ form.body.errors }}</div>{% endif %}
+    <div class="flex flex-wrap gap-3"><button type="submit" class="sf-button sf-button--primary min-h-11 px-4 py-2 text-sm">{% trans "Save changes" %}</button><button type="button" class="comment-edit-cancel sf-button sf-button--secondary min-h-11 px-4 py-2 text-sm">{% trans "Cancel" %}</button></div>
+</form>

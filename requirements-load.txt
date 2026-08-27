@@ -1,0 +1,2 @@
+# Local load-test tooling only. Do not install this file in the production image.
+locust==2.46.3

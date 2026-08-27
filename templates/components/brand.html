@@ -1,0 +1,27 @@
+{% load i18n %}
+<a
+    href="{% url 'products:home' %}"
+    data-store-brand
+    class="group inline-flex min-h-11 shrink-0 items-center {% if compact %}gap-2{% else %}gap-3{% endif %} rounded-control text-text-primary transition hover:opacity-85"
+    aria-label="{% trans 'TileStore home' %}"
+>
+    <span
+        class="inline-flex {% if compact %}h-8 w-8{% else %}h-9 w-9{% endif %} items-center justify-center rounded-control bg-brand-subtle text-brand"
+        aria-hidden="true"
+    >
+        <svg
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="{% if compact %}h-6 w-6{% else %}h-7 w-7{% endif %}"
+        >
+            <rect x="4.75" y="5.25" width="10" height="9" rx="2" fill="currentColor" opacity="0.42"/>
+            <rect x="17.25" y="5.25" width="10" height="9" rx="2" fill="currentColor" opacity="0.72"/>
+            <rect x="4.75" y="16.75" width="10" height="10" rx="2" fill="currentColor" opacity="0.72"/>
+            <rect x="17.25" y="16.75" width="10" height="10" rx="2" fill="currentColor"/>
+        </svg>
+    </span>
+    <span class="{% if compact %}text-lg{% else %}text-2xl{% endif %} {% if hide_wordmark_on_narrow %}mobile-brand-wordmark{% endif %} font-bold tracking-tight">
+        Tile<span class="text-brand">Store</span>
+    </span>
+</a>

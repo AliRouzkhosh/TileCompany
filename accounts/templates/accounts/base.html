@@ -1,0 +1,34 @@
+<!-- accounts/templates/accounts/account_base.html !-->
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="account-shell">
+
+    {% include "components/breadcrumbs.html" %}
+
+    <div id="account-workspace" class="scroll-mt-24" data-htmx-workspace tabindex="-1">
+    <header class="mt-2 border-b border-border pb-3">
+        <p class="text-sm font-semibold text-brand">{% trans "Account" %}</p>
+        <p class="mt-1 text-sm text-text-secondary">{{ request.user.get_full_name|default:request.user.username }}</p>
+    </header>
+
+    <div class="account-shell__layout mt-4 grid min-w-0 gap-5 lg:grid-cols-12 lg:gap-8">
+
+        <aside class="min-w-0 lg:col-span-3">
+            {% include "accounts/components/sidebar.html" %}
+        </aside>
+
+        <main class="account-shell__content min-w-0 lg:col-span-9">
+            {% block account_content %}
+            {% endblock %}
+
+        </main>
+
+    </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% load i18n %}
+
+<div class="sticky bottom-0 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-lg">
+
+    <div>
+
+        <p class="font-medium text-slate-900">
+            {% trans "Ready to save?" %}
+        </p>
+
+        <p class="text-sm text-slate-500">
+            {% trans "Your changes will be applied immediately." %}
+        </p>
+
+    </div>
+
+    <div class="flex items-center gap-3">
+
+        {% if product %}
+
+            <a
+                href="{% url 'dashboard:products:detail' product.pk %}"
+                class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+                {% trans "Cancel" %}
+            </a>
+
+        {% else %}
+
+            <a
+                href="{% url 'dashboard:products:catalog' %}"
+                class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+                {% trans "Cancel" %}
+            </a>
+
+        {% endif %}
+
+        <button
+            type="submit"
+            class="rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+        >
+            {% trans "Save Product" %}
+        </button>
+
+    </div>
+
+</div>

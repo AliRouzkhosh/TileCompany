@@ -1,0 +1,35 @@
+<!-- dashboard/moderation/reviews.html -->
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Product Reviews" %}{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    {% trans "Product Reviews" as page_title %}{% trans "Pending customer reviews awaiting moderation." as page_subtitle %}{% include "dashboard/moderation/components/moderation_header.html" with title=page_title subtitle=page_subtitle %}
+
+    {% include "dashboard/moderation/components/moderation_filters.html" %}
+
+    {% if reviews %}
+
+        <div class="space-y-4">
+
+            {% for review in reviews %}
+                {% include "dashboard/moderation/components/review_card.html" %}
+            {% endfor %}
+
+        </div>
+
+        {% include "dashboard/moderation/components/moderation_pagination.html" %}
+
+    {% else %}
+
+        {% trans "No pending reviews" as empty_title %}{% trans "There are currently no reviews waiting for approval." as empty_message %}{% include "dashboard/components/empty_state.html" with title=empty_title message=empty_message %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

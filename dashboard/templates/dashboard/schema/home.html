@@ -1,0 +1,14 @@
+{% extends "dashboard/base.html" %}{% load i18n pricing %}
+{% block title %}{% trans "Catalog Schema" %}{% endblock %}
+{% block dashboard_content %}
+<div class="mx-auto max-w-6xl space-y-6">
+  <div><p class="text-sm font-semibold uppercase tracking-wider text-emerald-700">{% trans "Framework" %}</p><h1 class="mt-1 text-3xl font-bold text-slate-900">{% trans "Catalog Schema" %}</h1><p class="mt-2 text-slate-500">{% trans "Configure reusable ProductTypes, attributes, allowed options, and category hierarchy. Product and Variant editing is managed separately." %}</p></div>
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <a href="{% url 'dashboard:schema:product_type_list' %}" class="rounded-2xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500">{% trans "Product Types" %}</p><p class="mt-2 text-3xl font-bold">{{ product_type_count|localized_number }}</p></a>
+    <a href="{% url 'dashboard:schema:definition_list' %}" class="rounded-2xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500">{% trans "Attributes" %}</p><p class="mt-2 text-3xl font-bold">{{ definition_count|localized_number }}</p></a>
+    <a href="{% url 'dashboard:schema:definition_list' %}" class="rounded-2xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500">{% trans "Global Options" %}</p><p class="mt-2 text-3xl font-bold">{{ option_count|localized_number }}</p></a>
+    <a href="{% url 'dashboard:schema:category_list' %}" class="rounded-2xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500">{% trans "Categories" %}</p><p class="mt-2 text-3xl font-bold">{{ category_count|localized_number }}</p></a>
+  </div>
+  <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900"><strong>{% trans "Tile compatibility protection" %}</strong><p class="mt-1">{% trans "The Tile ProductType, bindings, memberships, and mapped option identities remain read-only here while legacy Tile writes are authoritative." %}</p></div>
+</div>
+{% endblock %}

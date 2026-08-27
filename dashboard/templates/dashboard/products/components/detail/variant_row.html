@@ -1,0 +1,16 @@
+{% load i18n pricing %}
+<tr class="transition hover:bg-slate-50">
+    <td class="px-6 py-4">
+        <div class="font-semibold">{% if variant.display_size %}{{ variant.display_size }}{% else %}{% trans "Variant" %}{% endif %}{% if variant.color %} · {{ variant.color }}{% endif %}</div>
+        <div class="font-mono text-xs text-slate-400" dir="ltr">{{ variant.sku }}</div>
+    </td>
+    <td class="px-6 py-4">{% for chip in variant.specification_chips %}<span class="rounded-full bg-slate-100 px-2 py-1 text-xs">{{ chip }}</span>{% empty %}—{% endfor %}</td>
+    <td class="px-6 py-4 text-end">
+        {% for price in variant.prices.all %}<div>{{ price.amount|money:price.currency }}{% if price.compare_at_amount %}<span class="ms-1 text-xs text-slate-400 line-through">{{ price.compare_at_amount|money:price.currency }}</span>{% endif %}</div>{% empty %}{% trans "No prices" %}{% endfor %}
+        <div class="text-xs text-slate-500">{{ variant.get_price_unit_display }}</div>
+    </td>
+    <td class="px-6 py-4 text-center">{{ variant.stock|localized_number }}</td>
+    <td class="px-6 py-4 text-center">{% if variant.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</td>
+    <td class="px-6 py-4 text-center">{{ variant.sort_order }}</td>
+    <td class="px-6 py-4 text-end"><a href="{% url 'dashboard:products:variants:edit' product.pk variant.pk %}">{% trans "Edit" %}</a></td>
+</tr>

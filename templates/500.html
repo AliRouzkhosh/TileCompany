@@ -1,0 +1,15 @@
+{% load i18n %}<!DOCTYPE html>
+<html>
+<head>
+    <title>{% trans "Something Went Wrong" %}</title>
+    <style>
+        body { font-family: sans-serif; background:#f7f5f2; color:#2b2b2b; text-align:center; padding: 5rem 1rem; }
+        a { color:#b5651d; }
+    </style>
+</head>
+<body>
+    <h1>{% trans "Something Went Wrong" %}</h1>
+    <p>{% trans "We're working on it. Please try again shortly." %}</p>
+    <a href="/">{% trans "Back to Home" %}</a>
+</body>
+</html>

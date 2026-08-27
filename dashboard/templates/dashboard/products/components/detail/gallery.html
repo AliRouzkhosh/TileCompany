@@ -1,0 +1,116 @@
+<!-- dashboard/products/components/detail/gallery.html -->
+{% load i18n pricing %}
+
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+
+        <div>
+            <h2 class="text-lg font-semibold text-slate-900">
+                {% trans "Product Gallery" %}
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                {% blocktrans count counter=statistics.gallery_images|add:1 with display_count=statistics.gallery_images|add:1|localized_number %}{{ display_count }} image{% plural %}{{ display_count }} images{% endblocktrans %}
+            </p>
+        </div>
+
+        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+            {% trans "Cover + Gallery" %}
+        </span>
+
+    </div>
+
+    <div class="p-6 space-y-5">
+
+        <!-- Cover Image -->
+
+        <div>
+
+            <h3 class="mb-3 text-sm font-medium text-slate-700">
+                {% trans "Cover Image" %}
+            </h3>
+
+            <div class="overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+
+                <div class="aspect-square">
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                            class="h-full w-full object-cover"
+                        >
+
+                    {% else %}
+
+                        <div class="flex h-full items-center justify-center text-sm text-slate-400">
+                            {% trans "No cover image" %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Gallery Images -->
+
+        <div>
+
+            <div class="mb-3 flex items-center justify-between">
+
+                <h3 class="text-sm font-medium text-slate-700">
+                    {% trans "Gallery Images" %}
+                </h3>
+
+                <span class="text-xs text-slate-500">
+                    {% blocktrans count counter=statistics.gallery_images with display_count=statistics.gallery_images|localized_number %}{{ display_count }} image{% plural %}{{ display_count }} images{% endblocktrans %}
+                </span>
+
+            </div>
+
+            {% if product.gallery.exists %}
+
+                <div class="grid grid-cols-4 gap-3">
+
+                    {% for image in product.gallery.all %}
+
+                        <div class="relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+
+                            <img
+                                src="{{ image.image.url }}"
+                                alt="{{ image.alt_text|default:product.name }}"
+                                class="h-full w-full object-cover transition duration-200 hover:scale-105"
+                            >
+                            <form method="post" action="{% url 'dashboard:products:gallery_delete' product.pk image.pk %}" class="js-confirm-action absolute end-1 top-1" data-confirm-message="{% trans 'Remove this gallery image?' %}">{% csrf_token %}<button class="rounded bg-white/90 px-2 py-1 text-xs text-red-700">{% trans "Remove" %}</button></form>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="flex h-32 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-400">
+
+                    {% trans "No gallery images uploaded" %}
+
+                </div>
+
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:products:gallery_upload' product.pk %}" class="mt-4 flex flex-wrap items-center gap-3">
+                {% csrf_token %}<label for="product-gallery-images" class="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm"><span id="product-gallery-file-name" data-file-input-label="product-gallery-images" data-empty="{% trans 'No files selected' %}" data-selected="{% trans 'Files selected' %}">{% trans "No files selected" %}</span><span class="font-medium">{% trans "Choose files" %}</span></label><input id="product-gallery-images" type="file" name="gallery_images" accept="image/*" multiple required class="sr-only"><button class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium">{% trans "Add Gallery Images" %}</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

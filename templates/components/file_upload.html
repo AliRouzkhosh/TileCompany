@@ -1,0 +1,14 @@
+{% load i18n %}
+<div class="file-upload" data-file-upload>
+    <span class="file-upload__native">{{ field }}</span>
+    <label class="file-upload__trigger" for="{{ field.id_for_label }}">
+        <i data-lucide="upload" class="sf-icon" aria-hidden="true"></i>
+        <span class="file-upload__content">
+            <span class="file-upload__action">{% trans "Choose files" %}</span>
+            <span class="file-upload__selection" data-file-upload-selection data-empty="{% trans 'No files selected' %}" data-selected="{% trans 'Selected files' %}" aria-live="polite">{% trans "No files selected" %}</span>
+        </span>
+    </label>
+    <button type="button" class="file-upload__remove" data-file-upload-remove hidden>{% trans "Remove selected files" %}</button>
+    {% if field.help_text %}<p class="file-upload__help">{{ field.help_text }}</p>{% endif %}
+    {% for error in field.errors %}<p class="file-upload__error">{{ error }}</p>{% endfor %}
+</div>

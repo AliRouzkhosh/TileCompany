@@ -1,0 +1,47 @@
+{% load i18n pricing %}
+<article class="commerce-result sf-surface overflow-hidden"
+         data-result-state="{{ result.state }}"
+         data-result-tone="{{ result.tone }}"
+         aria-labelledby="payment-result-title">
+    <header class="commerce-result__header px-5 py-7 text-center sm:px-8 sm:py-9">
+        <span class="commerce-result__icon mx-auto" aria-hidden="true">
+            <i data-lucide="{{ result.icon }}" class="sf-icon"></i>
+        </span>
+        <h1 id="payment-result-title" class="mt-4 text-2xl font-semibold text-text-primary sm:text-3xl">{{ result.title }}</h1>
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-text-secondary sm:text-base">{{ result.description }}</p>
+    </header>
+
+    <dl class="divide-y divide-border px-5 sm:px-8">
+        <div class="commerce-result__row">
+            <dt>{% trans "Order number" %}</dt>
+            <dd class="font-semibold text-text-primary" dir="ltr">{{ result.order_reference }}</dd>
+        </div>
+        <div class="commerce-result__row">
+            <dt>{% trans "Status" %}</dt>
+            <dd>{{ result.order_status_label }}</dd>
+        </div>
+        <div class="commerce-result__row">
+            <dt>{% trans "Payment method" %}</dt>
+            <dd>{{ result.payment_method_label }}</dd>
+        </div>
+        <div class="commerce-result__row">
+            <dt>{% trans "Payment status" %}</dt>
+            <dd>{{ result.payment_status_label }}</dd>
+        </div>
+        <div class="commerce-result__row">
+            <dt>{% trans "Total" %}</dt>
+            <dd class="font-semibold text-text-primary">{{ order.total_amount|money:order.currency }}</dd>
+        </div>
+        {% if result.payment_reference %}
+            <div class="commerce-result__row">
+                <dt>{% trans "Payment reference" %}</dt>
+                <dd class="break-all font-mono text-xs text-text-secondary" dir="ltr">{{ result.payment_reference }}</dd>
+            </div>
+        {% endif %}
+    </dl>
+
+    <footer class="flex flex-col gap-3 border-t border-border bg-page-subtle px-5 py-5 sm:flex-row sm:justify-end sm:px-8">
+        <a href="{{ result.primary_url }}" class="sf-button sf-button--primary min-h-11 sm:min-w-36">{{ result.primary_label }}</a>
+        <a href="{{ result.secondary_url }}" class="sf-button sf-button--secondary min-h-11 sm:min-w-36">{{ result.secondary_label }}</a>
+    </footer>
+</article>

@@ -1,0 +1,8 @@
+{% extends "accounts/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "SMS login phone" %}{% endblock %}
+{% block account_content %}
+{% translate "Security" as eyebrow %}{% translate "Phone for SMS login" as title %}{% translate "Verify a phone number before using it to sign in with SMS." as description %}
+{% include "accounts/components/account_header.html" with eyebrow=eyebrow title=title description=description %}
+<form method="post" class="mt-6 max-w-xl space-y-5 sf-surface p-4 sm:p-6" novalidate>{% csrf_token %}{% include "accounts/components/auth_field.html" with field=form.phone %}<button class="sf-button sf-button--primary" type="submit">{% trans "Send code" %}</button><a href="{% url 'accounts:profile' %}" class="sf-button sf-button--secondary">{% trans "Cancel" %}</a></form>
+{% endblock %}

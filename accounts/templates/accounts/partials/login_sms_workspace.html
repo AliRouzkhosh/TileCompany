@@ -1,0 +1,11 @@
+{% load i18n %}
+<div id="auth-workspace">
+{% translate "Sign in" as eyebrow %}{% translate "Sign in with SMS code" as title %}{% translate "Enter your mobile number to receive a sign-in code." as description %}
+{% include "accounts/components/auth_header.html" with eyebrow=eyebrow title=title description=description %}
+<nav class="mb-6 grid grid-cols-2 rounded-xl bg-surface-subtle p-1" aria-label="{% trans 'Sign-in method' %}">
+    <a href="{% url 'accounts:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" hx-get="{% url 'accounts:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" hx-target="#auth-workspace" hx-swap="outerHTML" class="flex min-h-11 items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-semibold text-brand hover:bg-surface">{% trans "Sign in with password" %}</a>
+    <span class="flex min-h-11 items-center justify-center rounded-lg bg-surface px-3 py-2 text-center text-sm font-semibold text-text-primary" aria-current="page">{% trans "Sign in with SMS code" %}</span>
+</nav>
+<form method="post" action="{% url 'accounts:sms_login_request' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="space-y-5" novalidate>{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">{% include "accounts/components/auth_field.html" with field=form.phone %}<button class="sf-button sf-button--primary w-full" type="submit">{% trans "Send code" %}</button></form>
+<p class="mt-5 text-center text-sm text-text-secondary">{% trans "If this number can be used for SMS sign-in, a code has been sent." %}</p>
+</div>

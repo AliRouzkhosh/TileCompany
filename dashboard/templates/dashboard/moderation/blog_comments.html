@@ -1,0 +1,35 @@
+<!-- dashboard/moderation/blog_comments.html -->
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Blog Comments" %}{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="space-y-6">
+
+    {% trans "Blog Comments" as page_title %}{% trans "Pending comments awaiting approval." as page_subtitle %}{% include "dashboard/moderation/components/moderation_header.html" with title=page_title subtitle=page_subtitle %}
+
+    {% include "dashboard/moderation/components/moderation_filters.html" %}
+
+    {% if comments %}
+
+        <div class="space-y-4">
+
+            {% for comment in comments %}
+                {% include "dashboard/moderation/components/blog_comment_card.html" %}
+            {% endfor %}
+
+        </div>
+
+        {% include "dashboard/moderation/components/moderation_pagination.html" %}
+
+    {% else %}
+
+        {% trans "No pending blog comments" as empty_title %}{% trans "All blog comments have been moderated." as empty_message %}{% include "dashboard/components/empty_state.html" with title=empty_title message=empty_message %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

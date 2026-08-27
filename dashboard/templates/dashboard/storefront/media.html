@@ -1,0 +1,136 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Storefront Media" %}{% endblock %}
+
+{% block dashboard_content %}
+<div class="mx-auto max-w-6xl space-y-8">
+    <header>
+        <p class="text-sm font-semibold uppercase tracking-wider text-stone-500">{% trans "Storefront" %}</p>
+        <h1 class="mt-2 text-3xl font-bold text-stone-900">{% trans "Homepage Media" %}</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-stone-600">{% trans "Manage the homepage Hero, editorial feature, and Category discovery images. Existing automatic fallbacks remain available." %}</p>
+    </header>
+
+    <section class="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm" aria-labelledby="editorial-selection-heading">
+        <div class="border-b border-stone-200 px-6 py-5">
+            <h2 id="editorial-selection-heading" class="text-xl font-semibold text-stone-900">{% trans "Homepage editorial" %}</h2>
+            <p class="mt-1 text-sm text-stone-600">{% trans "Choose one published Article or keep the automatic editorial selection." %}</p>
+        </div>
+        <form method="post" action="{% url 'dashboard:storefront:update_editorial' %}" class="space-y-4 p-6">
+            {% csrf_token %}
+            <label for="{{ editorial_form.article.id_for_label }}" class="block text-sm font-medium text-stone-700">{{ editorial_form.article.label }}</label>
+            {{ editorial_form.article }}
+            {% if editorial_form.article.errors %}<p class="text-sm text-red-700">{{ editorial_form.article.errors|striptags }}</p>{% endif %}
+            <button type="submit" class="min-h-11 rounded-xl bg-stone-900 px-5 py-3 text-sm font-semibold text-white hover:bg-stone-700">{% trans "Save featured article" %}</button>
+        </form>
+    </section>
+
+    <section class="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm" aria-labelledby="hero-media-heading">
+        <div class="border-b border-stone-200 px-6 py-5">
+            <h2 id="hero-media-heading" class="text-xl font-semibold text-stone-900">{% trans "Homepage Hero" %}</h2>
+        </div>
+        <div class="grid gap-6 p-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+            <div class="overflow-hidden rounded-2xl bg-stone-100 aspect-[4/3]">
+                {% if hero and hero.image %}
+                    <img src="{{ hero.image.url }}" alt="{{ hero.image_alt }}" class="h-full w-full object-cover">
+                {% else %}
+                    <div class="flex h-full items-center justify-center text-stone-400" role="img" aria-label="{% trans 'No configured Hero image' %}">
+                        <svg class="h-16 w-16" aria-hidden="true" fill="none" viewBox="0 0 80 80" stroke="currentColor"><path stroke-width="1.75" d="M8 8h28v28H8zM44 8h28v28H44zM8 44h28v28H8zM44 44h28v28H44z"/></svg>
+                    </div>
+                {% endif %}
+            </div>
+
+            <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:storefront:update_hero' %}" class="space-y-5">
+                {% csrf_token %}
+                {% if hero_form.non_field_errors %}<div class="rounded-xl bg-red-50 p-3 text-sm text-red-700">{{ hero_form.non_field_errors }}</div>{% endif %}
+                {% for field in hero_form %}
+                    <div{% if field.name == 'is_enabled' or field.name == 'remove_image' %} class="flex items-center gap-3"{% endif %}>
+                        {% if field.name == 'is_enabled' or field.name == 'remove_image' %}
+                            {{ field }} <label for="{{ field.id_for_label }}" class="text-sm font-medium text-stone-700">{{ field.label }}</label>
+                        {% else %}
+                            <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-medium text-stone-700">{{ field.label }}</label>
+                            {{ field }}
+                        {% endif %}
+                        {% if field.errors %}<p class="mt-1 text-sm text-red-700">{{ field.errors|striptags }}</p>{% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="rounded-xl bg-stone-900 px-5 py-3 text-sm font-semibold text-white hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">{% trans "Save Hero media" %}</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm" aria-labelledby="discovery-media-heading">
+        <div class="border-b border-stone-200 px-6 py-5">
+            <h2 id="discovery-media-heading" class="text-xl font-semibold text-stone-900">{% trans "Homepage discovery media" %}</h2>
+            <p class="mt-1 text-sm text-stone-600">{% trans "Optional images for Category, Application Area, and Brand cards. Names and links remain canonical." %}</p>
+        </div>
+        <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:storefront:update_merchandising_media' %}" class="grid gap-4 border-b border-stone-200 p-6 md:grid-cols-2">
+            {% csrf_token %}
+            {% for field in merchandising_form %}
+                <div{% if field.name == 'is_active' or field.name == 'remove_image' %} class="flex items-center gap-2"{% endif %}>
+                    {% if field.name == 'is_active' or field.name == 'remove_image' %}{{ field }}<label for="{{ field.id_for_label }}" class="text-sm font-medium text-stone-700">{{ field.label }}</label>{% else %}<label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-stone-700">{{ field.label }}</label>{{ field }}{% endif %}
+                    {% if field.errors %}<p class="mt-1 text-sm text-red-700">{{ field.errors|striptags }}</p>{% endif %}
+                </div>
+            {% endfor %}
+            <div class="md:col-span-2"><button type="submit" class="min-h-11 rounded-xl bg-stone-900 px-5 py-3 text-sm font-semibold text-white hover:bg-stone-700">{% trans "Save discovery media" %}</button></div>
+        </form>
+        <div class="divide-y divide-stone-200">
+            {% for item in merchandising_media %}
+                <div class="grid gap-4 p-4 md:grid-cols-[3.5rem_minmax(12rem,.55fr)_minmax(0,1fr)] md:items-start">
+                    <div class="h-14 w-14 overflow-hidden rounded-xl bg-stone-100">{% if item.image %}<img src="{{ item.image.url }}" alt="" class="h-full w-full object-cover">{% endif %}</div>
+                    <div class="min-w-0"><p class="font-medium text-stone-900">{% if item.category %}{{ item.category.name }}{% elif item.attribute_option %}{{ item.attribute_option.name }}{% else %}{{ item.brand.name }}{% endif %}</p><p class="text-xs text-stone-500">{% if item.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</p></div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:storefront:update_existing_merchandising_media' item.pk %}" class="grid gap-3 sm:grid-cols-2">
+                        {% csrf_token %}
+                        {% for field in item.edit_form %}
+                            <div{% if field.name == 'is_active' or field.name == 'remove_image' %} class="flex min-h-11 items-center gap-2"{% endif %}>
+                                {% if field.name == 'is_active' or field.name == 'remove_image' %}{{ field }}<label for="{{ field.id_for_label }}" class="text-sm font-medium text-stone-700">{{ field.label }}</label>{% else %}<label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-stone-700">{{ field.label }}</label>{{ field }}{% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="sm:col-span-2"><button type="submit" class="min-h-11 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">{% trans "Save" %}</button></div>
+                    </form>
+                </div>
+            {% empty %}<p class="p-6 text-sm text-stone-600">{% trans "No homepage discovery media is configured." %}</p>{% endfor %}
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm" aria-labelledby="category-media-heading">
+        <div class="border-b border-stone-200 px-6 py-5">
+            <h2 id="category-media-heading" class="text-xl font-semibold text-stone-900">{% trans "Category discovery images" %}</h2>
+            <p class="mt-1 text-sm text-stone-600">{% trans "Categories without an uploaded image continue to use a representative active Product image." %}</p>
+        </div>
+        <div class="divide-y divide-stone-200">
+            {% for category in categories %}
+                <article class="grid items-center gap-5 p-6 md:grid-cols-[5rem_minmax(10rem,0.7fr)_minmax(0,1.3fr)]">
+                    <div class="h-20 w-20 overflow-hidden rounded-xl bg-stone-100">
+                        {% if category.storefront_image %}
+                            <img src="{{ category.storefront_image.url }}" alt="" class="h-full w-full object-cover">
+                        {% else %}
+                            <div class="flex h-full items-center justify-center text-stone-400">
+                                <svg class="h-9 w-9" aria-hidden="true" fill="none" viewBox="0 0 80 80" stroke="currentColor"><path stroke-width="1.75" d="M8 8h28v28H8zM44 8h28v28H44zM8 44h28v28H8zM44 44h28v28H44z"/></svg>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-stone-900">{{ category.name }}</h3>
+                        {% if category.name_fa %}<p class="mt-1 text-sm text-stone-500" dir="rtl">{{ category.name_fa }}</p>{% endif %}
+                        <p class="mt-1 text-xs text-stone-500">{% if category.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</p>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:storefront:update_category' category.pk %}" class="flex flex-col gap-3 sm:flex-row sm:items-end">
+                        {% csrf_token %}
+                        <div class="min-w-0 flex-1">
+                            <label for="category-image-{{ category.pk }}" class="mb-2 block text-sm font-medium text-stone-700">{% trans "Upload replacement" %}</label>
+                            <input id="category-image-{{ category.pk }}" type="file" name="image" accept="image/*" class="w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm">
+                        </div>
+                        {% if category.storefront_image %}
+                            <label class="flex min-h-11 items-center gap-2 text-sm text-stone-700"><input type="checkbox" name="remove_image" class="h-5 w-5 rounded border-stone-300"> {% trans "Remove" %}</label>
+                        {% endif %}
+                        <button type="submit" class="min-h-11 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2">{% trans "Save" %}</button>
+                    </form>
+                </article>
+            {% empty %}
+                <p class="p-6 text-sm text-stone-600">{% trans "No Categories are available." %}</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

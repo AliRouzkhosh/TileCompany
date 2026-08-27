@@ -1,0 +1,44 @@
+{% extends "accounts/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Addresses" context "address page" %}{% endblock %}
+
+{% block account_content %}
+
+{% translate "Account" context "address page" as eyebrow %}
+{% translate "Addresses" context "address page" as title %}
+{% translate "Manage your shipping and billing addresses." context "address page" as description %}
+{% include "accounts/components/account_header.html" with eyebrow=eyebrow title=title description=description %}
+
+<div class="mb-6 flex justify-end">
+
+    <a href="{% url 'accounts:address_create' %}"
+       class="sf-button sf-button--primary min-h-11">
+
+        {% trans "Add address" context "address page" %}
+
+    </a>
+
+</div>
+
+{% if addresses %}
+
+<div class="grid gap-4 xl:grid-cols-2">
+
+    {% for address in addresses %}
+
+        {% include "accounts/components/address_card.html" %}
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+{% translate "No addresses yet" context "address page" as empty_title %}
+{% translate "Add your first shipping address to make checkout faster." context "address page" as empty_description %}
+{% include "components/empty_state.html" with title=empty_title description=empty_description %}
+
+{% endif %}
+
+{% endblock %}

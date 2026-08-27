@@ -1,0 +1,317 @@
+<!-- dashboard/components/sidebar.html -->
+{% load i18n pricing %}
+
+<aside class="dashboard-sidebar {% if mobile %}flex h-full w-72 shrink-0 flex-col shadow-xl{% else %}hidden w-72 shrink-0 lg:flex lg:flex-col{% endif %}">
+
+    <!-- ====================================================== -->
+    <!-- Logo -->
+    <!-- ====================================================== -->
+
+    <div class="border-b border-stone-200 p-6">
+
+        <h2 class="text-2xl font-bold text-stone-900">
+            TileCompany
+        </h2>
+
+        <p class="mt-1 text-sm text-stone-500">
+            {% trans "Operations Dashboard" %}
+        </p>
+
+    </div>
+
+    <!-- ====================================================== -->
+    <!-- Navigation -->
+    <!-- ====================================================== -->
+
+    <nav class="flex-1 overflow-y-auto p-4">
+
+        <!-- ================= Overview ================= -->
+
+        <div class="mb-6">
+
+            <p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                {% trans "Overview" %}
+            </p>
+
+            <a href="{% url 'dashboard:home' %}"
+               class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+
+                <i data-lucide="layout-dashboard" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                <span class="ms-3">
+                    {% trans "Dashboard" %}
+                </span>
+
+            </a>
+
+        </div>
+
+        {% if perms.orders.view_order %}
+        <!-- ================= Orders ================= -->
+
+        <div class="mb-6">
+
+            <p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                {% trans "Orders" %}
+            </p>
+
+            <div class="space-y-1">
+
+                <a href="{% url 'dashboard:fulfillment_queue' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+                    <div class="flex items-center">
+                        <i data-lucide="package-check" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                        <span class="ms-3">
+                            {% trans "Fulfillment" %}
+                        </span>
+                    </div>
+
+
+                    {% if dashboard_counts.fulfillment %}
+
+                        <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+
+                            {{ dashboard_counts.fulfillment|localized_number }}
+
+                        </span>
+
+                    {% endif %}
+
+                </a>
+
+                <a href="{% url 'dashboard:in_transit_queue' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+                    <div class="flex items-center">
+                        <i data-lucide="truck" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                        <span class="ms-3">
+                            {% trans "In Transit" %}
+                        </span>
+                    </div>
+
+                    {% if dashboard_counts.in_transit %}
+
+                        <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+
+                            {{ dashboard_counts.in_transit|localized_number }}
+
+                        </span>
+
+                    {% endif %}
+
+                </a>
+
+                {% if request.user.is_superuser %}
+                <a href="{% url 'dashboard:refund_queue' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+                    <div class="flex items-center">
+                        <i data-lucide="rotate-ccw" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                        <span class="ms-3">
+                            {% trans "Refunds" %}
+                        </span>
+                    </div>
+                    {% if dashboard_counts.refunds %}
+
+                        <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+
+                            {{ dashboard_counts.refunds|localized_number }}
+
+                        </span>
+
+                    {% endif %}
+
+
+                </a>
+
+                <a href="{% url 'dashboard:refund_processing_queue' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+                    <div class="flex items-center"><i data-lucide="credit-card" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Refund Processing" %}</span></div>
+                    {% if dashboard_counts.refund_processing %}
+                        <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+                            {{ dashboard_counts.refund_processing|localized_number }}
+                        </span>
+                    {% endif %}
+                </a>
+                {% endif %}
+
+                <a href="{% url 'dashboard:attention_queue' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+                    <div class="flex items-center">
+                        <i data-lucide="triangle-alert" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                        <span class="ms-3">
+                            {% trans "Attention" %}
+                        </span>
+                    </div>
+
+                    {% if dashboard_counts.attention %}
+
+                        <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+
+                            {{ dashboard_counts.attention|localized_number }}
+
+                        </span>
+
+                    {% endif %}
+
+                </a>
+
+                <a href="{% url 'dashboard:all_orders' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+
+                    <i data-lucide="clipboard-list" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                    <span class="ms-3">
+                        {% trans "All Orders" %}
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+        <!-- ================= Products ================= -->
+
+        {% if perms.products.view_product or perms.products.view_category or perms.products.view_brand or perms.products.view_design or perms.products.view_usage or perms.products.view_material or perms.products.view_color or perms.products.view_size or perms.products.view_finish %}
+        <div class="mb-6">
+
+            <p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                {% trans "Products" %}
+            </p>
+
+            <div class="space-y-1">
+
+                {% if perms.products.view_product %}<a href="{% url 'dashboard:products:catalog' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if request.resolver_match.namespace == 'products' %}bg-stone-100 text-stone-900{% endif %}">
+                    <i data-lucide="package" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+                    <span class="ms-3">{% trans "All Products" %}</span>
+                </a>{% endif %}
+
+                {% if perms.products.view_category or perms.products.view_brand or perms.products.view_design or perms.products.view_usage or perms.products.view_material or perms.products.view_color or perms.products.view_size or perms.products.view_finish %}<a href="{% url 'dashboard:products:catalog_data' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if 'catalog-data' in request.path %}bg-stone-100 text-stone-900{% endif %}">
+                    <i data-lucide="database" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+                    <span class="ms-3">{% trans "Catalog Data" %}</span>
+                </a>{% endif %}
+
+                {% if perms.products.run_inventory_price_import %}<a href="{% url 'dashboard:products:inventory_import' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if 'bulk-inventory-pricing' in request.path %}bg-stone-100 text-stone-900{% endif %}">
+                    <i data-lucide="file-spreadsheet" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+                    <span class="ms-3">{% trans "Bulk inventory & pricing" %}</span>
+                </a>{% endif %}
+
+                {% if request.user.is_superuser %}<a href="{% url 'dashboard:schema:home' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if 'catalog-schema' in request.path %}bg-stone-100 text-stone-900{% endif %}">
+                    <i data-lucide="network" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+                    <span class="ms-3">{% trans "Catalog Schema" %}</span>
+                </a>{% endif %}
+
+
+            </div>
+
+        </div>
+        {% endif %}
+
+        <!-- ================= Support ================= -->
+        {% if perms.support.view_ticket %}
+        <div class="mb-6"><p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">{% trans "Support" %}</p><div class="space-y-1"><a href="{% url 'dashboard:support:inbox' %}?queue=needs_response" class="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100"><span class="flex items-center"><i data-lucide="headset" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Needs Response" %}</span></span>{% if dashboard_counts.support_needs_response %}<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs">{{ dashboard_counts.support_needs_response|localized_number }}</span>{% endif %}</a><a href="{% url 'dashboard:support:inbox' %}?queue=mine" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium hover:bg-stone-100"><i data-lucide="ticket" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "My Tickets" %}</span></a><a href="{% url 'dashboard:support:inbox' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium hover:bg-stone-100"><i data-lucide="inbox" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "All Tickets" %}</span></a>{% if perms.support.view_helparticle %}<a href="{% url 'dashboard:support:articles' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium hover:bg-stone-100"><i data-lucide="book-open" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Help Center" %}</span></a>{% endif %}{% if perms.support.view_ticketcategory %}<a href="{% url 'dashboard:support:categories' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium hover:bg-stone-100"><i data-lucide="tags" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Categories" %}</span></a>{% endif %}</div></div>
+        {% endif %}
+
+        <!-- ================= Content ================= -->
+
+        {% if perms.blog.view_article or perms.blog.view_sitepage or perms.blog.view_blogcategory or perms.blog.view_blogtag or perms.products.manage_storefront_media or perms.reviews.moderate_reviews or perms.blog.moderate_article_comments %}
+
+        <div class="mb-6">
+
+            <p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                {% trans "Content" %}
+            </p>
+
+            <div class="space-y-1">
+
+                {% if perms.products.manage_storefront_media %}<a href="{% url 'dashboard:storefront:media' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if 'storefront/media' in request.path %}bg-stone-100 text-stone-900{% endif %}">
+                    <i data-lucide="images" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+                    <span class="ms-3">{% trans "Storefront Media" %}</span>
+                </a>{% endif %}
+
+                {% if perms.reviews.moderate_reviews or perms.blog.moderate_article_comments %}<a href="{% url 'dashboard:moderation' %}"
+                   class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+                    <div class="flex items-center">
+                        <i data-lucide="message-square-text" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                        <span class="ms-3">
+                            {% trans "Moderation" %}
+                        </span>
+                    </div>
+                    {% if dashboard_counts.moderation %}
+
+                        <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+
+                            {{ dashboard_counts.moderation|localized_number }}
+
+                        </span>
+
+                    {% endif %}
+
+                </a>{% endif %}
+
+                {% if perms.blog.view_article %}<a href="{% url 'dashboard:blog:catalog' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if request.resolver_match.url_name == 'catalog' and request.resolver_match.namespace == 'dashboard:blog' %}bg-stone-100{% endif %}"><i data-lucide="file-text" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Articles" %}</span></a>{% endif %}
+                {% if perms.blog.view_sitepage %}<a href="{% url 'dashboard:blog:pages' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if request.resolver_match.url_name == 'pages' or request.resolver_match.url_name == 'page_edit' %}bg-stone-100{% endif %}"><i data-lucide="files" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Pages" %}</span></a>{% endif %}
+                {% if perms.blog.view_blogcategory %}<a href="{% url 'dashboard:blog:categories' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if request.resolver_match.url_name == 'categories' %}bg-stone-100{% endif %}"><i data-lucide="folder-tree" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Categories" %}</span></a>{% endif %}
+                {% if perms.blog.view_blogtag %}<a href="{% url 'dashboard:blog:tags' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if request.resolver_match.url_name == 'tags' %}bg-stone-100{% endif %}"><i data-lucide="tags" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Tags" %}</span></a>{% endif %}
+
+                {# Future #}
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <!-- ================= Insights ================= -->
+
+        {% if perms.dashboard.view_sensitive_analytics %}<div>
+
+            <p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                {% trans "Insights" %}
+            </p>
+
+            <a href="{% url 'dashboard:analytics' %}"
+               class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100">
+
+                <i data-lucide="chart-no-axes-combined" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i>
+
+                <span class="ms-3">
+                    {% trans "Analytics" %}
+                </span>
+
+            </a>
+
+        </div>{% endif %}
+
+        {% if request.user.is_superuser %}<div class="mb-6"><p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">{% trans "Administration" %}</p><a href="{% url 'dashboard:staff_access:list' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100"><i data-lucide="users-round" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Staff & Access" %}</span></a></div>{% endif %}
+
+    </nav>
+
+    <!-- ====================================================== -->
+    <!-- Footer -->
+    <!-- ====================================================== -->
+
+    <div class="border-t border-stone-200 p-6">
+
+        <p class="text-xs text-stone-500">
+
+            {% trans "Logged in as" %}
+
+            <span class="font-semibold">
+                {{ request.user.username }}
+            </span>
+
+        </p>
+
+    </div>
+
+</aside>

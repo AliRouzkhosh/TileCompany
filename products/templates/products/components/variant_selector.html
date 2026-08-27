@@ -1,0 +1,32 @@
+{% load i18n %}
+<div id="variantSelector" class="space-y-4" data-source="{{ selector_source }}">
+    {% if variant_groups %}
+        <div class="rounded-control bg-surface-subtle px-4 py-3 text-sm lg:py-2" data-selected-configuration{% if not selected_configuration_values %} hidden{% endif %}>
+            <span class="font-medium text-text-muted">{% trans "Selected" %}:</span>
+            <span class="ms-1 font-semibold text-text-primary" data-selected-configuration-values>{% for value in selected_configuration_values %}{{ value }}{% if not forloop.last %}<span class="mx-1 text-text-muted" aria-hidden="true">•</span>{% endif %}{% endfor %}</span>
+        </div>
+    {% endif %}
+
+    {% for group in variant_groups %}
+        <fieldset class="variant-group" data-group-code="{{ group.code }}">
+            <legend class="mb-2.5 text-sm font-semibold text-text-primary lg:mb-2">{{ group.label }}</legend>
+            <div class="flex flex-wrap gap-2.5" role="group" aria-label="{{ group.label }}">
+                {% for option in group.options %}
+                    <button
+                        type="button"
+                        class="variant-btn group inline-flex min-h-11 max-w-full items-center gap-2 rounded-control border border-border-strong bg-surface px-3.5 py-2 text-sm font-medium text-text-secondary transition hover:border-brand-mid hover:bg-brand-subtle hover:text-brand-active focus-visible:outline-none aria-pressed:border-brand aria-pressed:bg-brand-subtle aria-pressed:text-brand-active data-[context-incompatible=true]:border-dashed data-[context-incompatible=true]:opacity-60 disabled:cursor-not-allowed disabled:opacity-30"
+                        data-group="{{ group.code }}"
+                        data-value="{{ option.code }}"
+                        data-context-incompatible="false"
+                        aria-pressed="false"
+                        aria-disabled="false"
+                        {% if option.presentation_metadata.swatch %}style="--option-swatch: {{ option.presentation_metadata.swatch }}"{% endif %}>
+                        {% if option.presentation_metadata.swatch %}<span class="h-4 w-4 shrink-0 rounded-full border border-border-strong" style="background: var(--option-swatch)" aria-hidden="true"></span>{% endif %}
+                        <span class="min-w-0 break-words">{{ option.label }}</span>
+                        <svg class="hidden h-3.5 w-3.5 shrink-0 group-aria-pressed:block" aria-hidden="true" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 8 3 3 7-7"/></svg>
+                    </button>
+                {% endfor %}
+            </div>
+        </fieldset>
+    {% endfor %}
+</div>

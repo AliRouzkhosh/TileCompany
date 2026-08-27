@@ -1,0 +1,81 @@
+{% load i18n %}
+<section class="max-w-5xl" data-product-specifications>
+    <header class="max-w-2xl">
+        <h2 class="text-xl font-semibold tracking-[-0.02em] text-text-primary sm:text-2xl">{% trans "Specifications" %}</h2>
+    </header>
+
+    {% if product_presentation.brand_label or product_presentation.category_labels or product_presentation.specification_attributes %}
+        <section class="mt-7 border-t border-border pt-5 sm:mt-8 sm:pt-6" aria-labelledby="product-details-title" data-specification-section="product">
+            <h3 id="product-details-title" class="text-sm font-semibold text-text-primary sm:text-base">{% trans "Product details" %}</h3>
+            <dl class="mt-2 divide-y divide-border" data-product-detail-rows>
+                {% if product_presentation.brand_label %}
+                    <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row data-product-brand>
+                        <dt class="text-sm font-medium text-text-muted">{% trans "Brand" %}</dt>
+                        <dd class="min-w-0 text-sm leading-6 text-text-primary sm:text-start">{{ product_presentation.brand_label }}</dd>
+                    </div>
+                {% endif %}
+                {% if product_presentation.category_labels %}
+                    <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row>
+                        <dt class="text-sm font-medium text-text-muted">{% trans "Categories" %}</dt>
+                        <dd class="min-w-0 text-sm leading-6 text-text-primary sm:text-start">
+                            {% for label in product_presentation.category_labels %}{{ label }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </dd>
+                    </div>
+                {% endif %}
+                {% for attribute in product_presentation.specification_attributes %}
+                    <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row data-product-specification="{{ attribute.definition_code }}">
+                        <dt class="text-sm font-medium text-text-muted">{{ attribute.label }}</dt>
+                        <dd class="min-w-0 text-sm leading-6 text-text-primary sm:text-start">
+                            {% for value in attribute.values %}{{ value.display_value }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </dd>
+                    </div>
+                {% endfor %}
+            </dl>
+        </section>
+    {% endif %}
+
+    <section class="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-7" aria-labelledby="variant-details-title" data-specification-section="variant" data-selected-variant-specifications{% if not selected_variant_data and not product_presentation.selected_variant_specifications %} hidden{% endif %}>
+        <div class="border-s-2 border-brand-mid ps-4 sm:ps-5">
+            <h3 id="variant-details-title" class="text-sm font-semibold text-text-primary sm:text-base">{% trans "Variant details" %}</h3>
+            {% if selected_variant_data %}
+                <dl class="mt-2 divide-y divide-border">
+                    <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row>
+                        <dt class="text-sm font-medium text-text-muted">{% trans "Variant SKU" %}</dt>
+                        <dd class="ltr-value min-w-0 text-sm leading-6 text-text-primary sm:text-start" data-selected-variant-sku>{{ selected_variant_data.sku|default:"" }}</dd>
+                    </div>
+                </dl>
+            {% endif %}
+            <dl class="{% if selected_variant_data %}divide-y divide-border border-t border-border{% else %}mt-2 divide-y divide-border{% endif %}" data-selected-variant-rows{% if not selected_variant_data.detail_specifications and not product_presentation.selected_variant_specifications %} hidden{% endif %}>
+                {% for attribute in selected_variant_data.detail_specifications %}
+                    <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row data-variant-specification="{{ attribute.definition_code }}">
+                        <dt class="text-sm font-medium text-text-muted">{{ attribute.label }}</dt>
+                        <dd class="min-w-0 text-sm leading-6 text-text-primary sm:text-start">{{ attribute.display_value }}</dd>
+                    </div>
+                {% empty %}
+                    {% for attribute in product_presentation.selected_variant_specifications %}
+                        <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row data-variant-specification="{{ attribute.definition_code }}">
+                            <dt class="text-sm font-medium text-text-muted">{{ attribute.label }}</dt>
+                            <dd class="min-w-0 text-sm leading-6 text-text-primary sm:text-start">{{ attribute.display_value }}</dd>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </dl>
+
+            <section class="mt-5 border-t border-border pt-4" aria-labelledby="variant-operational-title" data-specification-subsection="operational" data-variant-operational-section{% if not selected_variant_data.operational_facts %} hidden{% endif %}>
+                <h4 id="variant-operational-title" class="text-sm font-medium text-text-secondary">{% trans "Dimensions & packaging" %}</h4>
+                <dl class="mt-2 divide-y divide-border" data-variant-operational-rows>
+                    {% for fact in selected_variant_data.operational_facts %}
+                        <div class="grid gap-1 py-3 sm:grid-cols-[minmax(0,32%)_minmax(0,68%)] sm:gap-6 sm:py-3.5" data-specification-row>
+                            <dt class="text-sm font-medium text-text-muted">{{ fact.label }}</dt>
+                            <dd class="min-w-0 text-sm leading-6 text-text-primary sm:text-start">{{ fact.value }}</dd>
+                        </div>
+                    {% endfor %}
+                </dl>
+            </section>
+        </div>
+    </section>
+
+    {% if not product_presentation.brand_label and not product_presentation.category_labels and not product_presentation.specification_attributes and not selected_variant_data %}
+        <p class="mt-6 text-sm text-text-muted">{% trans "No specifications available." %}</p>
+    {% endif %}
+</section>

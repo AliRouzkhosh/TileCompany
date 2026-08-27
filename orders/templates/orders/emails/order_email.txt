@@ -1,0 +1,15 @@
+{% load i18n %}{% if delivery.kind == "online_paid_receipt" %}{% trans "Paid order receipt" %}{% elif delivery.kind == "cod_confirmation" %}{% trans "Cash on Delivery order confirmation" %}{% else %}{% trans "Cash on Delivery payment receipt" %}{% endif %}
+
+{% blocktrans with number=order.user_order_number %}Order #{{ number }}{% endblocktrans %}
+{% trans "Order date" %}: {{ order.created_at }}
+{% trans "Payment method" %}: {{ order.get_payment_method_display }}
+{% trans "Payment status" %}: {{ order.payment_status_display }}
+
+{% for item in items %}{{ item.product_name }} — {{ item.quantity }} × {{ item.unit_price }} {{ order.currency }} = {{ item.subtotal }} {{ order.currency }}
+{% endfor %}
+{% trans "Shipping" %}: {{ order.shipping_cost }} {{ order.currency }}
+{% trans "Total" %}: {{ order.total_amount }} {{ order.currency }}
+
+{% if delivery.kind == "cod_confirmation" %}{% trans "Payment is due on delivery." %}
+{% endif %}{% trans "View your order" %}: {{ order_url }}
+{% trans "Need help?" %}: {{ support_url }}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{ result.title }}{% endblock %}
+
+{% block content %}
+<main class="store-container py-8 sm:py-12 lg:py-16">
+    <div class="mx-auto max-w-3xl">
+        {% include "orders/components/payment_result_card.html" %}
+    </div>
+</main>
+{% endblock %}

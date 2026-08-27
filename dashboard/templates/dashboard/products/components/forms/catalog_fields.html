@@ -1,0 +1,126 @@
+{% load i18n %}
+
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="border-b border-slate-200 px-6 py-4">
+
+        <div class="flex items-start justify-between gap-4">
+
+            <div>
+
+                <h2 class="text-lg font-semibold text-slate-900">
+                    {% trans "Catalog Information" %}
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    {% trans "Organize this product within the store catalog." %}
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'dashboard:products:catalog_data' %}"
+                class="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+                {% trans "Manage Catalog" %}
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="grid gap-6 p-6 md:grid-cols-2">
+
+        <!-- Brand -->
+
+        <div>
+            {{ form.brand.label_tag }}
+            {{ form.brand }}
+            {{ form.brand.errors }}
+        </div>
+
+        <!-- Designs -->
+
+        <div>
+            {{ form.designs.label_tag }}
+            {{ form.designs }}
+            {{ form.designs.errors }}
+        </div>
+
+        <!-- Series -->
+
+        <div class="md:col-span-2">
+            {{ form.series_name.label_tag }}
+            {{ form.series_name }}
+            {{ form.series_name.errors }}
+        </div>
+
+        <div class="md:col-span-2">
+            {{ form.series_name_fa.label_tag }}
+            {{ form.series_name_fa }}
+            {{ form.series_name_fa.errors }}
+        </div>
+
+        <!-- Materials -->
+
+        <div class="md:col-span-2">
+
+            <label class="mb-3 block text-sm font-medium text-slate-700">
+                {{ form.materials.label }}
+            </label>
+
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+
+                {% for checkbox in form.materials %}
+
+                    <label class="flex items-center gap-3 rounded-lg border border-slate-200 p-3 transition hover:border-slate-400 hover:bg-slate-50">
+
+                        {{ checkbox.tag }}
+
+                        <span class="text-sm text-slate-700">
+                            {{ checkbox.choice_label }}
+                        </span>
+
+                    </label>
+
+                {% endfor %}
+
+            </div>
+
+            {{ form.materials.errors }}
+
+        </div>
+
+        <!-- Usages -->
+
+        <div class="md:col-span-2">
+
+            <label class="mb-3 block text-sm font-medium text-slate-700">
+                {{ form.usages.label }}
+            </label>
+
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+
+                {% for checkbox in form.usages %}
+
+                    <label class="flex items-center gap-3 rounded-lg border border-slate-200 p-3 transition hover:border-slate-400 hover:bg-slate-50">
+
+                        {{ checkbox.tag }}
+
+                        <span class="text-sm text-slate-700">
+                            {{ checkbox.choice_label }}
+                        </span>
+
+                    </label>
+
+                {% endfor %}
+
+            </div>
+
+            {{ form.usages.errors }}
+
+        </div>
+
+    </div>
+
+</section>

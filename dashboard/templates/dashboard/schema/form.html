@@ -1,0 +1,10 @@
+{% extends "dashboard/base.html" %}{% load i18n %}
+{% block dashboard_content %}
+<div class="mx-auto max-w-4xl space-y-6">
+  <div><h1 class="text-2xl font-bold text-slate-900">{{ title }}</h1>{% if impact %}<p class="mt-2 text-sm text-slate-500">{% blocktrans with products=impact.products variants=impact.variants %}Impact: {{ products }} Products, {{ variants }} Variants.{% endblocktrans %}</p>{% endif %}{% if option_impact %}<p class="mt-2 text-sm text-slate-500">{% blocktrans with products=option_impact.product_values variants=option_impact.variant_values %}Used by {{ products }} Product values and {{ variants }} Variant values.{% endblocktrans %}</p>{% endif %}</div>
+  <form method="post" class="rounded-2xl border border-slate-200 bg-white shadow-sm">{% csrf_token %}
+    <div class="grid gap-5 p-6 md:grid-cols-2">{% for field in form %}<div class="{% if field.name == 'validation_rules' %}md:col-span-2{% endif %}">{% include "components/form_field.html" with field=field %}</div>{% endfor %}</div>
+    <div class="flex justify-end gap-3 border-t p-5"><a href="{% url 'dashboard:home' %}" class="rounded-xl border px-4 py-2 text-sm">{% trans "Cancel" %}</a><button class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white">{% trans "Save" %}</button></div>
+  </form>
+</div>
+{% endblock %}

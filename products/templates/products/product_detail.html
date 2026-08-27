@@ -1,0 +1,61 @@
+<!-- product_detail.html !-->
+{% extends "base.html" %}
+{% load static %}
+{% load i18n localized_content %}
+{% block title %}
+{{ product|localized:"name" }} | TileStore
+{% endblock %}
+
+{% block content %}
+
+<div class="space-y-8 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:space-y-12 md:pb-0" data-product-detail>
+    {% include "components/breadcrumbs.html" %}
+    <!-- ============================= -->
+    <!-- Product Hero -->
+    <!-- ============================= -->
+
+    <section class="grid gap-8 lg:grid-cols-[minmax(0,56fr)_minmax(22rem,44fr)] lg:items-start lg:gap-10 xl:gap-14" data-product-hero>
+
+        <!-- Gallery -->
+
+        {% include "products/components/product_gallery.html" %}
+
+        <!-- Product Information -->
+
+        {% include "products/components/product_info.html" %}
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- Product Tabs -->
+    <!-- ============================= -->
+
+    {% include "products/components/product_tabs.html" %}
+
+
+    <!-- ============================= -->
+    <!-- Related Products -->
+    <!-- ============================= -->
+
+    {% include "products/components/related_products.html" %}
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+    <div id="review-i18n" class="hidden" data-submitting="{% trans 'Submitting...' %}" data-posting="{% trans 'Posting...' %}" data-read-more="{% trans 'Read more' %}" data-show-less="{% trans 'Show less' %}" data-edited="{% trans 'Edited' %}" data-delete-review="{% trans 'Delete this review?' %}" data-delete-comment="{% trans 'Delete this comment?' %}" data-unable-submit-review="{% trans 'Unable to submit review.' %}" data-unable-update-review="{% trans 'Unable to update review.' %}" data-unable-delete-review="{% trans 'Unable to delete review.' %}" data-review-moderation="{% trans 'Your edited review was submitted for moderation.' %}" data-unable-update-comment="{% trans 'Unable to update comment.' %}" data-unable-delete-comment="{% trans 'Unable to delete comment.' %}" data-unable-post-comment="{% trans 'Unable to post comment.' %}" data-comment-moderation="{% trans 'Your edited comment was submitted for moderation.' %}"></div>
+    {{ variants_data|json_script:"variants-data" }}
+    {{ preselected|json_script:"preselected-data" }}
+
+    {{ preselected_variant_id|json_script:"preselected-variant" }}
+    <script src="{% static 'js/product_gallery.js' %}?v=4b"></script>
+    <script src="{% static 'js/variant_selector.js' %}?v=4c"></script>
+    <script src="{% static 'js/quantity.js' %}?v=4b"></script>
+    <script src="{% static 'js/tabs.js' %}?v=4c"></script>
+    <script src="{% static 'js/reviews.js' %}?v=4c"></script>
+    <script src="{% static 'js/comments.js' %}?v=4c"></script>
+
+{% endblock %}

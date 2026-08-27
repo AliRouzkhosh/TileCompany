@@ -1,0 +1,158 @@
+<!-- accounts/templates/accounts/profile.html !-->
+{% extends "accounts/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Profile settings" context "profile page" %}{% endblock %}
+
+{% block account_content %}
+
+{% translate "Account settings" context "profile page" as eyebrow %}
+{% translate "Profile" context "profile page" as title %}
+{% translate "Update your personal and business information." context "profile page" as description %}
+{% include "accounts/components/account_header.html" with eyebrow=eyebrow title=title description=description %}
+
+<form method="post" class="mt-6 max-w-3xl space-y-5" novalidate>
+
+    {% csrf_token %}
+
+    <!-- PERSONAL INFORMATION -->
+    <section class="sf-surface account-form-surface p-4 sm:p-6" aria-labelledby="personal-information-title">
+
+        <h2 id="personal-information-title" class="mb-4 text-lg font-semibold text-text-primary">
+            {% trans "Personal information" context "profile page" %}
+        </h2>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ user_form.first_name.id_for_label }}">{{ user_form.first_name.label }}</label>
+                {{ user_form.first_name }}
+                {{ user_form.first_name.errors }}
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ user_form.last_name.id_for_label }}">{{ user_form.last_name.label }}</label>
+                {{ user_form.last_name }}
+                {{ user_form.last_name.errors }}
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700">
+                    {% trans "Username" context "profile page" %}
+                </label>
+
+                <p class="mt-2 rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700" dir="ltr">
+                    {{ request.user.username }}
+                </p>
+
+                <p class="mt-2 text-xs text-stone-500">
+                    {% trans "Your username cannot be changed." context "profile page" %}
+                </p>
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ user_form.email.id_for_label }}">{{ user_form.email.label }}</label>
+                {{ user_form.email }}
+                {{ user_form.email.errors }}
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ profile_form.phone.id_for_label }}">{{ profile_form.phone.label }}</label>
+                {{ profile_form.phone }}
+                {{ profile_form.phone.errors }}
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ profile_form.birthdate.id_for_label }}">{{ profile_form.birthdate.label }}</label>
+                {{ profile_form.birthdate }}
+                {{ profile_form.birthdate.errors }}
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ profile_form.gender.id_for_label }}">{{ profile_form.gender.label }}</label>
+                {{ profile_form.gender }}
+                {{ profile_form.gender.errors }}
+            </div>
+
+        </div>
+
+    </section>
+
+    {% if sms_login_available %}
+    <section class="sf-surface account-form-surface p-4 sm:p-6" aria-labelledby="sms-login-phone-title">
+        <h2 id="sms-login-phone-title" class="text-lg font-semibold text-text-primary">{% trans "Phone for SMS login" %}</h2>
+        <p class="mt-2 text-sm text-text-secondary">{% trans "Your verified login phone is used for SMS sign-in. It is separate from your contact phone." %}</p>
+        {% if phone_identity %}
+            <p class="mt-4 text-sm font-semibold text-success">{% trans "Phone verified" %}: <span dir="ltr">{{ phone_identity_masked }}</span></p>
+            <a href="{% url 'accounts:phone_verification_request' %}" class="sf-button sf-button--secondary mt-4">{% trans "Change login phone" %}</a>
+        {% else %}
+            <p class="mt-4 text-sm font-semibold text-text-secondary">{% trans "SMS login phone: Not verified" %}</p>
+            <a href="{% url 'accounts:phone_verification_request' %}" class="sf-button sf-button--primary mt-4">{% trans "Verify a phone for SMS login" %}</a>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <!-- BUSINESS INFORMATION -->
+    <section class="sf-surface account-form-surface p-4 sm:p-6" aria-labelledby="business-information-title">
+
+        <h2 id="business-information-title" class="mb-4 text-lg font-semibold text-text-primary">
+            {% trans "Business information" context "profile page" %}
+        </h2>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ profile_form.company_name.id_for_label }}">{{ profile_form.company_name.label }}</label>
+                {{ profile_form.company_name }}
+                {{ profile_form.company_name.errors }}
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-stone-700" for="{{ profile_form.company_tax_id.id_for_label }}">{{ profile_form.company_tax_id.label }}</label>
+                {{ profile_form.company_tax_id }}
+                {{ profile_form.company_tax_id.errors }}
+            </div>
+
+            <div class="sm:col-span-2 flex items-center gap-3">
+                {{ profile_form.is_business }}
+                <label class="text-sm font-medium text-stone-700" for="{{ profile_form.is_business.id_for_label }}">{{ profile_form.is_business.label }}</label>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- SECURITY SHORTCUT -->
+    <section class="border-t border-border pt-6">
+
+        <h2 class="text-lg font-semibold text-stone-900 mb-4">
+            {% trans "Security" context "profile page" %}
+        </h2>
+
+        <a href="{% url 'accounts:password_reset' %}"
+           class="sf-button sf-button--secondary min-h-11">
+
+            {% trans "Change password" context "profile page" %}
+        </a>
+
+    </section>
+
+    <!-- ACTIONS -->
+    <div class="flex flex-wrap justify-end gap-3">
+
+        <a href="{% url 'accounts:overview' %}"
+           class="sf-button sf-button--secondary min-h-11">
+
+            {% trans "Cancel" context "profile page" %}
+        </a>
+
+        <button type="submit" class="sf-button sf-button--primary min-h-11">
+
+            {% trans "Save changes" context "profile page" %}
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

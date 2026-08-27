@@ -1,0 +1,14 @@
+{% load i18n %}
+{% with comments=review.comments.all %}
+    <div class="space-y-3" data-comment-list>
+        {% if comments %}
+            {% for comment in comments %}
+                {% if not comment.parent %}
+                    {% include "products/components/reviews/comment_card.html" with comment=comment review=review %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="rounded-control border border-dashed border-border-strong bg-surface-subtle px-4 py-4" data-discussion-empty><p class="text-sm font-semibold text-text-primary">{% trans "No replies yet" %}</p><p class="mt-1 text-sm text-text-secondary">{% trans "Be the first to start the conversation." %}</p></div>
+        {% endif %}
+    </div>
+{% endwith %}
