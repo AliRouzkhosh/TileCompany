@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TileStore\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-26 09:49+0330\n"
+"POT-Creation-Date: 2026-08-29 10:20+0330\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,7 +415,7 @@ msgid "Manage your shipping and billing addresses."
 msgstr "نشانی‌های ارسال و صورتحساب خود را مدیریت کنید."
 
 #: .\accounts\templates\accounts\address_list.html:18
-#: .\accounts\templates\accounts\overview.html:38 .\accounts\views.py:461
+#: .\accounts\templates\accounts\overview.html:38 .\accounts\views.py:463
 msgctxt "address page"
 msgid "Add address"
 msgstr "افزودن نشانی"
@@ -1143,11 +1143,11 @@ msgstr ""
 msgid "Please try again later."
 msgstr "لطفاً کمی بعد دوباره تلاش کنید."
 
-#: .\accounts\views.py:156 .\accounts\views.py:196 .\accounts\views.py:576
+#: .\accounts\views.py:156 .\accounts\views.py:196 .\accounts\views.py:578
 msgid "Please wait before requesting another code."
 msgstr "پیش از درخواست کد جدید کمی صبر کنید."
 
-#: .\accounts\views.py:178 .\accounts\views.py:228 .\accounts\views.py:594
+#: .\accounts\views.py:178 .\accounts\views.py:228 .\accounts\views.py:596
 #, fuzzy
 #| msgid "This password reset link is invalid or has already been used."
 msgid "This code is invalid or has expired. Request a new code."
@@ -1163,8 +1163,8 @@ msgstr "این کد نامعتبر یا منقضی شده است. کد جدید 
 msgid "Welcome! Your account has been created successfully."
 msgstr "خوش آمدید! حساب شما با موفقیت ایجاد شد."
 
-#: .\accounts\views.py:329 .\accounts\views.py:399 .\accounts\views.py:422
-#: .\accounts\views.py:464 .\accounts\views.py:516 .\accounts\views.py:553
+#: .\accounts\views.py:329 .\accounts\views.py:401 .\accounts\views.py:424
+#: .\accounts\views.py:466 .\accounts\views.py:518 .\accounts\views.py:555
 #: .\notifications\views.py:54 .\orders\orders.py:50 .\orders\orders.py:69
 #: .\orders\orders.py:145 .\products\views\wishlist.py:82 .\support\views.py:96
 #: .\support\views.py:140 .\support\views.py:181
@@ -1177,61 +1177,61 @@ msgctxt "profile update message"
 msgid "Your profile has been updated successfully."
 msgstr "پروفایل شما با موفقیت به‌روزرسانی شد."
 
-#: .\accounts\views.py:400
+#: .\accounts\views.py:402
 msgctxt "account breadcrumb"
 msgid "Profile"
 msgstr "پروفایل"
 
-#: .\accounts\views.py:423 .\accounts\views.py:465 .\accounts\views.py:517
-#: .\accounts\views.py:554
+#: .\accounts\views.py:425 .\accounts\views.py:467 .\accounts\views.py:519
+#: .\accounts\views.py:556
 msgctxt "address breadcrumb"
 msgid "Addresses"
 msgstr "نشانی‌ها"
 
-#: .\accounts\views.py:447
+#: .\accounts\views.py:449
 msgctxt "address message"
 msgid "Address added successfully."
 msgstr "نشانی با موفقیت افزوده شد."
 
-#: .\accounts\views.py:466
+#: .\accounts\views.py:468
 msgctxt "address breadcrumb"
 msgid "Add address"
 msgstr "افزودن نشانی"
 
-#: .\accounts\views.py:499
+#: .\accounts\views.py:501
 msgctxt "address message"
 msgid "Address updated successfully."
 msgstr "نشانی با موفقیت به‌روزرسانی شد."
 
-#: .\accounts\views.py:513
+#: .\accounts\views.py:515
 msgctxt "address page"
 msgid "Edit address"
 msgstr "ویرایش نشانی"
 
-#: .\accounts\views.py:518
+#: .\accounts\views.py:520
 msgctxt "address breadcrumb"
 msgid "Edit address"
 msgstr "ویرایش نشانی"
 
-#: .\accounts\views.py:541
+#: .\accounts\views.py:543
 msgctxt "address message"
 msgid "Address removed."
 msgstr "نشانی حذف شد."
 
-#: .\accounts\views.py:555
+#: .\accounts\views.py:557
 msgctxt "address breadcrumb"
 msgid "Delete address"
 msgstr "حذف نشانی"
 
-#: .\accounts\views.py:570
+#: .\accounts\views.py:572
 msgid "This number cannot be used. Please try again later."
 msgstr "استفاده از این شماره ممکن نیست. بعداً دوباره تلاش کنید."
 
-#: .\accounts\views.py:573
+#: .\accounts\views.py:575
 msgid "Your SMS login phone is already verified."
 msgstr "شماره ورود پیامکی شما پیش‌تر تأیید شده است."
 
-#: .\accounts\views.py:592
+#: .\accounts\views.py:594
 msgid "Phone verified. You can now sign in with an SMS code."
 msgstr "شماره تلفن تأیید شد. اکنون می‌توانید با کد پیامکی وارد شوید."
 
@@ -1443,7 +1443,7 @@ msgstr "جست‌وجوی مقاله‌ها"
 #: .\dashboard\templates\dashboard\moderation\components\moderation_filters.html:15
 #: .\dashboard\templates\dashboard\products\components\product_filters.html:6
 #: .\dashboard\templates\dashboard\staff_access\list.html:1
-#: .\products\catalog_filter.py:603 .\products\presentation.py:85
+#: .\products\catalog_filter.py:641 .\products\presentation.py:85
 #: .\products\templates\products\product_list.html:11
 #: .\support\templates\support\components\help_discovery.html:5
 #: .\support\templates\support\support_home.html:12
@@ -1505,7 +1505,7 @@ msgstr "جست‌وجوی مقاله‌ها"
 #: .\dashboard\templates\dashboard\products\components\detail\info.html:35
 #: .\dashboard\templates\dashboard\products\components\product_filters.html:20
 #: .\dashboard\templates\dashboard\schema\home.html:10
-#: .\products\search\categories.py:100 .\products\storefront_navigation.py:47
+#: .\products\search\categories.py:100 .\products\storefront_navigation.py:70
 #: .\products\templates\products\components\filters_sidebar.html:21
 #: .\products\templates\products\components\generic_filters_sidebar.html:9
 #: .\products\templates\products\components\product_specs.html:19
@@ -1840,7 +1840,7 @@ msgstr "توضیحات فارسی"
 #: .\dashboard\forms.py:81
 #: .\dashboard\templates\dashboard\products\components\detail\info.html:46
 #: .\dashboard\templates\dashboard\products\components\product_filters.html:27
-#: .\products\catalog_filter.py:612 .\products\presentation.py:89
+#: .\products\catalog_filter.py:650 .\products\presentation.py:89
 #: .\products\templates\products\components\filters_sidebar.html:54
 #: .\products\templates\products\components\generic_filters_sidebar.html:44
 #: .\products\templates\products\components\product_specs.html:13
@@ -2063,7 +2063,7 @@ msgstr "زمان انتشار"
 #: .\dashboard\forms_blog.py:63
 #: .\dashboard\templates\dashboard\products\components\product_table.html:35
 #: .\dashboard\templates\dashboard\schema\categories.html:2
-#: .\products\catalog_filter.py:583 .\products\catalog_filter.py:596
+#: .\products\catalog_filter.py:621 .\products\catalog_filter.py:634
 #: .\products\presentation.py:83 .\products\presentation.py:88
 #: .\products\search\categories.py:96
 #: .\products\templates\products\product_list.html:11 .\support\forms.py:47
@@ -2239,14 +2239,14 @@ msgid "Not set"
 msgstr "تنظیم‌نشده"
 
 #: .\dashboard\forms_generic_product.py:124
-#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:452
+#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:490
 #: .\products\catalog_read.py:297 .\products\catalog_read.py:299
 #: .\products\purchase_snapshot.py:117
 msgid "Yes"
 msgstr ""
 
 #: .\dashboard\forms_generic_product.py:124
-#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:452
+#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:490
 #: .\products\catalog_read.py:297 .\products\catalog_read.py:299
 #: .\products\purchase_snapshot.py:117
 #, fuzzy
@@ -2318,18 +2318,18 @@ msgstr "یک تصویر برای بارگذاری انتخاب کنید یا گ�
 msgid "Choose exactly one homepage merchandising target."
 msgstr "دقیقاً یک مقصد برای رسانهٔ صفحهٔ اصلی انتخاب کنید."
 
-#: .\dashboard\notifications.py:47
+#: .\dashboard\notifications.py:55
 #: .\dashboard\templates\dashboard\analytics\index.html:10
 #: .\dashboard\templates\dashboard\home\index.html:6
 msgid "Low stock"
 msgstr "موجودی کم"
 
-#: .\dashboard\notifications.py:48
+#: .\dashboard\notifications.py:56
 #, python-format
 msgid "%(product)s — %(sku)s has only %(quantity)s remaining."
 msgstr "از %(product)s — %(sku)s تنها %(quantity)s باقی مانده است."
 
-#: .\dashboard\notifications.py:57
+#: .\dashboard\notifications.py:65
 #: .\dashboard\templates\dashboard\home\index.html:6
 #: .\orders\templates\orders\components\cart_item.html:48
 #: .\products\templates\products\components\product_info.html:3
@@ -2337,76 +2337,76 @@ msgstr "از %(product)s — %(sku)s تنها %(quantity)s باقی مانده �
 msgid "Out of stock"
 msgstr "ناموجود"
 
-#: .\dashboard\notifications.py:58
+#: .\dashboard\notifications.py:66
 #, python-format
 msgid "%(product)s — %(sku)s is out of stock."
 msgstr "%(product)s — %(sku)s ناموجود است."
 
-#: .\dashboard\notifications.py:84
+#: .\dashboard\notifications.py:93
 msgid "Tickets needing response"
 msgstr "تیکت‌های نیازمند پاسخ"
 
-#: .\dashboard\notifications.py:84
+#: .\dashboard\notifications.py:93
 #, python-format
 msgid "%(count)d support ticket requires a response."
 msgid_plural "%(count)d support tickets require a response."
 msgstr[0] "%(count)d تیکت پشتیبانی نیازمند پاسخ است."
 
-#: .\dashboard\notifications.py:87
+#: .\dashboard\notifications.py:96
 msgid "Urgent support tickets"
 msgstr "تیکت‌های پشتیبانی فوری"
 
-#: .\dashboard\notifications.py:87
+#: .\dashboard\notifications.py:96
 #, python-format
 msgid "%(count)d urgent support ticket needs attention."
 msgid_plural "%(count)d urgent support tickets need attention."
 msgstr[0] "%(count)d تیکت پشتیبانی فوری نیازمند رسیدگی است."
 
-#: .\dashboard\notifications.py:92
+#: .\dashboard\notifications.py:101
 msgid "Orders on hold"
 msgstr "سفارش‌های در حالت تعلیق"
 
-#: .\dashboard\notifications.py:92
+#: .\dashboard\notifications.py:101
 #, python-format
 msgid "%(count)d order requires manual attention."
 msgid_plural "%(count)d orders require manual attention."
 msgstr[0] "%(count)d سفارش نیازمند رسیدگی دستی است."
 
-#: .\dashboard\notifications.py:94
+#: .\dashboard\notifications.py:103
 msgid "Orders ready to ship"
 msgstr "سفارش‌های آمادهٔ ارسال"
 
-#: .\dashboard\notifications.py:94
+#: .\dashboard\notifications.py:103
 #, python-format
 msgid "%(count)d paid order is waiting for shipment."
 msgid_plural "%(count)d paid orders are waiting for shipment."
 msgstr[0] "%(count)d سفارش پرداخت‌شده در انتظار ارسال است."
 
-#: .\dashboard\notifications.py:99
+#: .\dashboard\notifications.py:108
 msgid "Refund requests waiting"
 msgstr "درخواست‌های بازپرداخت در انتظار بررسی"
 
-#: .\dashboard\notifications.py:99
+#: .\dashboard\notifications.py:108
 #, python-format
 msgid "%(count)d refund request requires review."
 msgid_plural "%(count)d refund requests require review."
 msgstr[0] "%(count)d درخواست بازپرداخت نیازمند بررسی است."
 
-#: .\dashboard\notifications.py:101
+#: .\dashboard\notifications.py:110
 msgid "Approved refunds awaiting processing"
 msgstr "بازپرداخت تأیید شده و در انتظار پردازش مالی است."
 
-#: .\dashboard\notifications.py:101
+#: .\dashboard\notifications.py:110
 #, python-format
 msgid "%(count)d approved refund still requires financial processing."
 msgid_plural "%(count)d approved refunds still require financial processing."
 msgstr[0] "%(count)d بازپرداخت تأییدشده همچنان نیازمند پردازش مالی است."
 
-#: .\dashboard\notifications.py:107
+#: .\dashboard\notifications.py:122
 msgid "Content moderation"
 msgstr "مدیریت محتوا"
 
-#: .\dashboard\notifications.py:107
+#: .\dashboard\notifications.py:122
 #, python-format
 msgid "%(count)d comment or review requires approval."
 msgid_plural "%(count)d comments or reviews require approval."
@@ -3206,14 +3206,15 @@ msgstr "رسیدگی"
 #: .\dashboard\templates\dashboard\products\inventory_import\index.html:4
 #: .\dashboard\templates\dashboard\schema\categories.html:2
 #: .\dashboard\templates\dashboard\schema\product_types.html:2
-#: .\dashboard\views\products.py:63 .\products\views\catalog.py:295
-#: .\products\views\catalog.py:423
+#: .\dashboard\views\products.py:63 .\products\views\catalog.py:304
+#: .\products\views\catalog.py:432
 #: .\templates\components\navbar\searchbar.html:7
 msgid "Products"
 msgstr "محصولات"
 
 #: .\dashboard\templates\dashboard\components\sidebar.html:191
 #: .\dashboard\templates\dashboard\products\components\product_filters.html:36
+#: .\products\catalog_filter.py:76
 #: .\products\templates\products\product_list.html:4
 #: .\products\templates\products\product_list.html:13
 #: .\templates\components\footer.html:19 .\templates\components\footer.html:57
@@ -5938,7 +5939,7 @@ msgstr "گونهٔ عمومی به‌صورت پیش‌نویس غیرفعال �
 msgid "Generic Variant updated."
 msgstr "گونهٔ عمومی به‌روزرسانی شد."
 
-#: .\dashboard\views\generic_variants.py:111 .\dashboard\views\variants.py:130
+#: .\dashboard\views\generic_variants.py:111 .\dashboard\views\variants.py:147
 #, python-format
 msgid "Edit %(sku)s"
 msgstr "ویرایش %(sku)s"
@@ -6022,23 +6023,23 @@ msgstr "پاسخ بررسی رد شد."
 msgid "Unable to reject review comment."
 msgstr "رد پاسخ بررسی ممکن نیست."
 
-#: .\dashboard\views\orders.py:79 .\orders\models.py:708 .\orders\models.py:819
+#: .\dashboard\views\orders.py:80 .\orders\models.py:708 .\orders\models.py:819
 msgid "Order marked as shipped."
 msgstr "سفارش به‌عنوان ارسال‌شده علامت‌گذاری شد."
 
-#: .\dashboard\views\orders.py:81
+#: .\dashboard\views\orders.py:82
 msgid "Unable to ship this order."
 msgstr "امکان ارسال این سفارش وجود ندارد."
 
-#: .\dashboard\views\orders.py:99
+#: .\dashboard\views\orders.py:100
 msgid "Order delivered."
 msgstr "سفارش تحویل شد."
 
-#: .\dashboard\views\orders.py:101
+#: .\dashboard\views\orders.py:102
 msgid "Unable to deliver this order."
 msgstr "امکان ثبت تحویل این سفارش وجود ندارد."
 
-#: .\dashboard\views\orders.py:130
+#: .\dashboard\views\orders.py:131
 #, python-format
 msgid ""
 "Refund approved. Order cancelled and %(quantities)s returned to inventory. "
@@ -6047,81 +6048,81 @@ msgstr ""
 "بازپرداخت تأیید شد. سفارش لغو و %(quantities)s به موجودی بازگردانده شد. "
 "بازپرداخت در انتظار پردازش مالی است."
 
-#: .\dashboard\views\orders.py:132
+#: .\dashboard\views\orders.py:133
 msgid ""
 "Refund approved. Inventory remains unchanged until the refund is processed."
 msgstr "بازپرداخت تأیید شد. موجودی تا زمان پردازش بازپرداخت تغییری نمی‌کند."
 
-#: .\dashboard\views\orders.py:141
+#: .\dashboard\views\orders.py:142
 msgid "Unable to approve refund."
 msgstr "تأیید بازپرداخت ممکن نیست."
 
-#: .\dashboard\views\orders.py:182
+#: .\dashboard\views\orders.py:183
 msgid "Refund rejected."
 msgstr "درخواست بازپرداخت رد شد."
 
-#: .\dashboard\views\orders.py:192
+#: .\dashboard\views\orders.py:193
 msgid "Unable to reject refund."
 msgstr "رد بازپرداخت ممکن نیست."
 
-#: .\dashboard\views\orders.py:224
+#: .\dashboard\views\orders.py:225
 #, python-format
 msgid "Refund processed. %(quantities)s returned to inventory."
 msgstr "بازپرداخت پردازش شد و %(quantities)s به موجودی بازگردانده شد."
 
-#: .\dashboard\views\orders.py:226
+#: .\dashboard\views\orders.py:227
 msgid ""
 "Refund processed. Inventory had already been restored earlier; no stock "
 "adjustment was made."
 msgstr ""
 "بازپرداخت پردازش شد. موجودی پیش‌تر بازگردانده شده بود و تغییری اعمال نشد."
 
-#: .\dashboard\views\orders.py:228
+#: .\dashboard\views\orders.py:229
 msgid "Refund processed."
 msgstr "بازپرداخت پردازش شد."
 
-#: .\dashboard\views\orders.py:232
+#: .\dashboard\views\orders.py:233
 msgid "Unable to process refund."
 msgstr "پردازش بازپرداخت ممکن نیست."
 
-#: .\dashboard\views\orders.py:253
+#: .\dashboard\views\orders.py:254
 #, python-format
 msgid "Order cancelled. %(quantities)s returned to inventory."
 msgstr "سفارش لغو شد و %(quantities)s به موجودی بازگردانده شد."
 
-#: .\dashboard\views\orders.py:255 .\orders\models.py:716
+#: .\dashboard\views\orders.py:256 .\orders\models.py:716
 #: .\orders\models.py:827 .\orders\payment.py:306
 msgid "Order cancelled."
 msgstr "سفارش لغو شد."
 
-#: .\dashboard\views\orders.py:257
+#: .\dashboard\views\orders.py:258
 msgid "Unable to cancel order."
 msgstr "لغو سفارش ممکن نیست."
 
-#: .\dashboard\views\orders.py:381
+#: .\dashboard\views\orders.py:388
 #, fuzzy
 #| msgid "Your comment has been submitted for moderation."
 msgid "The customer has been asked for more information."
 msgstr "دیدگاه شما ثبت شده و در انتظار بررسی است."
 
-#: .\dashboard\views\orders.py:383
+#: .\dashboard\views\orders.py:390
 msgid "Unable to request more information for this refund."
 msgstr ""
 
-#: .\dashboard\views\orders.py:464 .\orders\models.py:823
+#: .\dashboard\views\orders.py:477 .\orders\models.py:823
 msgid "Order placed on hold."
 msgstr "سفارش در حالت تعلیق"
 
-#: .\dashboard\views\orders.py:466
+#: .\dashboard\views\orders.py:479
 msgid "Unable to place order on hold."
 msgstr "قرار دادن سفارش در حالت تعلیق ممکن نیست."
 
-#: .\dashboard\views\orders.py:484 .\orders\models.py:714
+#: .\dashboard\views\orders.py:497 .\orders\models.py:714
 #: .\orders\models.py:825
 msgid "Order resumed."
 msgstr "سفارش از سر گرفته شد."
 
-#: .\dashboard\views\orders.py:486
+#: .\dashboard\views\orders.py:499
 msgid "Unable to resume order."
 msgstr "ازسرگیری سفارش ممکن نیست."
 
@@ -6201,29 +6202,31 @@ msgstr[0] "این دسته‌بندی توسط %(count)d درخواست استف
 msgid "Help article saved."
 msgstr "مقالهٔ راهنما ذخیره شد."
 
-#: .\dashboard\views\variants.py:19
-msgid "Generic Variant management is unavailable until F2C."
-msgstr ""
+#: .\dashboard\views\variants.py:24
+msgid ""
+"Removing existing variant images is not currently supported for this product "
+"type."
+msgstr "حذف تصاویر موجودِ گونه در حال حاضر برای این نوع محصول پشتیبانی نمی‌شود."
 
-#: .\dashboard\views\variants.py:47
+#: .\dashboard\views\variants.py:64
 #, python-format
 msgid "Variants for %(name)s"
 msgstr "گونه‌های %(name)s"
 
-#: .\dashboard\views\variants.py:81
+#: .\dashboard\views\variants.py:98
 msgid "Variant created successfully."
 msgstr "گونه با موفقیت ایجاد شد."
 
-#: .\dashboard\views\variants.py:88
+#: .\dashboard\views\variants.py:105
 #, python-format
 msgid "Add Variant for %(name)s"
 msgstr "افزودن گونه برای %(name)s"
 
-#: .\dashboard\views\variants.py:123
+#: .\dashboard\views\variants.py:140
 msgid "Variant updated successfully."
 msgstr "گونه با موفقیت به‌روزرسانی شد."
 
-#: .\dashboard\views\variants.py:149
+#: .\dashboard\views\variants.py:166
 msgid "Variant image removed."
 msgstr "تصویر گونه حذف شد."
 
@@ -7679,7 +7682,7 @@ msgid "Order number"
 msgstr "شمارهٔ سفارش"
 
 #: .\orders\templates\orders\components\purchased_line_details.html:6
-#: .\products\catalog_filter.py:623
+#: .\products\catalog_filter.py:661
 #: .\products\templates\products\components\generic_filters_sidebar.html:25
 msgid "Product type"
 msgstr "نوع محصول"
@@ -8188,27 +8191,27 @@ msgstr ""
 msgid "Combination signature does not match the configured dimension values."
 msgstr ""
 
-#: .\products\catalog_filter.py:574
+#: .\products\catalog_filter.py:612
 #, fuzzy, python-format
 #| msgid "Remove filter: %(label)s%(value)s"
 msgid "Remove filter: %(label)s %(value)s"
 msgstr "حذف فیلتر: %(label)s%(value)s"
 
-#: .\products\catalog_filter.py:643 .\products\presentation.py:109
+#: .\products\catalog_filter.py:681 .\products\presentation.py:109
 msgid "Minimum price"
 msgstr "حداقل قیمت"
 
-#: .\products\catalog_filter.py:643 .\products\presentation.py:114
+#: .\products\catalog_filter.py:681 .\products\presentation.py:114
 msgid "Maximum price"
 msgstr "حداکثر قیمت"
 
-#: .\products\catalog_filter.py:648 .\products\presentation.py:118
+#: .\products\catalog_filter.py:686 .\products\presentation.py:118
 #: .\products\templates\products\components\filters_sidebar.html:349
 #: .\products\templates\products\components\generic_filters_sidebar.html:116
 msgid "In Stock"
 msgstr "موجود"
 
-#: .\products\catalog_filter.py:650 .\products\presentation.py:120
+#: .\products\catalog_filter.py:688 .\products\presentation.py:120
 #: .\products\templates\products\components\filters_sidebar.html:359
 #: .\products\templates\products\components\generic_filters_sidebar.html:117
 msgid "On Sale"
@@ -8773,12 +8776,12 @@ msgid ""
 msgstr ""
 "این آخرین گونهٔ فعال و آمادهٔ انتشار است. ابتدا انتشار محصول را لغو کنید."
 
-#: .\products\storefront_navigation.py:52
+#: .\products\storefront_navigation.py:75
 #: .\products\templates\products\home.html:9
 msgid "Shop by Space"
 msgstr "خرید بر اساس فضا"
 
-#: .\products\storefront_navigation.py:68
+#: .\products\storefront_navigation.py:91
 msgid "Brands"
 msgstr "برندها"
 
@@ -8788,7 +8791,7 @@ msgstr "جست‌وجو و فیلترهای فعال"
 
 #: .\products\templates\products\components\active_filters.html:16
 #: .\products\templates\products\components\catalog_empty_state.html:13
-#: .\products\templates\products\components\catalog_workspace.html:4
+#: .\products\templates\products\components\catalog_workspace.html:5
 msgid "Clear all"
 msgstr "پاک کردن همه"
 
@@ -8839,7 +8842,7 @@ msgstr "محصولی موجود نیست"
 msgid "The catalog does not have any products to show yet."
 msgstr "در حال حاضر محصولی برای نمایش در فروشگاه وجود ندارد."
 
-#: .\products\templates\products\components\catalog_workspace.html:4
+#: .\products\templates\products\components\catalog_workspace.html:5
 #: .\products\templates\products\components\filter_drawer.html:25
 #: .\products\templates\products\components\shop_toolbar.html:7
 #: .\products\templates\products\components\shop_toolbar.html:18
@@ -8847,7 +8850,7 @@ msgstr "در حال حاضر محصولی برای نمایش در فروشگا�
 msgid "Filters"
 msgstr "فیلترها"
 
-#: .\products\templates\products\components\catalog_workspace.html:4
+#: .\products\templates\products\components\catalog_workspace.html:5
 msgid "Product results"
 msgstr "نتایج محصولات"
 
@@ -8856,6 +8859,11 @@ msgstr "نتایج محصولات"
 #| msgid "Browse our %(category_name)s collection."
 msgid "Explore %(category_name)s"
 msgstr "مشاهدهٔ %(category_name)s"
+
+#: .\products\templates\products\components\category_selector.html:3
+#: .\products\templates\products\components\category_selector.html:4
+msgid "Shop by category"
+msgstr "خرید بر اساس دسته‌بندی"
 
 #: .\products\templates\products\components\editorial_feature.html:9
 msgid "Design inspiration image coming soon"

@@ -12,7 +12,7 @@ from django.utils.translation import gettext as _
 
 from .catalog_read import CatalogReadIntegrityError
 from .models import (
-    AttributeDefinition, AttributeOption, Brand, Category, ProductAttributeValue,
+    AttributeDefinition, AttributeOption, Brand, Category, Product, ProductAttributeValue,
     ProductType, ProductTypeAttribute, ProductTypeAttributeOption, ProductVariant,
     VariantAttributeValue,
 )
@@ -53,6 +53,41 @@ def selected_category_slugs(request):
             value.strip() for value in request.GET.getlist(key) if value.strip()
         )
     return tuple(dict.fromkeys(values))
+
+
+def build_category_selector_items(request, categories, *, path_category=None):
+    """Prepare canonical, progressively-enhanced category destinations."""
+    base_path = reverse("products:product_list")
+    params = request.GET.copy()
+    params.pop("page", None)
+    for key in CATEGORY_FILTER_ALIASES:
+        params.pop(key, None)
+
+    def url_for(slug=None):
+        destination = params.copy()
+        if slug:
+            destination.setlist("categories", [slug])
+        query = destination.urlencode()
+        return f"{base_path}?{query}" if query else base_path
+
+    selected = selected_category_slugs(request)
+    path_slug = path_category.slug if path_category else None
+    items = [{
+        "label": _("All Products"),
+        "url": url_for(),
+        "active": not selected and path_slug is None,
+    }]
+    for category in categories:
+        is_active = (
+            (len(selected) == 1 and selected[0] == category.slug)
+            or (not selected and path_slug == category.slug)
+        )
+        items.append({
+            "category": category,
+            "url": url_for(category.slug),
+            "active": is_active,
+        })
+    return tuple(items)
 
 
 def selected_brand_slugs(request):
@@ -150,6 +185,37 @@ def active_descendant_ids(category):
         found.add(pk)
         pending.extend(children.get(pk, ()))
     return sorted(found)
+
+
+def get_category_selector_categories(categories):
+    """Return navigation categories with an active catalog destination."""
+    category_ids_with_products = set(
+        Product.objects.filter(
+            is_active=True,
+            variants__is_active=True,
+            categories__isnull=False,
+        ).values_list("categories__id", flat=True).distinct()
+    )
+    children = {}
+    for category in categories:
+        children.setdefault(category.parent_id, []).append(category.pk)
+
+    def has_catalog_descendant(category):
+        pending, seen = [category.pk], set()
+        while pending:
+            category_id = pending.pop()
+            if category_id in seen:
+                continue
+            seen.add(category_id)
+            if category_id in category_ids_with_products:
+                return True
+            pending.extend(children.get(category_id, ()))
+        return False
+
+    return tuple(
+        category for category in categories
+        if category.show_in_navigation and has_catalog_descendant(category)
+    )
 
 
 def _binding_map(products):

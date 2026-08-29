@@ -11,7 +11,7 @@ from products.catalog_framework_audit import run_catalog_framework_audit
 from products.catalog_read import read_product_detail
 from products.models import (
     AttributeDefinition, AttributeOption, Product, ProductType,
-    ProductOperationalChange, ProductTypeAttribute, ProductVariant, VariantAttributeValue, VariantPrice,
+    ProductOperationalChange, ProductTypeAttribute, ProductVariant, VariantAttributeValue, VariantImage, VariantPrice,
 )
 from products.publication_services import PublicationBlockedError, publish_variant
 
@@ -219,18 +219,39 @@ class GenericVariantEditorTests(TestCase):
         user = get_user_model().objects.create_user(username="catalog-staff", password="secret")
         user.groups.add(Group.objects.get(name="Product Manager"))
         self.client.force_login(user)
-        self.assertEqual(
-            self.client.get(reverse("dashboard:products:generic_variant_catalog", args=[self.product.pk])).status_code,
-            200,
-        )
-        self.assertEqual(
-            self.client.get(reverse("dashboard:products:generic_variant_create", args=[self.product.pk])).status_code,
-            200,
+        detail = self.client.get(reverse("dashboard:products:generic_detail", args=[self.product.pk]))
+        generic_catalog = self.client.get(reverse("dashboard:products:generic_variant_catalog", args=[self.product.pk]))
+        generic_create = self.client.get(reverse("dashboard:products:generic_variant_create", args=[self.product.pk]))
+        self.assertEqual(generic_catalog.status_code, 200)
+        self.assertEqual(generic_create.status_code, 200)
+        for response in (detail, generic_catalog, generic_create):
+            self.assertNotContains(response, "until F2C")
+
+        variant = self._create("IP17P-REDIRECT")
+        self.assertRedirects(
+            self.client.get(reverse("dashboard:products:variants:catalog", args=[self.product.pk])),
+            reverse("dashboard:products:generic_variant_catalog", args=[self.product.pk]),
         )
         legacy_for_generic = self.client.get(
             reverse("dashboard:products:variants:create", args=[self.product.pk])
         )
-        self.assertRedirects(legacy_for_generic, reverse("dashboard:products:generic_detail", args=[self.product.pk]))
+        self.assertRedirects(legacy_for_generic, reverse("dashboard:products:generic_variant_create", args=[self.product.pk]))
+        self.assertRedirects(
+            self.client.get(reverse("dashboard:products:variants:edit", args=[self.product.pk, variant.pk])),
+            reverse("dashboard:products:generic_variant_edit", args=[self.product.pk, variant.pk]),
+        )
+
+        image = VariantImage.objects.create(variant=variant, image="products/variants/generic.jpg")
+        gallery_delete = self.client.post(
+            reverse("dashboard:products:variants:gallery_delete", args=[self.product.pk, variant.pk, image.pk]),
+            follow=True,
+        )
+        self.assertEqual(gallery_delete.redirect_chain[-1][0], reverse(
+            "dashboard:products:generic_variant_edit", args=[self.product.pk, variant.pk],
+        ))
+        self.assertTrue(VariantImage.objects.filter(pk=image.pk).exists())
+        self.assertContains(gallery_delete, "Removing existing variant images is not currently supported for this product type.")
+        self.assertNotContains(gallery_delete, "F2C")
 
         tile = ProductType.objects.create(code="tile", name="Tile")
         tile_product = Product.objects.create(product_type=tile, name="Tile", slug="tile-route", sku="TILE-ROUTE", is_active=False)

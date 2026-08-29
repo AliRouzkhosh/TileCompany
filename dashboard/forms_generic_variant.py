@@ -74,7 +74,7 @@ class GenericVariantForm(forms.ModelForm):
 
     def _build_dynamic_field(self, binding):
         definition = binding.definition
-        # All generic Variants are drafts in F2C; required dimensions may be omitted temporarily.
+        # Generic Variant drafts may omit dimensions until publication readiness is satisfied.
         common = {"label": self._label(binding), "required": False}
         rules = definition.validation_rules
         if definition.data_type == AttributeDefinition.DataType.OPTION:

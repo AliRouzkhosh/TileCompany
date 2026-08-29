@@ -21,6 +21,8 @@ from products.catalog_presentation import (
 from products.catalog_filter import (
     CatalogFilterIntegrityError,
     build_generic_catalog,
+    build_category_selector_items,
+    get_category_selector_categories,
     build_generic_filter_state,
     selected_category_slugs,
 )
@@ -260,10 +262,16 @@ def product_list(request, slug=None):
     # ------------------------------------------------------------------
     # Render
     # ------------------------------------------------------------------
+    categories = list(Category.objects.filter(is_active=True).order_by("sort_order", "name"))
     context = {
             "page_obj": page_obj,
             "category": category,
-            "categories": Category.objects.filter(is_active=True).order_by("sort_order", "name"),
+            "categories": categories,
+            "category_selector_items": build_category_selector_items(
+                request,
+                get_category_selector_categories(categories),
+                path_category=category,
+            ),
             "query": query,
             "query_string": query_string,
             "filter_options": filter_data["filter_options"],

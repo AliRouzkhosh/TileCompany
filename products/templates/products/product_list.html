@@ -4,7 +4,7 @@
 {% block title %}{% if category %}{{ category|localized:"name" }}{% elif query %}{% blocktrans %}Search: {{ query }}{% endblocktrans %}{% else %}{% trans "All Products" %}{% endif %}{% endblock %}
 
 {% block content %}
-<div class="space-y-6 md:space-y-7 xl:space-y-8" hx-history="false">
+<div class="space-y-6 md:space-y-5 xl:space-y-6" hx-history="false">
     {% include "components/breadcrumbs.html" %}
 
     <header class="max-w-3xl space-y-2 md:max-w-4xl" data-catalog-header>

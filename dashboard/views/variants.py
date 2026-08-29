@@ -12,13 +12,30 @@ from TileCompany.uploads import validate_raster_images
 from products.models import VariantImage
 
 
-def _generic_variant_guard(request, product):
+def _generic_variant_guard(request, product, *, operation, variant=None):
     if product.product_type_id and product.product_type.code != "tile":
-        messages.error(
-            request,
-            _("Generic Variant management is unavailable until F2C."),
-        )
-        return redirect("dashboard:products:generic_detail", pk=product.pk)
+        destinations = {
+            "catalog": ("dashboard:products:generic_variant_catalog", {"product_pk": product.pk}),
+            "create": ("dashboard:products:generic_variant_create", {"product_pk": product.pk}),
+        }
+        if operation == "gallery_delete":
+            messages.warning(
+                request,
+                _("Removing existing variant images is not currently supported for this product type."),
+            )
+            return redirect(
+                "dashboard:products:generic_variant_edit",
+                product_pk=product.pk,
+                variant_pk=variant.pk,
+            )
+        if operation == "edit":
+            return redirect(
+                "dashboard:products:generic_variant_edit",
+                product_pk=product.pk,
+                variant_pk=variant.pk,
+            )
+        name, kwargs = destinations[operation]
+        return redirect(name, **kwargs)
     return None
 
 
@@ -38,7 +55,7 @@ def variant_catalog(request, product_pk):
     """List all variants for a product, including inactive variants."""
 
     product = get_product(pk=product_pk)
-    if response := _generic_variant_guard(request, product):
+    if response := _generic_variant_guard(request, product, operation="catalog"):
         return response
     return render(
         request,
@@ -56,7 +73,7 @@ def variant_create(request, product_pk):
     """Create a variant for one specific product."""
 
     product = get_product(pk=product_pk)
-    if response := _generic_variant_guard(request, product):
+    if response := _generic_variant_guard(request, product, operation="create"):
         return response
     form = DashboardProductVariantForm(
         request.POST or None,
@@ -97,9 +114,9 @@ def variant_edit(request, product_pk, variant_pk):
     """Edit a variant only through its owning product URL."""
 
     product = get_product(pk=product_pk)
-    if response := _generic_variant_guard(request, product):
-        return response
     variant = get_product_variant(product=product, variant_pk=variant_pk)
+    if response := _generic_variant_guard(request, product, operation="edit", variant=variant):
+        return response
     form = DashboardProductVariantForm(
         request.POST or None, instance=variant,
         can_change_inventory=request.user.has_perm("products.change_inventory"),
@@ -139,9 +156,9 @@ def variant_edit(request, product_pk, variant_pk):
 @require_POST
 def variant_gallery_delete(request, product_pk, variant_pk, image_pk):
     product = get_product(pk=product_pk)
-    if response := _generic_variant_guard(request, product):
-        return response
     variant = get_product_variant(product=product, variant_pk=variant_pk)
+    if response := _generic_variant_guard(request, product, operation="gallery_delete", variant=variant):
+        return response
     image = VariantImage.objects.filter(pk=image_pk, variant=variant).first()
     if image:
         image.image.delete(save=False)
