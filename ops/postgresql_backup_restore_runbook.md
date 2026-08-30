@@ -1,8 +1,35 @@
-# TileCompany PostgreSQL backup and restore runbook
+# TileCompany backup and isolated recovery runbook
 
 This runbook is for deployment operators. It never supplies or records a database password. Use the platform secret manager or PostgreSQL's protected password-file mechanism; do not put `PGPASSWORD` or real credentials in scripts, repository files, or shell history.
 
-## Backup contract
+## Authoritative coherent backup contract
+
+`backup_tilecompany.ps1 -BackupRoot <absolute operator-owned path>` is the
+authoritative local-production application backup. It preflights the active
+stack, stops only `web`, creates a PostgreSQL custom dump and separate
+`media_data` / `private_inventory_import_data` archives, validates each
+artifact, writes a manifest and SHA-256 list, then restarts web in a `finally`
+path. It writes an incomplete directory first and renames it only after all
+validation succeeds. The set contains no Redis, staticfiles, `.env`, TLS keys,
+or runtime/provider secrets.
+
+The private-inventory archive records its 90-day lifecycle and must not be
+retained past that lifecycle without an explicit policy decision. Redis is
+recreated empty; staticfiles are regenerated with `collectstatic`; recovery
+requires separately protected Django, database, Redis, and provider secrets.
+
+Restore only with `recovery_drill.ps1 -BackupSet <absolute set path>`. It
+verifies checksums, refuses a Git SHA mismatch, uses uniquely named isolated
+Docker resources, never mounts active volumes, restores into a new PostgreSQL
+database, safely extracts archives into new volumes, regenerates staticfiles,
+and removes only resources labelled for that drill after success. A point-in-
+time restore can resurrect protected files deleted after the backup; payment
+state needs real-production reconciliation before reopening payment flows.
+
+Real production still needs approved encryption, access control, off-host
+storage, scheduling, alerting, RPO/RTO, retention, and secret-manager policy.
+
+## PostgreSQL-only utility
 
 Use `pg_dump -Fc` for a transactionally consistent logical database snapshot. Ordinary logical backups do not require stopping the web application, but PostgreSQL and uploaded media are not one atomic snapshot: protect database rows and their required private/public media with coordinated backup/retention operations.
 

@@ -1,5 +1,6 @@
-# Creates a timestamped PostgreSQL custom-format backup. Copy/adapt this outside
-# the repository for scheduled deployment use; it never accepts a password arg.
+# Low-level PostgreSQL-only utility. For application recovery use
+# backup_tilecompany.ps1, which creates a coherent DB + media + private-source set.
+# Copy/adapt this outside the repository for scheduled deployment use; it never accepts a password arg.
 # Use the PostgreSQL password-file/secret-manager mechanism supported by pg_dump.
 
 $ErrorActionPreference = 'Stop'
