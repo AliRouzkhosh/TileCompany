@@ -1,5 +1,6 @@
 from decimal import Decimal
 from io import BytesIO
+from tempfile import TemporaryDirectory
 
 from django.conf import settings
 
@@ -13,10 +14,15 @@ from openpyxl import load_workbook
 
 from products.currency import Currency
 from products.models import InventoryPriceImportBatch, Product, ProductVariant, VariantPrice
+from products.storage import private_inventory_import_storage
 
 
 class DashboardInventoryImportWorkflowTests(TestCase):
     def setUp(self):
+        self.private_storage_directory = TemporaryDirectory()
+        self.previous_private_storage_location = private_inventory_import_storage.location
+        private_inventory_import_storage.location = self.private_storage_directory.name
+        self.addCleanup(self._restore_private_storage)
         call_command("seed_dashboard_roles", verbosity=0)
         User = get_user_model()
         self.manager = User.objects.create_user("inventory-manager", password="secret")
@@ -27,6 +33,10 @@ class DashboardInventoryImportWorkflowTests(TestCase):
         product = Product.objects.create(name="Import product", slug="import-product", sku="IMPORT")
         self.variant = ProductVariant.objects.create(product=product, sku="IMPORT-1", stock=5, low_stock_threshold=2)
         VariantPrice.objects.create(variant=self.variant, currency=Currency.TOMAN, amount=Decimal("100"))
+
+    def _restore_private_storage(self):
+        private_inventory_import_storage.location = self.previous_private_storage_location
+        self.private_storage_directory.cleanup()
 
     def test_permissions_upload_preview_apply_and_private_source_download(self):
         self.client.force_login(self.manager)

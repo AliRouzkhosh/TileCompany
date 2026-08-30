@@ -163,7 +163,9 @@ def refund_attachment_download(request, attachment_id):
     attachment = get_object_or_404(RefundAttachment.objects.select_related("order"), pk=attachment_id)
     if attachment.order.user_id != request.user.id and not request.user.is_superuser:
         raise Http404
-    return FileResponse(attachment.file.open("rb"), as_attachment=True, filename=safe_upload_filename(attachment.original_filename or attachment.file.name.rsplit("/", 1)[-1]))
+    response = FileResponse(attachment.file.open("rb"), as_attachment=True, filename=safe_upload_filename(attachment.original_filename or attachment.file.name.rsplit("/", 1)[-1]))
+    response["Cache-Control"] = "private, no-store"
+    return response
 
 
 # ==========================================================

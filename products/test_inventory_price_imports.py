@@ -2,6 +2,7 @@ import io
 import zipfile
 from datetime import timedelta
 from decimal import Decimal
+from tempfile import TemporaryDirectory
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
@@ -14,6 +15,7 @@ from openpyxl import Workbook
 from products.currency import Currency
 from products.inventory_price_imports import create_inventory_price_import_preview
 from products.models import InventoryPriceImportBatch, Product, ProductVariant, VariantPrice
+from products.storage import private_inventory_import_storage
 
 
 HEADERS = "sku,stock,low_stock_threshold,irt_price,irt_compare_at,usd_price,usd_compare_at\n"
@@ -21,6 +23,10 @@ HEADERS = "sku,stock,low_stock_threshold,irt_price,irt_compare_at,usd_price,usd_
 
 class InventoryPriceImportPreviewTests(TestCase):
     def setUp(self):
+        self.private_storage_directory = TemporaryDirectory()
+        self.previous_private_storage_location = private_inventory_import_storage.location
+        private_inventory_import_storage.location = self.private_storage_directory.name
+        self.addCleanup(self._restore_private_storage)
         call_command("seed_dashboard_roles", verbosity=0)
         User = get_user_model()
         self.manager = User.objects.create_user("product-manager", password="secret")
@@ -32,6 +38,10 @@ class InventoryPriceImportPreviewTests(TestCase):
         self.variant = ProductVariant.objects.create(product=self.product, sku="import-01", stock=5, low_stock_threshold=2)
         VariantPrice.objects.create(variant=self.variant, currency=Currency.TOMAN, amount=Decimal("100"), compare_at_amount=Decimal("120"))
         VariantPrice.objects.create(variant=self.variant, currency=Currency.USD, amount=Decimal("10.00"), compare_at_amount=Decimal("12.00"))
+
+    def _restore_private_storage(self):
+        private_inventory_import_storage.location = self.previous_private_storage_location
+        self.private_storage_directory.cleanup()
 
     def upload(self, body, name="inventory.csv"):
         return SimpleUploadedFile(name, body if isinstance(body, bytes) else body.encode("utf-8"), content_type="text/csv")
@@ -135,3 +145,9 @@ class InventoryPriceImportPreviewTests(TestCase):
         self.assertEqual(Group.objects.get(name="Order Manager").permissions.count(), 5)
         with self.assertRaises(Exception):
             self.preview(HEADERS.encode(), name="inventory.xlsx")
+
+    def test_private_source_storage_has_no_public_url(self):
+        batch = self.preview(HEADERS + "IMPORT-01,1,,,,,,\n")
+        self.assertTrue(batch.source_file.storage.exists(batch.source_file.name))
+        with self.assertRaises(ValueError):
+            batch.source_file.storage.url(batch.source_file.name)

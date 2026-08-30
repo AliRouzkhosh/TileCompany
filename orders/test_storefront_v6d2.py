@@ -2,16 +2,20 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.management import call_command
 from django.core.exceptions import PermissionDenied
 from django.db import connection
 from django.test import TestCase
+from django.test import override_settings
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import override
 from io import BytesIO
 from PIL import Image
+from tempfile import TemporaryDirectory
 
 from orders.forms import RefundRequestForm
 from orders.models import Order, OrderItem
@@ -118,27 +122,45 @@ class CustomerRefundRequestV6D2Tests(TestCase):
         self.assertEqual(self.client.get(reverse("orders:order_cancel", args=[delivered.pk])).status_code, 302)
 
     def test_attachment_validation_and_farsi_refund_status(self):
-        order = self.order()
-        url = reverse("orders:order_cancel", args=[order.pk])
-        bad = SimpleUploadedFile("evidence.txt", b"invalid", content_type="text/plain")
-        invalid = self.client.post(url, {"reason": Order.RefundReason.OTHER, "message": "", "attachments": bad})
-        self.assertContains(invalid, "Upload a valid JPG, PNG, WEBP, or PDF file.")
-        self.assertEqual(order.refund_status, Order.RefundStatus.NONE)
-        valid = self.image_upload()
-        submitted = self.client.post(url, {"reason": Order.RefundReason.OTHER, "message": "شرح", "attachments": valid})
-        self.assertRedirects(submitted, reverse("orders:order_detail", args=[order.pk]))
-        attachment = order.refund_attachments.get()
-        self.client.force_login(self.other)
-        self.assertEqual(
-            self.client.get(reverse("orders:refund_attachment_download", args=[attachment.pk])).status_code,
-            404,
-        )
-        self.client.force_login(self.user)
-        with override("fa"):
-            response = self.client.get(reverse("orders:order_detail", args=[order.pk]))
-        self.assertContains(response, "بازپرداخت")
-        self.assertContains(response, "درخواست شما برای بازپرداخت")
-        self.assertNotContains(response, ">Refund<")
+        with TemporaryDirectory() as media_root, override_settings(MEDIA_ROOT=media_root):
+            order = self.order()
+            url = reverse("orders:order_cancel", args=[order.pk])
+            bad = SimpleUploadedFile("evidence.txt", b"invalid", content_type="text/plain")
+            invalid = self.client.post(url, {"reason": Order.RefundReason.OTHER, "message": "", "attachments": bad})
+            self.assertContains(invalid, "Upload a valid JPG, PNG, WEBP, or PDF file.")
+            self.assertEqual(order.refund_status, Order.RefundStatus.NONE)
+            valid = self.image_upload()
+            submitted = self.client.post(url, {"reason": Order.RefundReason.OTHER, "message": "شرح", "attachments": valid})
+            self.assertRedirects(submitted, reverse("orders:order_detail", args=[order.pk]))
+            attachment = order.refund_attachments.get()
+            download_url = reverse("orders:refund_attachment_download", args=[attachment.pk])
+            self.client.force_login(self.other); self.assertEqual(self.client.get(download_url).status_code, 404)
+            self.client.force_login(self.user)
+            download = self.client.get(download_url)
+            self.assertEqual(download.status_code, 200)
+            self.assertTrue(b"".join(download.streaming_content).startswith(b"\x89PNG\r\n\x1a\n"))
+            self.assertIn("attachment", download["Content-Disposition"])
+            self.assertIn("private", download["Cache-Control"])
+            self.assertIn("no-store", download["Cache-Control"])
+            self.assertEqual(download["X-Content-Type-Options"], "nosniff")
+            download.close()
+            owner = get_user_model().objects.create_superuser("refund-owner-admin", "refund-owner-admin@example.test", "secret")
+            self.client.force_login(owner)
+            superuser_download = self.client.get(download_url)
+            self.assertEqual(superuser_download.status_code, 200)
+            superuser_download.close()
+            order_manager = get_user_model().objects.create_user("order-manager", password="secret")
+            call_command("seed_dashboard_roles", verbosity=0)
+            order_manager.groups.add(Group.objects.get(name="Order Manager"))
+            self.client.force_login(order_manager); self.assertEqual(self.client.get(download_url).status_code, 404)
+            self.client.logout(); self.assertEqual(self.client.get(download_url).status_code, 302)
+            self.client.force_login(self.user)
+            attachment.file.close()
+            with override("fa"):
+                response = self.client.get(reverse("orders:order_detail", args=[order.pk]))
+            self.assertContains(response, "بازپرداخت")
+            self.assertContains(response, "درخواست شما برای بازپرداخت")
+            self.assertNotContains(response, ">Refund<")
 
     def test_detail_query_count_is_bounded_for_refund_attachments(self):
         order = self.order()

@@ -1,4 +1,5 @@
 from decimal import Decimal
+from tempfile import TemporaryDirectory
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
@@ -13,6 +14,7 @@ from unittest.mock import patch
 from products.currency import Currency
 from products.inventory_price_imports import apply_inventory_price_import, create_inventory_price_import_preview
 from products.models import InventoryPriceImportBatch, Product, ProductOperationalChange, ProductVariant, VariantPrice
+from products.storage import private_inventory_import_storage
 from dashboard.notifications import get_inventory_alerts
 from django.urls import reverse
 
@@ -22,6 +24,10 @@ HEADERS = b"sku,stock,low_stock_threshold,irt_price,irt_compare_at,usd_price,usd
 
 class InventoryPriceImportApplyTests(TestCase):
     def setUp(self):
+        self.private_storage_directory = TemporaryDirectory()
+        self.previous_private_storage_location = private_inventory_import_storage.location
+        private_inventory_import_storage.location = self.private_storage_directory.name
+        self.addCleanup(self._restore_private_storage)
         call_command("seed_dashboard_roles", verbosity=0)
         User = get_user_model()
         self.actor = User.objects.create_user("manager", password="secret")
@@ -29,6 +35,10 @@ class InventoryPriceImportApplyTests(TestCase):
         product = Product.objects.create(name="Apply tile", slug="apply-tile", sku="APPLY")
         self.variant = ProductVariant.objects.create(product=product, sku="APPLY-1", stock=5, low_stock_threshold=2)
         VariantPrice.objects.create(variant=self.variant, currency=Currency.TOMAN, amount=Decimal("100"), compare_at_amount=Decimal("120"))
+
+    def _restore_private_storage(self):
+        private_inventory_import_storage.location = self.previous_private_storage_location
+        self.private_storage_directory.cleanup()
 
     def preview(self, line):
         return create_inventory_price_import_preview(actor=self.actor, uploaded_file=SimpleUploadedFile("apply.csv", HEADERS + line))

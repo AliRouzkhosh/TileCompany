@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.core.management import call_command
 from django.test import TestCase
+from django.test import override_settings
 from django.urls import reverse
+from tempfile import TemporaryDirectory
 
 from support.models import Ticket, TicketCategory, TicketPriority
 
@@ -47,9 +49,22 @@ class SupportAuthorizationTests(TestCase):
     def test_public_attachment_uses_ticket_ownership_or_support_permissions(self):
         from django.core.files.uploadedfile import SimpleUploadedFile
         from support.models import TicketAttachment
-        attachment = TicketAttachment.objects.create(ticket=self.ticket, uploaded_by=self.customer, file=SimpleUploadedFile("note.pdf", b"%PDF-1.4"), original_filename="note.pdf")
-        url = reverse("support:attachment_download", args=[attachment.pk])
-        self.client.force_login(self.customer); self.assertEqual(self.client.get(url).status_code, 200)
-        self.client.force_login(self.other); self.assertEqual(self.client.get(url).status_code, 404)
-        self.client.force_login(self.legacy); self.assertEqual(self.client.get(url).status_code, 404)
-        self.client.force_login(self.manager); self.assertEqual(self.client.get(url).status_code, 200)
+        with TemporaryDirectory() as media_root, override_settings(MEDIA_ROOT=media_root):
+            attachment = TicketAttachment.objects.create(ticket=self.ticket, uploaded_by=self.customer, file=SimpleUploadedFile("note.pdf", b"%PDF-1.4"), original_filename="note.pdf")
+            url = reverse("support:attachment_download", args=[attachment.pk])
+            self.client.force_login(self.customer)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(b"".join(response.streaming_content), b"%PDF-1.4")
+            self.assertIn("attachment", response["Content-Disposition"])
+            self.assertIn("private", response["Cache-Control"])
+            self.assertIn("no-store", response["Cache-Control"])
+            self.assertEqual(response["X-Content-Type-Options"], "nosniff")
+            self.client.force_login(self.other); self.assertEqual(self.client.get(url).status_code, 404)
+            self.client.force_login(self.legacy); self.assertEqual(self.client.get(url).status_code, 404)
+            self.client.force_login(self.manager)
+            manager_response = self.client.get(url)
+            self.assertEqual(manager_response.status_code, 200)
+            manager_response.close()
+            self.client.logout(); self.assertEqual(self.client.get(url).status_code, 302)
+            self.client.force_login(self.customer); self.assertEqual(self.client.get(reverse("support:attachment_download", args=[999999])).status_code, 404)

@@ -230,4 +230,6 @@ def attachment_download(request, attachment_id):
     is_support_actor = request.user.has_perms(("support.view_ticket", "support.view_ticketattachment"))
     if attachment.ticket.user_id != request.user.id and not is_support_actor:
         raise Http404
-    return FileResponse(attachment.file.open("rb"), as_attachment=True, filename=safe_upload_filename(attachment.original_filename or attachment.file.name.rsplit("/", 1)[-1]))
+    response = FileResponse(attachment.file.open("rb"), as_attachment=True, filename=safe_upload_filename(attachment.original_filename or attachment.file.name.rsplit("/", 1)[-1]))
+    response["Cache-Control"] = "private, no-store"
+    return response

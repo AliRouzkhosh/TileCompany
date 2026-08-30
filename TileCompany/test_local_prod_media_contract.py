@@ -16,6 +16,9 @@ class LocalProductionMediaContractTests(SimpleTestCase):
         self.compose = (root / "ops" / "local-prod" / "compose.yml").read_text(
             encoding="utf-8"
         )
+        self.inventory_storage = (root / "products" / "storage.py").read_text(
+            encoding="utf-8"
+        )
 
     def test_only_audited_public_prefixes_are_directly_served(self):
         for prefix in (
@@ -40,6 +43,23 @@ class LocalProductionMediaContractTests(SimpleTestCase):
         self.assertIn("chown 10001:10001 /app/media", self.compose)
         self.assertIn('network_mode: "none"', self.compose)
         self.assertIn("condition: service_completed_successfully", self.compose)
+
+    def test_private_inventory_storage_has_a_web_only_persistent_volume(self):
+        mount = "private_inventory_import_data:/app/private_inventory_price_import_sources"
+        self.assertIn(mount, self.compose)
+        self.assertIn("private_inventory_import_data:", self.compose)
+        self.assertIn(
+            "chown 10001:10001 /app/media /app/private_inventory_price_import_sources",
+            self.compose,
+        )
+        nginx_block = self.compose.split("\n  nginx:", 1)[1].split("\nnetworks:", 1)[0]
+        self.assertNotIn("private_inventory_import_data", nginx_block)
+        self.assertIn(
+            'location=settings.BASE_DIR / "private_inventory_price_import_sources"',
+            self.inventory_storage,
+        )
+        self.assertIn("base_url=None", self.inventory_storage)
+        self.assertNotIn("location /private_inventory_price_import_sources", self.nginx)
 
     def test_proxy_config_keeps_logs_private_and_rejects_unknown_tls_hosts(self):
         self.assertIn("map $uri $privacy_safe_path", self.nginx)
