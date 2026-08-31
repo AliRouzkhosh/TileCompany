@@ -73,6 +73,13 @@ class LocalProductionMediaContractTests(SimpleTestCase):
         self.assertIn("server_name _;", self.nginx)
         self.assertIn("return 444;", self.nginx)
 
+    def test_gunicorn_access_logs_are_disabled_while_error_and_edge_logs_remain_enabled(self):
+        web_block = self.compose.split("\n  web:\n", 1)[1].split("\n  media-init:", 1)[0]
+        self.assertNotIn("--access-logfile", web_block)
+        self.assertIn("--error-logfile=-", web_block)
+        self.assertIn("--capture-output", web_block)
+        self.assertIn("access_log /var/log/nginx/access.log localprod;", self.nginx)
+
     def test_sensitive_account_log_paths_are_precise(self):
         """Keep UUID challenge routes redacted without hiding static siblings."""
         map_block = re.search(
