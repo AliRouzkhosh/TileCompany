@@ -142,7 +142,7 @@ class InventoryPriceImportPreviewTests(TestCase):
 
     def test_role_counts_and_source_format_mismatch(self):
         self.assertEqual(Group.objects.get(name="Product Manager").permissions.count(), 59)
-        self.assertEqual(Group.objects.get(name="Order Manager").permissions.count(), 5)
+        self.assertEqual(Group.objects.get(name="Order Manager").permissions.count(), 9)
         with self.assertRaises(Exception):
             self.preview(HEADERS.encode(), name="inventory.xlsx")
 

@@ -19,7 +19,7 @@
 
     <section aria-labelledby="delivery-slot-title" class="border-t border-border pt-5">
         <div class="max-w-2xl">
-            <label id="delivery-slot-title" for="{{ form.delivery_slot.id_for_label }}" class="text-sm font-semibold text-text-primary">{% trans "Delivery slot" %} <span class="font-normal text-text-muted">({% trans "optional" %})</span></label>
+            <label id="delivery-slot-title" for="{{ form.delivery_slot.id_for_label }}" class="text-sm font-semibold text-text-primary">{% trans "Preferred delivery time (optional)" %}</label>
             <p id="delivery-slot-help" class="mt-1 text-xs leading-5 text-text-muted">{% trans "Preferred delivery time (optional)" %}</p>
             <div class="mt-3">{{ form.delivery_slot }}</div>
             {% if form.delivery_slot.errors %}<div id="delivery-slot-errors" class="checkout-error mt-2" role="alert">{{ form.delivery_slot.errors }}</div>{% endif %}

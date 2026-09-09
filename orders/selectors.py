@@ -24,6 +24,7 @@ from products.selectors import get_variant_price, prefetch_variant_prices_for_cu
 from .cart import _get_cart
 from .currency import get_cart_currency
 from .models import Order
+from .pricing import calculate_pricing, load_policy, shipping_methods
 from .purchase_presentation import purchase_history_item_queryset
 
 
@@ -144,6 +145,11 @@ class CheckoutSummary:
     total: Decimal
     reference_subtotal: Decimal = Decimal("0.00")
     product_savings: Decimal = Decimal("0.00")
+    delivery_is_free: bool = False
+    delivery_free_by_threshold: bool = False
+    delivery_pay_on_delivery: bool = False
+    effective_delivery_mode: str | None = None
+    tax_rate: Decimal = Decimal("0.00")
 
 @dataclass(slots=True)
 class ShippingMethod:
@@ -177,6 +183,7 @@ class CheckoutContext:
     shipping_methods: list[ShippingMethod]
     currency: str
     unavailable_variant_ids: list[int]
+    policy_version: int = 1
 
 
 
@@ -185,7 +192,7 @@ class CheckoutContext:
 # Cart
 # ==========================================================
 
-def get_checkout_context(request):
+def get_checkout_context(request, *, include_addresses=True):
     """
     Build a normalized checkout cart.
 
@@ -301,80 +308,64 @@ def get_checkout_context(request):
     )
     for item in items:
         item.presentation = presentations[item.variant.pk]
-    shipping_price = Decimal("0.00")
-
     selected_code = (
         request.session
         .get("checkout_shipping", {})
         .get("shipping_method")
     )
 
-    for method in get_shipping_methods(currency):
-        if method.code == selected_code:
-            shipping_price = method.amount
-            break
+    policy_bundle = load_policy()
+    methods = shipping_methods(subtotal=subtotal, currency=currency, policy_bundle=policy_bundle)
+    pricing = calculate_pricing(
+        subtotal=subtotal,
+        currency=currency,
+        delivery_method=selected_code,
+        policy_bundle=policy_bundle,
+    )
 
     summary = CheckoutSummary(
         currency=currency,
         subtotal=subtotal,
-        shipping=shipping_price,
+        shipping=pricing.delivery_amount,
         discount=Decimal("0.00"),
-        tax=Decimal("0.00"),
-        total=subtotal + shipping_price,
+        tax=pricing.tax_amount,
+        total=pricing.total_payable_now,
         reference_subtotal=reference_subtotal,
         product_savings=reference_subtotal - subtotal,
+        delivery_is_free=pricing.delivery_is_free,
+        delivery_free_by_threshold=pricing.delivery_free_by_threshold,
+        delivery_pay_on_delivery=pricing.delivery_pay_on_delivery,
+        effective_delivery_mode=pricing.effective_delivery_mode,
+        tax_rate=pricing.tax_rate,
     )
+
+    addresses = list(get_customer_addresses(request.user)) if include_addresses else []
+    default_address = next((address for address in addresses if address.is_default_shipping), None)
 
     return CheckoutContext(
         items=items,
         summary=summary,
         cart_quantity=quantity,
-        default_address=get_default_shipping_address(request.user),
-        addresses=get_customer_addresses(request.user),
-        shipping_methods=get_shipping_methods(currency),
+        default_address=default_address,
+        addresses=addresses,
+        shipping_methods=methods,
         currency=currency,
         unavailable_variant_ids=unavailable_variant_ids,
+        policy_version=pricing.policy_version,
     )
 
 
 # ==========================================================
 # Customer
 # ==========================================================
-def get_shipping_methods(currency):
+def get_shipping_methods(currency, subtotal=Decimal("0.00")):
     """
     Available shipping methods.
 
     Later this can come from the database.
     """
 
-    prices = {
-        "standard": {"USD": Decimal("0.00"), "IRT": Decimal("0.00")},
-        "express": {"USD": Decimal("19.90"), "IRT": Decimal("1500000")},
-        "pickup": {"USD": Decimal("0.00"), "IRT": Decimal("0.00")},
-    }
-    return [
-        ShippingMethod(
-            code="standard",
-            name=_("Standard delivery"),
-            amount=prices["standard"][currency],
-            estimated_days=_("3–5 business days"),
-            description=_("Free standard delivery."),
-        ),
-        ShippingMethod(
-            code="express",
-            name=_("Express delivery"),
-            amount=prices["express"][currency],
-            estimated_days=_("1–2 business days"),
-            description=_("Priority shipping."),
-        ),
-        ShippingMethod(
-            code="pickup",
-            name=_("Store pickup"),
-            amount=prices["pickup"][currency],
-            estimated_days=_("Today"),
-            description=_("Collect from our warehouse."),
-        ),
-    ]
+    return shipping_methods(subtotal=subtotal, currency=currency)
 
 
 def get_default_shipping_address(user: User):

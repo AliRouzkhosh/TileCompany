@@ -8,6 +8,7 @@ every exception back to the test thread.
 from datetime import timedelta
 from decimal import Decimal
 from threading import Barrier, Lock, Thread
+from tempfile import TemporaryDirectory
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
@@ -30,6 +31,7 @@ from orders.services import confirm_cod_order, create_order, mark_order_paid
 from products.currency import Currency
 from products.inventory_price_imports import apply_inventory_price_import, create_inventory_price_import_preview
 from products.models import InventoryPriceImportBatch, Product, ProductOperationalChange, ProductVariant, VariantPrice
+from products.storage import private_inventory_import_storage
 from products.services import set_variant_price
 
 
@@ -39,9 +41,24 @@ from products.services import set_variant_price
     SMS_ENABLED=True,
     SMS_OTP_LOGIN_ENABLED=True,
     SMS_BACKEND="accounts.sms.MemorySmsBackend",
+    LOCAL_PAYMENT_SIMULATOR_ENABLED=True,
+    MOCK_PAYMENT_SIMULATION_ENABLED=False,
 )
 class PostgreSQLConcurrencyCharacterizationTests(TransactionTestCase):
     """Characterize production service behavior under independent transactions."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._private_storage_directory = TemporaryDirectory()
+        cls._previous_private_storage_location = private_inventory_import_storage.location
+        private_inventory_import_storage.location = cls._private_storage_directory.name
+
+    @classmethod
+    def tearDownClass(cls):
+        private_inventory_import_storage.location = cls._previous_private_storage_location
+        cls._private_storage_directory.cleanup()
+        super().tearDownClass()
 
     def setUp(self):
         super().setUp()

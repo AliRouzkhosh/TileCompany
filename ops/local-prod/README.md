@@ -85,6 +85,29 @@ It directly serves only these public prefixes: `products/`,
 refund attachments continue to use authenticated Django download views, and
 inventory-import sources are stored outside `MEDIA_ROOT`.
 
+## Private inventory-import evidence
+
+`private_inventory_import_data` is a second named volume, mounted only in the
+web service at `/app/private_inventory_price_import_sources`. The application
+receives that exact path through `PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT`; Nginx
+does not mount this volume and has no location block for it. `media-init` owns
+this mount as UID/GID `10001` with mode `0755` before non-root Gunicorn starts.
+
+To prove persistence without deleting any volume, create a source through the
+authorized import workflow, record its storage key, then run:
+
+```powershell
+docker compose --env-file ops/local-prod/.env -f ops/local-prod/compose.yml up -d --force-recreate web
+docker compose --env-file ops/local-prod/.env -f ops/local-prod/compose.yml exec web sh -c 'id; test -w /app/private_inventory_price_import_sources; find /app/private_inventory_price_import_sources -type f -print'
+curl.exe -k -I https://tilecompany.localhost/media/products/inventory-price-imports/guessed.csv
+curl.exe -k -I https://tilecompany.localhost/static/products/inventory-price-imports/guessed.csv
+curl.exe -k -I https://tilecompany.localhost/private_inventory_price_import_sources/guessed.csv
+```
+
+The source remains available to its authorized dashboard workflow after only
+`web` recreation. Each guessed public path must be unserved (404/403, never
+the source bytes). Do not use `docker compose down -v` for this verification.
+
 After changing the Docker image or Compose configuration, rebuild and recreate
 only the affected services (do not use `down -v`):
 

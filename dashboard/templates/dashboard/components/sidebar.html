@@ -292,6 +292,7 @@
 
         </div>{% endif %}
 
+        {% if perms.orders.view_commercepolicy %}<div class="mb-6"><p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">{% trans "Settings" %}</p><a href="{% url 'dashboard:commerce:settings' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100 {% if request.resolver_match.namespace == 'dashboard:commerce' %}bg-stone-100 text-stone-900{% endif %}"><i data-lucide="settings-2" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Commerce settings" %}</span></a></div>{% endif %}
         {% if request.user.is_superuser %}<div class="mb-6"><p class="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-stone-400">{% trans "Administration" %}</p><a href="{% url 'dashboard:staff_access:list' %}" class="flex items-center rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-stone-100"><i data-lucide="users-round" class="sf-icon h-5 w-5 shrink-0" aria-hidden="true"></i><span class="ms-3">{% trans "Staff & Access" %}</span></a></div>{% endif %}
 
     </nav>

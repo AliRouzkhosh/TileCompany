@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TileStore\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 10:20+0330\n"
+"POT-Creation-Date: 2026-09-08 19:46+0330\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -329,7 +329,7 @@ msgstr "مرد"
 msgid "Female"
 msgstr "زن"
 
-#: .\accounts\models.py:15 .\orders\models.py:201
+#: .\accounts\models.py:15 .\orders\models.py:287
 msgid "Other"
 msgstr "سایر"
 
@@ -627,7 +627,7 @@ msgid "You can review your account here:"
 msgstr "حساب کاربری خود را از اینجا بررسی کنید:"
 
 #: .\accounts\templates\accounts\emails\welcome_email.txt:8
-#: .\orders\templates\orders\emails\order_email.txt:15
+#: .\orders\templates\orders\emails\order_email.txt:17
 msgid "Need help?"
 msgstr "به کمک نیاز دارید؟"
 
@@ -654,7 +654,7 @@ msgstr "جاری"
 #: .\accounts\templates\accounts\overview.html:26
 #: .\dashboard\templates\dashboard\components\badges\status_badge.html:24
 #: .\dashboard\templates\dashboard\components\filters.html:19
-#: .\orders\models.py:29
+#: .\orders\models.py:106
 #: .\orders\templates\orders\components\orders_workspace.html:4
 msgid "Delivered"
 msgstr "تحویل‌شده"
@@ -662,7 +662,7 @@ msgstr "تحویل‌شده"
 #: .\accounts\templates\accounts\overview.html:31
 #: .\dashboard\templates\dashboard\components\badges\status_badge.html:36
 #: .\dashboard\templates\dashboard\components\filters.html:20
-#: .\orders\models.py:30
+#: .\orders\models.py:107
 #: .\orders\templates\orders\components\orders_workspace.html:4
 msgid "Cancelled"
 msgstr "لغوشده"
@@ -1443,7 +1443,7 @@ msgstr "جست‌وجوی مقاله‌ها"
 #: .\dashboard\templates\dashboard\moderation\components\moderation_filters.html:15
 #: .\dashboard\templates\dashboard\products\components\product_filters.html:6
 #: .\dashboard\templates\dashboard\staff_access\list.html:1
-#: .\products\catalog_filter.py:641 .\products\presentation.py:85
+#: .\products\catalog_filter.py:672 .\products\presentation.py:85
 #: .\products\templates\products\product_list.html:11
 #: .\support\templates\support\components\help_discovery.html:5
 #: .\support\templates\support\support_home.html:12
@@ -1840,7 +1840,7 @@ msgstr "توضیحات فارسی"
 #: .\dashboard\forms.py:81
 #: .\dashboard\templates\dashboard\products\components\detail\info.html:46
 #: .\dashboard\templates\dashboard\products\components\product_filters.html:27
-#: .\products\catalog_filter.py:650 .\products\presentation.py:89
+#: .\products\catalog_filter.py:681 .\products\presentation.py:89
 #: .\products\templates\products\components\filters_sidebar.html:54
 #: .\products\templates\products\components\generic_filters_sidebar.html:44
 #: .\products\templates\products\components\product_specs.html:13
@@ -2049,7 +2049,7 @@ msgstr "تصویر جلد"
 #: .\dashboard\templates\dashboard\products\components\product_table.html:47
 #: .\dashboard\templates\dashboard\products\inventory_import\detail.html:9
 #: .\dashboard\templates\dashboard\products\inventory_import\index.html:8
-#: .\dashboard\templates\dashboard\support\inbox.html:23 .\orders\models.py:732
+#: .\dashboard\templates\dashboard\support\inbox.html:23 .\orders\models.py:826
 #: .\orders\templates\orders\components\payment_result_card.html:20
 #: .\support\templates\support\ticket_detail.html:3
 msgid "Status"
@@ -2063,7 +2063,7 @@ msgstr "زمان انتشار"
 #: .\dashboard\forms_blog.py:63
 #: .\dashboard\templates\dashboard\products\components\product_table.html:35
 #: .\dashboard\templates\dashboard\schema\categories.html:2
-#: .\products\catalog_filter.py:621 .\products\catalog_filter.py:634
+#: .\products\catalog_filter.py:652 .\products\catalog_filter.py:665
 #: .\products\presentation.py:83 .\products\presentation.py:88
 #: .\products\search\categories.py:96
 #: .\products\templates\products\product_list.html:11 .\support\forms.py:47
@@ -2188,6 +2188,54 @@ msgstr ""
 msgid "Stable within this Attribute. It cannot change after reference."
 msgstr ""
 
+#: .\dashboard\forms_commerce.py:16
+msgid "Enable tax"
+msgstr "فعال‌سازی مالیات"
+
+#: .\dashboard\forms_commerce.py:17
+msgid "Tax rate (%)"
+msgstr "نرخ مالیات (درصد)"
+
+#: .\dashboard\forms_commerce.py:18
+msgid "Enable free-shipping threshold"
+msgstr "فعال‌سازی حداقل مبلغ ارسال رایگان"
+
+#: .\dashboard\forms_commerce.py:19
+msgid "IRT threshold"
+msgstr "حداقل مبلغ به تومان"
+
+#: .\dashboard\forms_commerce.py:20
+msgid "USD threshold"
+msgstr "حداقل مبلغ به دلار"
+
+#: .\dashboard\forms_commerce.py:38
+msgid "Charge mode"
+msgstr "نحوه دریافت هزینه"
+
+#: .\dashboard\forms_commerce.py:39
+msgid "IRT fixed amount"
+msgstr "هزینه ثابت به تومان"
+
+#: .\dashboard\forms_commerce.py:40
+msgid "USD fixed amount"
+msgstr "هزینه ثابت به دلار"
+
+#: .\dashboard\forms_commerce.py:41
+msgid "Eligible for free-shipping threshold"
+msgstr "مشمول حداقل مبلغ ارسال رایگان"
+
+#: .\dashboard\forms_commerce.py:52 .\orders\models.py:52
+msgid "Enter the IRT threshold."
+msgstr "حداقل مبلغ به تومان را وارد کنید."
+
+#: .\dashboard\forms_commerce.py:54 .\orders\models.py:54
+msgid "Enter the USD threshold."
+msgstr "حداقل مبلغ به دلار را وارد کنید."
+
+#: .\dashboard\forms_commerce.py:59
+msgid "Enter a fixed amount for this currency."
+msgstr "هزینه ثابت این ارز را وارد کنید."
+
 #: .\dashboard\forms_generic_product.py:17
 #: .\dashboard\templates\dashboard\generic_products\detail.html:22
 #, fuzzy
@@ -2239,14 +2287,14 @@ msgid "Not set"
 msgstr "تنظیم‌نشده"
 
 #: .\dashboard\forms_generic_product.py:124
-#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:490
+#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:521
 #: .\products\catalog_read.py:297 .\products\catalog_read.py:299
 #: .\products\purchase_snapshot.py:117
 msgid "Yes"
 msgstr ""
 
 #: .\dashboard\forms_generic_product.py:124
-#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:490
+#: .\dashboard\forms_generic_variant.py:109 .\products\catalog_filter.py:521
 #: .\products\catalog_read.py:297 .\products\catalog_read.py:299
 #: .\products\purchase_snapshot.py:117
 #, fuzzy
@@ -2412,51 +2460,51 @@ msgid "%(count)d comment or review requires approval."
 msgid_plural "%(count)d comments or reviews require approval."
 msgstr[0] "%(count)d دیدگاه یا بررسی نیازمند تأیید است."
 
-#: .\dashboard\role_definitions.py:74
+#: .\dashboard\role_definitions.py:78
 msgid "Products, variants, stock, prices and catalog operations"
 msgstr "محصولات، گونه‌ها، موجودی، قیمت‌ها و عملیات کاتالوگ"
 
-#: .\dashboard\role_definitions.py:75
+#: .\dashboard\role_definitions.py:79
 msgid "Order fulfillment and operational Order handling"
 msgstr "ارسال سفارش و عملیات اجرایی سفارش‌ها"
 
-#: .\dashboard\role_definitions.py:76
+#: .\dashboard\role_definitions.py:80
 msgid "Customer Support Tickets and Help Center"
 msgstr "تیکت‌های پشتیبانی مشتری و مرکز راهنما"
 
-#: .\dashboard\role_definitions.py:77
+#: .\dashboard\role_definitions.py:81
 msgid "Articles, site pages and storefront editorial media"
 msgstr "مقاله‌ها، صفحه‌های سایت و رسانه‌های تحریریهٔ ویترین"
 
-#: .\dashboard\role_definitions.py:78
+#: .\dashboard\role_definitions.py:82
 msgid "Reviews and Article Comment moderation"
 msgstr "نظارت بر دیدگاه‌ها و نظرهای مقاله"
 
-#: .\dashboard\role_definitions.py:79
+#: .\dashboard\role_definitions.py:83
 msgid "Read-only business analytics"
 msgstr "تحلیل‌های کسب‌وکار فقط‌خواندنی"
 
-#: .\dashboard\role_definitions.py:85
+#: .\dashboard\role_definitions.py:89
 msgid "Product Manager"
 msgstr "مدیر محصولات"
 
-#: .\dashboard\role_definitions.py:86
+#: .\dashboard\role_definitions.py:90
 msgid "Order Manager"
 msgstr "مدیر سفارش‌ها"
 
-#: .\dashboard\role_definitions.py:87
+#: .\dashboard\role_definitions.py:91
 msgid "Support Manager"
 msgstr "مدیر پشتیبانی"
 
-#: .\dashboard\role_definitions.py:88
+#: .\dashboard\role_definitions.py:92
 msgid "Content Manager"
 msgstr "مدیر محتوا"
 
-#: .\dashboard\role_definitions.py:89
+#: .\dashboard\role_definitions.py:93
 msgid "Moderator"
 msgstr "ناظر محتوا"
 
-#: .\dashboard\role_definitions.py:90
+#: .\dashboard\role_definitions.py:94
 msgid "Analyst"
 msgstr "تحلیل‌گر"
 
@@ -2467,7 +2515,7 @@ msgstr "۳۰ روز گذشته"
 
 #: .\dashboard\selectors\analytics.py:51
 #: .\dashboard\templates\dashboard\analytics\index.html:6
-#: .\orders\selectors.py:374
+#: .\orders\pricing.py:15
 msgid "Today"
 msgstr "امروز"
 
@@ -2493,7 +2541,7 @@ msgstr "امسال"
 msgid "%(quantity)s legacy / unknown"
 msgstr "%(quantity)s %(unit)s"
 
-#: .\dashboard\services.py:178 .\orders\orders.py:264
+#: .\dashboard\services.py:178 .\orders\orders.py:266
 #: .\orders\templates\orders\order_refund_confirm.html:7
 #: .\support\templates\support\components\support_ticket_card.html:4
 #: .\support\templates\support\ticket_detail.html:2
@@ -3005,11 +3053,84 @@ msgstr "مقاله‌ها"
 msgid "No taxonomy entries yet."
 msgstr "هنوز موردی در رده‌بندی وجود ندارد."
 
+#: .\dashboard\templates\dashboard\commerce\method_card.html:3
+#: .\orders\pricing.py:13
+msgid "Standard delivery"
+msgstr "ارسال استاندارد"
+
+#: .\dashboard\templates\dashboard\commerce\method_card.html:3
+#: .\orders\pricing.py:14
+msgid "Express delivery"
+msgstr "ارسال فوری"
+
+#: .\dashboard\templates\dashboard\commerce\method_card.html:3
+#: .\orders\pricing.py:15
+msgid "Store pickup"
+msgstr "دریافت از فروشگاه"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:3
+#: .\dashboard\templates\dashboard\commerce\settings.html:7
+#: .\dashboard\templates\dashboard\components\sidebar.html:295
+msgid "Commerce settings"
+msgstr "تنظیمات تجاری"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:7
+#: .\dashboard\templates\dashboard\components\sidebar.html:295
+msgid "Settings"
+msgstr "تنظیمات"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:7
+msgid ""
+"Control tax and customer delivery charges without changing delivery method "
+"identities."
+msgstr "مالیات و هزینه‌های ارسال مشتری را بدون تغییر شناسه روش‌های تحویل مدیریت کنید."
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:8
+#, python-format
+msgid "Policy version %(version)s"
+msgstr "نسخه سیاست %(version)s"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:12
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+#: .\orders\templates\orders\components\checkout_summary.html:59
+#: .\orders\templates\orders\emails\order_email.html:1
+#: .\orders\templates\orders\emails\order_email.txt:12
+msgid "Tax"
+msgstr "مالیات"
+
+#: .\orders\templates\orders\components\checkout_summary.html:59
+#, python-format
+msgid "Tax (%(rate)s%%)"
+msgstr "مالیات (%(rate)s٪)"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:13
+msgid "Free-shipping threshold"
+msgstr "حداقل مبلغ برای ارسال رایگان"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:13
+msgid ""
+"Eligible delivery methods become free when the qualifying cart subtotal "
+"reaches this amount."
+msgstr "با رسیدن مبلغ سبد خرید به این حد، روش‌های ارسال واجد شرایط رایگان می‌شوند."
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:14
+#: .\orders\templates\orders\components\shipping_information_card.html:1
+msgid "Delivery"
+msgstr "تحویل"
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:14
+msgid "Fixed amounts are configured independently for IRT and USD."
+msgstr "هزینه‌های ثابت تومان و دلار به‌صورت مستقل تنظیم می‌شوند."
+
+#: .\dashboard\templates\dashboard\commerce\settings.html:19
+msgid "Save commerce settings"
+msgstr "ذخیره تنظیمات تجاری"
+
 #: .\dashboard\templates\dashboard\components\badges\payment_badge.html:5
 #: .\dashboard\templates\dashboard\components\filters.html:25
 #: .\dashboard\templates\dashboard\orders\components\payment_card.html:1
 #: .\dashboard\templates\dashboard\support\detail.html:10
-#: .\orders\models.py:329
+#: .\orders\models.py:415
 msgid "Paid"
 msgstr "پرداخت‌شده"
 
@@ -3026,14 +3147,14 @@ msgid "Awaiting Review"
 msgstr "در انتظار بررسی"
 
 #: .\dashboard\templates\dashboard\components\badges\refund_badge.html:5
-#: .\orders\models.py:190 .\orders\orders.py:96
+#: .\orders\models.py:276 .\orders\orders.py:96
 #: .\orders\templates\orders\components\order_list_card.html:11
 #: .\orders\templates\orders\components\order_status_surface.html:4
 msgid "More information required"
 msgstr "اطلاعات بیشتری نیاز است"
 
 #: .\dashboard\templates\dashboard\components\badges\refund_badge.html:7
-#: .\orders\models.py:191
+#: .\orders\models.py:277
 msgid "Approved"
 msgstr "تأییدشده"
 
@@ -3042,7 +3163,7 @@ msgid "Refunded"
 msgstr "بازپرداخت‌شده"
 
 #: .\dashboard\templates\dashboard\components\badges\refund_badge.html:11
-#: .\orders\models.py:192
+#: .\orders\models.py:278
 msgid "Rejected"
 msgstr "ردشده"
 
@@ -3055,25 +3176,25 @@ msgstr "هیچ‌کدام"
 #: .\dashboard\templates\dashboard\components\badges\status_badge.html:6
 #: .\dashboard\templates\dashboard\components\filters.html:15
 #: .\dashboard\templates\dashboard\moderation\components\moderation_header.html:27
-#: .\orders\models.py:25 .\orders\models.py:524
+#: .\orders\models.py:102 .\orders\models.py:618
 msgid "Pending"
 msgstr "در انتظار"
 
 #: .\dashboard\templates\dashboard\components\badges\status_badge.html:12
 #: .\dashboard\templates\dashboard\components\filters.html:16
-#: .\orders\models.py:26
+#: .\orders\models.py:103
 msgid "Confirmed"
 msgstr "تأییدشده"
 
 #: .\dashboard\templates\dashboard\components\badges\status_badge.html:18
 #: .\dashboard\templates\dashboard\components\filters.html:18
-#: .\orders\models.py:28
+#: .\orders\models.py:105
 msgid "Shipped"
 msgstr "ارسال‌شده"
 
 #: .\dashboard\templates\dashboard\components\badges\status_badge.html:30
 #: .\dashboard\templates\dashboard\components\filters.html:17
-#: .\orders\models.py:27
+#: .\orders\models.py:104
 msgid "On Hold"
 msgstr "در حالت تعلیق"
 
@@ -3206,8 +3327,8 @@ msgstr "رسیدگی"
 #: .\dashboard\templates\dashboard\products\inventory_import\index.html:4
 #: .\dashboard\templates\dashboard\schema\categories.html:2
 #: .\dashboard\templates\dashboard\schema\product_types.html:2
-#: .\dashboard\views\products.py:63 .\products\views\catalog.py:304
-#: .\products\views\catalog.py:432
+#: .\dashboard\views\products.py:63 .\products\views\catalog.py:305
+#: .\products\views\catalog.py:433
 #: .\templates\components\navbar\searchbar.html:7
 msgid "Products"
 msgstr "محصولات"
@@ -3276,19 +3397,19 @@ msgstr "نظارت"
 msgid "Insights"
 msgstr "بینش‌ها"
 
-#: .\dashboard\templates\dashboard\components\sidebar.html:295
+#: .\dashboard\templates\dashboard\components\sidebar.html:296
 #, fuzzy
 #| msgid "Design inspiration"
 msgid "Administration"
 msgstr "الهام برای طراحی"
 
-#: .\dashboard\templates\dashboard\components\sidebar.html:295
+#: .\dashboard\templates\dashboard\components\sidebar.html:296
 #: .\dashboard\templates\dashboard\home\index.html:9
 #: .\dashboard\templates\dashboard\staff_access\list.html:1
 msgid "Staff & Access"
 msgstr "مدیریت کارکنان و دسترسی‌ها"
 
-#: .\dashboard\templates\dashboard\components\sidebar.html:307
+#: .\dashboard\templates\dashboard\components\sidebar.html:308
 msgid "Logged in as"
 msgstr "واردشده با حساب"
 
@@ -3941,7 +4062,7 @@ msgstr "اقدامی در دسترس نیست"
 #: .\dashboard\templates\dashboard\refunds\refund_review.html:50
 #: .\dashboard\templates\dashboard\refunds\refund_review.html:69
 #: .\dashboard\templates\dashboard\support\detail.html:10
-#: .\dashboard\templates\dashboard\support\inbox.html:23 .\orders\models.py:728
+#: .\dashboard\templates\dashboard\support\inbox.html:23 .\orders\models.py:822
 msgid "Customer"
 msgstr "مشتری"
 
@@ -4028,7 +4149,7 @@ msgstr "مشاهده"
 #: .\dashboard\templates\dashboard\orders\components\payment_card.html:1
 #: .\dashboard\templates\dashboard\orders\components\queue_table.html:108
 #: .\dashboard\templates\dashboard\refunds\refund_review.html:105
-#: .\orders\models.py:735
+#: .\orders\models.py:829
 #: .\orders\templates\orders\components\checkout_steps.html:14
 #: .\orders\templates\orders\components\checkout_steps.html:32
 #: .\orders\templates\orders\components\order_review.html:40
@@ -4112,7 +4233,7 @@ msgstr "مبلغ"
 
 #: .\dashboard\templates\dashboard\orders\components\queue_table.html:116
 #: .\dashboard\templates\dashboard\orders\components\refund_card.html:6
-#: .\notifications\models.py:32 .\orders\models.py:734
+#: .\notifications\models.py:32 .\orders\models.py:828
 #: .\orders\templates\orders\components\refund_card.html:2
 #: .\orders\templates\orders\components\refund_status.html:4
 msgid "Refund"
@@ -4189,7 +4310,7 @@ msgid "Inventory will be restored when the refund is processed."
 msgstr "موجودی هنگام پردازش بازپرداخت بازگردانده می‌شود."
 
 #: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
-#: .\orders\checkout.py:120 .\orders\models.py:733
+#: .\orders\checkout.py:122 .\orders\models.py:827
 #: .\orders\templates\orders\components\cart_summary.html:7
 #: .\orders\templates\orders\components\checkout_steps.html:12
 #: .\orders\templates\orders\components\checkout_steps.html:27
@@ -4201,6 +4322,49 @@ msgstr "موجودی هنگام پردازش بازپرداخت بازگردان
 #: .\orders\templates\orders\shipping.html:9
 msgid "Shipping"
 msgstr "ارسال"
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+msgid "Address"
+msgstr "نشانی"
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+msgid "Shipping method"
+msgstr "روش ارسال"
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+msgid "Shipping charge"
+msgstr "هزینه ارسال"
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+#: .\orders\models.py:68
+#: .\orders\templates\orders\components\checkout_summary.html:56
+#: .\orders\templates\orders\components\order_summary_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
+#: .\orders\templates\orders\components\shipping_method_card.html:18
+#: .\orders\templates\orders\emails\order_email.html:1
+#: .\orders\templates\orders\emails\order_email.txt:10
+msgid "Pay on delivery"
+msgstr "پس‌کرایه"
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+#: .\orders\pricing.py:41
+#: .\orders\templates\orders\components\checkout_summary.html:56
+#: .\orders\templates\orders\components\order_summary_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
+#: .\orders\templates\orders\components\shipping_method_card.html:18
+#: .\orders\templates\orders\emails\order_email.html:1
+#: .\orders\templates\orders\emails\order_email.txt:11
+msgid "Free — order threshold reached"
+msgstr "رایگان — حداقل مبلغ سفارش تأمین شده است"
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+msgid ""
+"Delivery charge is paid separately when the customer receives the order."
+msgstr "هزینه ارسال هنگام تحویل سفارش به مشتری، جداگانه پرداخت می‌شود."
+
+#: .\dashboard\templates\dashboard\orders\components\shipping_card.html:1
+msgid "Total payable"
+msgstr "مبلغ قابل پرداخت"
 
 #: .\dashboard\templates\dashboard\orders\components\timeline.html:7
 msgid "Timeline"
@@ -4976,7 +5140,7 @@ msgid "Customer Refund Request"
 msgstr "درخواست بازپرداخت مشتری"
 
 #: .\dashboard\templates\dashboard\refunds\refund_review.html:81
-#: .\orders\models.py:189
+#: .\orders\models.py:275
 #: .\orders\templates\orders\components\refund_card.html:2
 #: .\orders\templates\orders\components\refund_status.html:6
 msgid "Requested"
@@ -5900,6 +6064,16 @@ msgstr ""
 msgid "Invalid form data"
 msgstr ""
 
+#: .\dashboard\views\commerce.py:23
+msgid ""
+"These settings changed while you were editing them. Review the latest values "
+"and try again."
+msgstr "این تنظیمات هنگام ویرایش شما تغییر کرده‌اند. مقادیر جدید را بررسی کرده و دوباره تلاش کنید."
+
+#: .\dashboard\views\commerce.py:27
+msgid "Commerce settings updated."
+msgstr "تنظیمات تجاری به‌روزرسانی شد."
+
 #: .\dashboard\views\generic_products.py:47
 #: .\dashboard\views\generic_products.py:78
 msgid "Tile Products must use the existing Tile Product editor."
@@ -6023,7 +6197,7 @@ msgstr "پاسخ بررسی رد شد."
 msgid "Unable to reject review comment."
 msgstr "رد پاسخ بررسی ممکن نیست."
 
-#: .\dashboard\views\orders.py:80 .\orders\models.py:708 .\orders\models.py:819
+#: .\dashboard\views\orders.py:80 .\orders\models.py:802 .\orders\models.py:913
 msgid "Order marked as shipped."
 msgstr "سفارش به‌عنوان ارسال‌شده علامت‌گذاری شد."
 
@@ -6090,8 +6264,8 @@ msgstr "پردازش بازپرداخت ممکن نیست."
 msgid "Order cancelled. %(quantities)s returned to inventory."
 msgstr "سفارش لغو شد و %(quantities)s به موجودی بازگردانده شد."
 
-#: .\dashboard\views\orders.py:256 .\orders\models.py:716
-#: .\orders\models.py:827 .\orders\payment.py:306
+#: .\dashboard\views\orders.py:256 .\orders\models.py:810
+#: .\orders\models.py:921 .\orders\payment.py:306
 msgid "Order cancelled."
 msgstr "سفارش لغو شد."
 
@@ -6109,7 +6283,7 @@ msgstr "دیدگاه شما ثبت شده و در انتظار بررسی است
 msgid "Unable to request more information for this refund."
 msgstr ""
 
-#: .\dashboard\views\orders.py:477 .\orders\models.py:823
+#: .\dashboard\views\orders.py:477 .\orders\models.py:917
 msgid "Order placed on hold."
 msgstr "سفارش در حالت تعلیق"
 
@@ -6117,8 +6291,8 @@ msgstr "سفارش در حالت تعلیق"
 msgid "Unable to place order on hold."
 msgstr "قرار دادن سفارش در حالت تعلیق ممکن نیست."
 
-#: .\dashboard\views\orders.py:497 .\orders\models.py:714
-#: .\orders\models.py:825
+#: .\dashboard\views\orders.py:497 .\orders\models.py:808
+#: .\orders\models.py:919
 msgid "Order resumed."
 msgstr "سفارش از سر گرفته شد."
 
@@ -6249,27 +6423,27 @@ msgid "Order on hold"
 msgstr "سفارش در انتظار"
 
 #: .\notifications\models.py:14 .\notifications\presentation.py:67
-#: .\orders\models.py:792
+#: .\orders\models.py:886
 msgid "Order resumed"
 msgstr "سفارش از انتظار خارج شد"
 
 #: .\notifications\models.py:15 .\notifications\presentation.py:68
-#: .\orders\models.py:789
+#: .\orders\models.py:883
 msgid "Order shipped"
 msgstr "سفارش ارسال شد"
 
 #: .\notifications\models.py:16 .\notifications\presentation.py:69
-#: .\orders\models.py:790
+#: .\orders\models.py:884
 msgid "Order delivered"
 msgstr "سفارش تحویل شد"
 
 #: .\notifications\models.py:17 .\notifications\presentation.py:70
-#: .\orders\models.py:793 .\orders\payment.py:305
+#: .\orders\models.py:887 .\orders\payment.py:305
 msgid "Order cancelled"
 msgstr "سفارش لغو شد"
 
 #: .\notifications\models.py:18 .\notifications\presentation.py:71
-#: .\orders\models.py:798 .\orders\orders.py:96
+#: .\orders\models.py:892 .\orders\orders.py:96
 #: .\orders\templates\orders\components\order_list_card.html:11
 #: .\orders\templates\orders\components\order_status_surface.html:4
 msgid "Refund approved"
@@ -6280,14 +6454,14 @@ msgid "More information required for refund"
 msgstr "اطلاعات بیشتر برای بازپرداخت لازم است"
 
 #: .\notifications\models.py:20 .\notifications\presentation.py:73
-#: .\orders\models.py:800 .\orders\orders.py:96
+#: .\orders\models.py:894 .\orders\orders.py:96
 #: .\orders\templates\orders\components\order_list_card.html:11
 #: .\orders\templates\orders\components\order_status_surface.html:4
 msgid "Refund rejected"
 msgstr "بازپرداخت رد شد"
 
 #: .\notifications\models.py:21 .\notifications\presentation.py:74
-#: .\orders\models.py:801 .\orders\orders.py:96
+#: .\orders\models.py:895 .\orders\orders.py:96
 #: .\orders\templates\orders\components\order_list_card.html:11
 #: .\orders\templates\orders\components\order_status_surface.html:4
 msgid "Refund processed"
@@ -6565,25 +6739,29 @@ msgstr "%(quantity)s %(unit)s"
 msgid "You save %(amount)s"
 msgstr "شما %(amount)s صرفه‌جویی می‌کنید"
 
-#: .\orders\checkout.py:65 .\orders\checkout.py:138 .\orders\checkout.py:203
+#: .\orders\checkout.py:66 .\orders\checkout.py:140 .\orders\checkout.py:205
 msgid "One or more cart items are no longer available in the current currency."
 msgstr "یک یا چند قلم از سبد خرید با ارز فعلی دیگر در دسترس نیستند."
 
-#: .\orders\checkout.py:69
+#: .\orders\checkout.py:70
 #: .\orders\templates\orders\components\checkout_summary.html:49
 msgid "Your cart is empty."
 msgstr "سبد خرید شما خالی است."
 
-#: .\orders\checkout.py:116 .\templates\components\navbar\desktop_nav.html:68
+#: .\orders\checkout.py:118 .\templates\components\navbar\desktop_nav.html:68
 #: .\templates\components\navbar\mobile_nav.html:25
 msgid "Cart"
 msgstr "سبد خرید"
 
-#: .\orders\checkout.py:190
+#: .\orders\checkout.py:192
 msgid ""
 "This checkout attempt is no longer valid. Please review your order again."
 msgstr ""
 "این تلاش برای ثبت سفارش دیگر معتبر نیست. لطفاً سفارش خود را دوباره بررسی کنید."
+
+#: .\orders\checkout.py:282
+msgid "Delivery or tax settings changed. Please review your updated total."
+msgstr "هزینه ارسال یا مالیات تغییر کرده است. لطفاً مبلغ به‌روزشده سفارش را بررسی کنید."
 
 #: .\orders\email_delivery.py:38
 msgid "Your paid TileStore order receipt"
@@ -6600,6 +6778,7 @@ msgid "Your Cash on Delivery payment receipt"
 msgstr "پرداخت در محل دریافت شد"
 
 #: .\orders\forms.py:86 .\orders\forms.py:125
+#: .\orders\templates\orders\shipping.html:22
 #: .\orders\templates\orders\shipping.html:23
 msgid "Preferred delivery time (optional)"
 msgstr "زمان ترجیحی تحویل (اختیاری)"
@@ -6635,7 +6814,7 @@ msgid ""
 "your request."
 msgstr "لطفاً مشکل و هر اطلاعاتی را که به بررسی درخواست شما کمک می‌کند شرح دهید."
 
-#: .\orders\forms.py:220 .\orders\services.py:575
+#: .\orders\forms.py:220 .\orders\services.py:592
 msgid "Additional information is required."
 msgstr "وارد کردن اطلاعات تکمیلی الزامی است."
 
@@ -6657,196 +6836,206 @@ msgstr ""
 msgid "Upload a valid JPG, PNG, WEBP, or PDF file."
 msgstr "فقط فایل‌های JPEG، PNG، WEBP و PDF مجاز هستند."
 
-#: .\orders\models.py:33
+#: .\orders\models.py:19 .\orders\models.py:110
 msgid "Standard Delivery"
 msgstr "ارسال استاندارد"
 
-#: .\orders\models.py:34
+#: .\orders\models.py:20 .\orders\models.py:111
 msgid "Express Delivery"
 msgstr "ارسال فوری"
 
-#: .\orders\models.py:35
+#: .\orders\models.py:21 .\orders\models.py:112
 msgid "Store Pickup"
 msgstr "دریافت از فروشگاه"
 
-#: .\orders\models.py:39
+#: .\orders\models.py:66
+msgid "Fixed fee"
+msgstr "هزینه ثابت"
+
+#: .\orders\models.py:67
+#: .\orders\templates\orders\components\checkout_summary.html:56
+#: .\orders\templates\orders\components\shipping_method_card.html:18
+msgid "Free"
+msgstr "رایگان"
+
+#: .\orders\models.py:116
 msgid "Development Payment"
 msgstr "پرداخت آزمایشی"
 
-#: .\orders\models.py:40
+#: .\orders\models.py:117
 msgid "Online Payment"
 msgstr "پرداخت آنلاین"
 
-#: .\orders\models.py:41
+#: .\orders\models.py:118
 msgid "Cash on Delivery"
 msgstr "پرداخت در محل"
 
-#: .\orders\models.py:42
+#: .\orders\models.py:119
 msgid "Strip Delivery"
 msgstr "تحویل نواری"
 
-#: .\orders\models.py:188
+#: .\orders\models.py:274
 msgid "No Request"
 msgstr "بدون درخواست"
 
-#: .\orders\models.py:193
+#: .\orders\models.py:279
 #: .\orders\templates\orders\components\refund_card.html:2
 #: .\orders\templates\orders\components\refund_status.html:6
 msgid "Processed"
 msgstr "پردازش‌شده"
 
-#: .\orders\models.py:196
+#: .\orders\models.py:282
 msgid "Product arrived damaged"
 msgstr "محصول آسیب‌دیده تحویل شد"
 
-#: .\orders\models.py:197
+#: .\orders\models.py:283
 msgid "Wrong product received"
 msgstr "محصول اشتباه دریافت شد"
 
-#: .\orders\models.py:198
+#: .\orders\models.py:284
 msgid "Product quality issue"
 msgstr "مشکل کیفیت محصول"
 
-#: .\orders\models.py:199
+#: .\orders\models.py:285
 msgid "Changed my mind"
 msgstr "تغییر نظر"
 
-#: .\orders\models.py:200
+#: .\orders\models.py:286
 msgid "Delivery issue"
 msgstr "مشکل در تحویل"
 
-#: .\orders\models.py:329
+#: .\orders\models.py:415
 msgid "Payment collected"
 msgstr "پرداخت دریافت شد"
 
-#: .\orders\models.py:331
+#: .\orders\models.py:417
 msgid "Payment due on delivery"
 msgstr "پرداخت در محل"
 
-#: .\orders\models.py:333 .\orders\payment.py:299
+#: .\orders\models.py:419 .\orders\payment.py:299
 #: .\orders\templates\orders\components\order_list_card.html:19
 msgid "Awaiting payment"
 msgstr "در انتظار پرداخت"
 
-#: .\orders\models.py:334
+#: .\orders\models.py:420
 msgid "Payment status unavailable"
 msgstr "وضعیت پرداخت در دسترس نیست"
 
-#: .\orders\models.py:519
+#: .\orders\models.py:613
 #, fuzzy
 #| msgid "Online Payment"
 msgid "Online paid receipt"
 msgstr "پرداخت آنلاین"
 
-#: .\orders\models.py:520 .\orders\templates\orders\emails\order_email.html:1
+#: .\orders\models.py:614 .\orders\templates\orders\emails\order_email.html:1
 #: .\orders\templates\orders\emails\order_email.txt:1
 msgid "Cash on Delivery order confirmation"
 msgstr "تأیید سفارش پرداخت در محل"
 
-#: .\orders\models.py:521
+#: .\orders\models.py:615
 msgid "Cash on Delivery paid receipt"
 msgstr "رسید پرداخت سفارش پرداخت در محل"
 
-#: .\orders\models.py:525
+#: .\orders\models.py:619
 #, fuzzy
 #| msgid "Pending"
 msgid "Sending"
 msgstr "در انتظار"
 
-#: .\orders\models.py:526
+#: .\orders\models.py:620
 msgid "Sent"
 msgstr ""
 
-#: .\orders\models.py:527
+#: .\orders\models.py:621
 msgid "Failed"
 msgstr ""
 
-#: .\orders\models.py:700 .\orders\payment.py:288 .\orders\payment.py:294
+#: .\orders\models.py:794 .\orders\payment.py:288 .\orders\payment.py:294
 #: .\orders\payment.py:300
 msgid "Order created, awaiting payment."
 msgstr "سفارش ایجاد شد و در انتظار پرداخت است."
 
-#: .\orders\models.py:702 .\orders\models.py:704
+#: .\orders\models.py:796 .\orders\models.py:798
 msgid "Online payment confirmed."
 msgstr "پرداخت آنلاین تأیید شد."
 
-#: .\orders\models.py:706 .\orders\payment.py:282
+#: .\orders\models.py:800 .\orders\payment.py:282
 #: .\orders\templates\orders\components\order_progress.html:103
 #: .\orders\templates\orders\components\order_status_surface.html:4
 msgid "Cash on Delivery order confirmed; payment is due on delivery."
 msgstr "سفارش پرداخت در محل تأیید شد؛ پرداخت هنگام تحویل انجام می‌شود."
 
-#: .\orders\models.py:710 .\orders\models.py:821
+#: .\orders\models.py:804 .\orders\models.py:915
 msgid "Order marked as delivered."
 msgstr "سفارش به‌عنوان تحویل‌شده علامت‌گذاری شد."
 
-#: .\orders\models.py:712
+#: .\orders\models.py:806
 #: .\orders\templates\orders\components\order_progress.html:140
 #: .\orders\templates\orders\components\order_progress.html:145
 msgctxt "order progress"
 msgid "Order on hold"
 msgstr "سفارش در حالت تعلیق"
 
-#: .\orders\models.py:727
+#: .\orders\models.py:821
 msgid "Internal"
 msgstr "داخلی"
 
-#: .\orders\models.py:731
+#: .\orders\models.py:825
 msgid "General"
 msgstr "عمومی"
 
-#: .\orders\models.py:786
+#: .\orders\models.py:880
 msgid "Payment recorded"
 msgstr "پرداخت ثبت شد"
 
-#: .\orders\models.py:787
+#: .\orders\models.py:881
 msgid "Cash on Delivery payment collected"
 msgstr "پرداخت در محل دریافت شد"
 
-#: .\orders\models.py:788
+#: .\orders\models.py:882
 msgid "Cash on Delivery order confirmed"
 msgstr "سفارش پرداخت در محل تأیید شد"
 
-#: .\orders\models.py:791
+#: .\orders\models.py:885
 msgid "Order placed on hold"
 msgstr "سفارش در حالت تعلیق قرار گرفت"
 
-#: .\orders\models.py:794
+#: .\orders\models.py:888
 msgid "Unpaid order cancelled"
 msgstr "سفارش پرداخت‌نشده لغو شد"
 
-#: .\orders\models.py:795
+#: .\orders\models.py:889
 msgid "Stale online payment cancelled"
 msgstr "پرداخت آنلاین منقضی لغو شد"
 
-#: .\orders\models.py:796
+#: .\orders\models.py:890
 msgid "Inventory restored"
 msgstr "موجودی بازگردانده شد"
 
-#: .\orders\models.py:797 .\orders\orders.py:96
+#: .\orders\models.py:891 .\orders\orders.py:96
 #: .\orders\templates\orders\components\order_list_card.html:11
 #: .\orders\templates\orders\components\order_status_surface.html:4
 msgid "Refund requested"
 msgstr "بازپرداخت درخواست شد"
 
-#: .\orders\models.py:799
+#: .\orders\models.py:893
 msgid "Refund approved and order cancelled"
 msgstr "بازپرداخت تأیید و سفارش لغو شد"
 
-#: .\orders\models.py:810
+#: .\orders\models.py:904
 #, python-format
 msgid "Payment confirmed via %(provider)s. Reference: %(reference)s."
 msgstr "پرداخت از طریق %(provider)s تأیید شد. شناسه: %(reference)s."
 
-#: .\orders\models.py:815
+#: .\orders\models.py:909
 msgid "Cash on Delivery payment collected."
 msgstr "پرداخت در محل دریافت شد."
 
-#: .\orders\models.py:817
+#: .\orders\models.py:911
 msgid "Cash on Delivery order confirmed with payment due on delivery."
 msgstr "سفارش پرداخت در محل تأیید شد و پرداخت هنگام تحویل انجام می‌شود."
 
-#: .\orders\models.py:829
+#: .\orders\models.py:923
 msgid "Stale online payment cancelled."
 msgstr "پرداخت آنلاین منقضی لغو شد."
 
@@ -6869,26 +7058,26 @@ msgstr "سفارش شمارهٔ %(number)s"
 msgid "Payment successful"
 msgstr "پرداخت موفق"
 
-#: .\orders\orders.py:191
+#: .\orders\orders.py:193
 msgid "Refund requests cannot be submitted while the order is in transit."
 msgstr "در زمانی که سفارش در مسیر است، نمی‌توان درخواست بازپرداخت ثبت کرد."
 
-#: .\orders\orders.py:208
+#: .\orders\orders.py:210
 msgid "Your order has been cancelled and stock released."
 msgstr "سفارش شما لغو و موجودی آن آزاد شد."
 
-#: .\orders\orders.py:218
+#: .\orders\orders.py:220
 #, fuzzy
 #| msgctxt "order detail"
 #| msgid "Cancel order"
 msgid "Cancel order"
 msgstr "لغو سفارش"
 
-#: .\orders\orders.py:240
+#: .\orders\orders.py:242
 msgid "This order is not eligible for a refund request."
 msgstr "این سفارش واجد شرایط درخواست بازپرداخت نیست."
 
-#: .\orders\orders.py:246
+#: .\orders\orders.py:248
 msgid ""
 "Your refund request has been submitted successfully. Our team will review it "
 "and contact you if additional information is required."
@@ -6896,7 +7085,7 @@ msgstr ""
 "درخواست بازپرداخت شما با موفقیت ثبت شد. تیم ما آن را بررسی می‌کند و در صورت "
 "نیاز به اطلاعات بیشتر با شما تماس خواهد گرفت."
 
-#: .\orders\orders.py:276
+#: .\orders\orders.py:278
 msgid "This order cannot be cancelled."
 msgstr "این سفارش قابل لغو نیست."
 
@@ -6999,6 +7188,31 @@ msgstr "شبیه‌ساز توسعهٔ زرین‌پال"
 msgid "Mock payment"
 msgstr "پرداخت آزمایشی"
 
+#: .\orders\pricing.py:13
+msgid "3–5 business days"
+msgstr "۳ تا ۵ روز کاری"
+
+#: .\orders\pricing.py:14
+msgid "1–2 business days"
+msgstr "۱ تا ۲ روز کاری"
+
+#: .\orders\pricing.py:39
+#: .\orders\templates\orders\components\checkout_summary.html:57
+#: .\orders\templates\orders\components\order_summary_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
+#: .\orders\templates\orders\emails\order_email.html:1
+#: .\orders\templates\orders\emails\order_email.txt:11
+msgid "Delivery charge is paid separately when you receive the order."
+msgstr "هزینه ارسال هنگام تحویل سفارش به‌صورت جداگانه پرداخت می‌شود."
+
+#: .\orders\pricing.py:43
+msgid "Free delivery."
+msgstr "ارسال رایگان."
+
+#: .\orders\pricing.py:44
+msgid "Delivery fee is included in the order total."
+msgstr "هزینه ارسال در مبلغ سفارش محاسبه شده است."
+
 #: .\orders\purchase_presentation.py:89 .\products\commerce_presentation.py:214
 msgid "Thickness"
 msgstr "ضخامت"
@@ -7034,44 +7248,12 @@ msgstr "جزئیات خرید در دسترس نیست"
 msgid "Purchase snapshot requires review"
 msgstr "اطلاعات ثبت‌شدهٔ خرید نیاز به بررسی دارد"
 
-#: .\orders\selectors.py:358
-msgid "Standard delivery"
-msgstr "ارسال استاندارد"
-
-#: .\orders\selectors.py:360
-msgid "3–5 business days"
-msgstr "۳ تا ۵ روز کاری"
-
-#: .\orders\selectors.py:361
-msgid "Free standard delivery."
-msgstr "ارسال استاندارد رایگان."
-
-#: .\orders\selectors.py:365
-msgid "Express delivery"
-msgstr "ارسال فوری"
-
-#: .\orders\selectors.py:367
-msgid "1–2 business days"
-msgstr "۱ تا ۲ روز کاری"
-
-#: .\orders\selectors.py:368
-msgid "Priority shipping."
-msgstr "اولویت"
-
-#: .\orders\selectors.py:372
-msgid "Store pickup"
-msgstr "دریافت از فروشگاه"
-
-#: .\orders\selectors.py:375
-msgid "Collect from our warehouse."
-msgstr "از انبار ما دریافت کنید."
-
-#: .\orders\services.py:96
+#: .\orders\services.py:97
 #, python-format
 msgid "%(quantities)s returned to inventory following %(reason)s."
 msgstr "پس از %(reason)s، %(quantities)s به موجودی بازگردانده شد."
 
-#: .\orders\services.py:217
+#: .\orders\services.py:222
 #, python-format
 msgid ""
 "Availability changed for %(sku)s. You requested %(requested)s; only "
@@ -7080,15 +7262,15 @@ msgstr ""
 "موجودی %(sku)s تغییر کرده است. شما %(requested)s درخواست کرده‌اید؛ تنها "
 "%(available)s عدد موجود است. لطفاً سبد خرید خود را بررسی کنید."
 
-#: .\orders\services.py:341 .\orders\services.py:342
+#: .\orders\services.py:358 .\orders\services.py:359
 msgid "Cash on delivery"
 msgstr "پرداخت در محل"
 
-#: .\orders\services.py:344
+#: .\orders\services.py:361
 msgid "Simulated online payment"
 msgstr "پرداخت آنلاین شبیه‌سازی‌شده"
 
-#: .\orders\services.py:346
+#: .\orders\services.py:363
 msgid "Development payment"
 msgstr "پرداخت آزمایشی"
 
@@ -7231,7 +7413,6 @@ msgid "VAT"
 msgstr "مالیات بر ارزش افزوده"
 
 #: .\orders\templates\orders\components\cart_summary.html:8
-#: .\orders\templates\orders\components\checkout_summary.html:58
 msgid "Included"
 msgstr "شامل است"
 
@@ -7311,31 +7492,19 @@ msgstr "محصولات این سفارش"
 msgid "Confirmed after this step"
 msgstr "پس از این مرحله نهایی می‌شود"
 
-#: .\orders\templates\orders\components\checkout_summary.html:56
-msgid "No charge"
-msgstr "بدون هزینه"
-
 #: .\orders\templates\orders\components\checkout_summary.html:57
+#: .\orders\templates\orders\components\order_summary_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
+msgid "Delivery charge note"
+msgstr "توضیح هزینه ارسال"
+
+#: .\orders\templates\orders\components\checkout_summary.html:58
 msgid "Discount"
 msgstr "تخفیف"
 
-#: .\orders\templates\orders\components\checkout_summary.html:58
-msgid "Tax"
-msgstr "مالیات"
-
-#: .\orders\templates\orders\components\checkout_summary.html:59
-#: .\orders\templates\orders\components\payment_result_card.html:32
-#: .\orders\templates\orders\emails\order_email.html:1
-#: .\orders\templates\orders\emails\order_email.txt:11
-#: .\orders\templates\orders\local_payment_simulator.html:11
-#: .\orders\templates\orders\mock_payment.html:17
-#: .\orders\templates\orders\order_cancel_confirm.html:5
-msgid "Total"
-msgstr "مجموع"
-
-#: .\orders\templates\orders\components\checkout_summary.html:59
-msgid "Includes applicable taxes"
-msgstr "شامل مالیات‌های قابل اعمال"
+#: .\orders\templates\orders\components\checkout_summary.html:60
+msgid "Total payable now"
+msgstr "مبلغ قابل پرداخت اکنون"
 
 #: .\orders\templates\orders\components\empty_cart.html:4
 msgid "Your cart is empty"
@@ -7499,11 +7668,9 @@ msgstr "روش تحویل"
 #: .\orders\templates\orders\components\order_review.html:25
 #: .\orders\templates\orders\components\shipping_method_card.html:21
 msgid "Estimated delivery:"
-msgstr "مجموع تقریبی"
+msgstr "زمان تقریبی تحویل:"
 
 #: .\orders\templates\orders\components\order_review.html:30
-#: .\orders\templates\orders\shipping.html:22
-#, fuzzy
 #| msgctxt "order shipping"
 #| msgid "Delivery slot"
 msgid "Delivery slot"
@@ -7558,7 +7725,7 @@ msgid "Subtotal"
 msgstr "جمع جزء"
 
 #: .\orders\templates\orders\components\order_summary_card.html:2
-#: .\orders\templates\orders\components\shipping_information_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
 msgctxt "order summary"
 msgid "Shipping"
 msgstr "ارسال"
@@ -7567,6 +7734,12 @@ msgstr "ارسال"
 msgctxt "order summary"
 msgid "Tax"
 msgstr "مالیات"
+
+#: .\orders\templates\orders\components\order_summary_card.html:2
+#, python-format
+msgctxt "order summary"
+msgid "Tax (%(rate)s%%)"
+msgstr "مالیات (%(rate)s٪)"
 
 #: .\orders\templates\orders\components\order_summary_card.html:2
 msgctxt "order summary"
@@ -7681,8 +7854,17 @@ msgstr "به‌روزرسانی شد"
 msgid "Order number"
 msgstr "شمارهٔ سفارش"
 
+#: .\orders\templates\orders\components\payment_result_card.html:32
+#: .\orders\templates\orders\emails\order_email.html:1
+#: .\orders\templates\orders\emails\order_email.txt:13
+#: .\orders\templates\orders\local_payment_simulator.html:11
+#: .\orders\templates\orders\mock_payment.html:17
+#: .\orders\templates\orders\order_cancel_confirm.html:5
+msgid "Total"
+msgstr "مجموع"
+
 #: .\orders\templates\orders\components\purchased_line_details.html:6
-#: .\products\catalog_filter.py:661
+#: .\products\catalog_filter.py:692
 #: .\products\templates\products\components\generic_filters_sidebar.html:25
 msgid "Product type"
 msgstr "نوع محصول"
@@ -7779,42 +7961,38 @@ msgstr "هنوز نشانی ذخیره‌شده‌ای ندارید."
 msgid "Add delivery address"
 msgstr "افزودن نشانی تحویل"
 
-#: .\orders\templates\orders\components\shipping_information_card.html:2
-msgid "Delivery"
-msgstr "تحویل"
-
-#: .\orders\templates\orders\components\shipping_information_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
 msgctxt "order shipping"
 msgid "Recipient"
 msgstr "گیرنده"
 
-#: .\orders\templates\orders\components\shipping_information_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
 msgctxt "order shipping"
 msgid "Address"
 msgstr "نشانی"
 
-#: .\orders\templates\orders\components\shipping_information_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
 msgctxt "order shipping"
 msgid "Phone"
 msgstr "تلفن"
 
-#: .\orders\templates\orders\components\shipping_information_card.html:2
+#: .\orders\templates\orders\components\shipping_information_card.html:1
 msgctxt "order shipping"
 msgid "Shipping method"
 msgstr "روش ارسال"
 
-#: .\orders\templates\orders\components\shipping_information_card.html:2
-msgctxt "order shipping"
-msgid "Delivery slot"
-msgstr "بازهٔ تحویل"
+#: .\orders\templates\orders\components\shipping_information_card.html:1
+msgid "Preferred delivery time"
+msgstr "زمان ترجیحی تحویل"
 
 #: .\orders\templates\orders\components\shipping_method_card.html:6
 msgid "Compare the available delivery options."
 msgstr "گزینه‌های موجود برای تحویل را مقایسه کنید."
 
-#: .\orders\templates\orders\components\shipping_method_card.html:18
-msgid "Free"
-msgstr "رایگان"
+#: .\orders\templates\orders\components\shipping_method_card.html:22
+#, python-format
+msgid "Add %(amount)s more for free %(method_name)s."
+msgstr "با %(amount)s خرید بیشتر، %(method_name)s رایگان می‌شود."
 
 #: .\orders\templates\orders\components\support_card.html:7
 msgctxt "order support"
@@ -7865,7 +8043,7 @@ msgid "Cash on Delivery payment receipt"
 msgstr "پرداخت در محل دریافت شد"
 
 #: .\orders\templates\orders\emails\order_email.html:1
-#: .\orders\templates\orders\emails\order_email.txt:13
+#: .\orders\templates\orders\emails\order_email.txt:15
 msgid "Payment is due on delivery."
 msgstr "پرداخت هنگام تحویل انجام می‌شود."
 
@@ -7874,7 +8052,7 @@ msgid "Item"
 msgstr "کالا"
 
 #: .\orders\templates\orders\emails\order_email.html:1
-#: .\orders\templates\orders\emails\order_email.txt:14
+#: .\orders\templates\orders\emails\order_email.txt:16
 msgid "View your order"
 msgstr "مشاهده سفارش شما"
 
@@ -8068,10 +8246,6 @@ msgstr "ثبت سفارش"
 msgid "Choose where and how your order should be delivered."
 msgstr "نشانی و روش تحویل سفارش خود را انتخاب کنید."
 
-#: .\orders\templates\orders\shipping.html:22
-msgid "optional"
-msgstr "اختیاری"
-
 #: .\orders\templates\orders\shipping.html:32
 msgid "Back to cart"
 msgstr "بازگشت به سبد خرید"
@@ -8191,27 +8365,27 @@ msgstr ""
 msgid "Combination signature does not match the configured dimension values."
 msgstr ""
 
-#: .\products\catalog_filter.py:612
+#: .\products\catalog_filter.py:643
 #, fuzzy, python-format
 #| msgid "Remove filter: %(label)s%(value)s"
 msgid "Remove filter: %(label)s %(value)s"
 msgstr "حذف فیلتر: %(label)s%(value)s"
 
-#: .\products\catalog_filter.py:681 .\products\presentation.py:109
+#: .\products\catalog_filter.py:712 .\products\presentation.py:109
 msgid "Minimum price"
 msgstr "حداقل قیمت"
 
-#: .\products\catalog_filter.py:681 .\products\presentation.py:114
+#: .\products\catalog_filter.py:712 .\products\presentation.py:114
 msgid "Maximum price"
 msgstr "حداکثر قیمت"
 
-#: .\products\catalog_filter.py:686 .\products\presentation.py:118
+#: .\products\catalog_filter.py:717 .\products\presentation.py:118
 #: .\products\templates\products\components\filters_sidebar.html:349
 #: .\products\templates\products\components\generic_filters_sidebar.html:116
 msgid "In Stock"
 msgstr "موجود"
 
-#: .\products\catalog_filter.py:688 .\products\presentation.py:120
+#: .\products\catalog_filter.py:719 .\products\presentation.py:120
 #: .\products\templates\products\components\filters_sidebar.html:359
 #: .\products\templates\products\components\generic_filters_sidebar.html:117
 msgid "On Sale"
@@ -10279,6 +10453,25 @@ msgstr[0] "%(count)s سفارش در انتظار پرداخت است."
 msgid "View orders"
 msgstr "مشاهدهٔ سفارش‌ها"
 
+#~ msgid "Priority shipping."
+#~ msgstr "اولویت"
+
+#~ msgid "Collect from our warehouse."
+#~ msgstr "از انبار ما دریافت کنید."
+
+#~ msgid "No charge"
+#~ msgstr "بدون هزینه"
+
+#~ msgid "Includes applicable taxes"
+#~ msgstr "شامل مالیات‌های قابل اعمال"
+
+#~ msgctxt "order shipping"
+#~ msgid "Delivery slot"
+#~ msgstr "بازهٔ تحویل"
+
+#~ msgid "optional"
+#~ msgstr "اختیاری"
+
 #, fuzzy
 #~| msgid "English Name"
 #~ msgid "English"
@@ -10392,9 +10585,6 @@ msgstr "مشاهدهٔ سفارش‌ها"
 
 #~ msgid "Request company invoice"
 #~ msgstr "درخواست فاکتور شرکتی"
-
-#~ msgid "Include this preference when you review the order."
-#~ msgstr "این درخواست هنگام بررسی سفارش نمایش داده می‌شود."
 
 #~ msgid ""
 #~ "Your operational access is being enabled module by module. Only the areas "
@@ -10975,9 +11165,6 @@ msgstr "مشاهدهٔ سفارش‌ها"
 #~ msgid "Failure reason"
 #~ msgstr "دلیل ناموفق بودن"
 
-#~ msgid "Total paid"
-#~ msgstr "مبلغ پرداخت‌شده"
-
 #~ msgid "Reference"
 #~ msgstr "شمارهٔ پیگیری"
 
@@ -11001,9 +11188,6 @@ msgstr "مشاهدهٔ سفارش‌ها"
 
 #~ msgid "Review your selected shipping method."
 #~ msgstr "روش ارسال انتخابی خود را بررسی کنید."
-
-#~ msgid "Preferred delivery"
-#~ msgstr "زمان ترجیحی تحویل (اختیاری)"
 
 #~ msgid "Confirm your payment preferences."
 #~ msgstr "تنظیمات پرداخت خود را تأیید کنید."

@@ -207,7 +207,10 @@ class StorefrontV5BCheckoutShellTests(TestCase):
         # shared Storefront Dashboard-link contract. Django's standard auth
         # backend loads direct and Group permissions once per request; this
         # is independent of checkout line count.
-        expected_limits = {"shipping": 24, "payment": 23, "review": 24}
+        # The dynamic commerce contract adds one singleton-policy read and one
+        # bounded delivery-method-policy read per request. Both are independent
+        # of checkout line count and deliberately remain uncached across requests.
+        expected_limits = {"shipping": 28, "payment": 27, "review": 28}
         results = {}
         for count in (1, 2):
             self._set_checkout(count)

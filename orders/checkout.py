@@ -17,6 +17,7 @@ from .selectors import (
     get_checkout_context,
 )
 from .services import (
+    CommercePolicyChanged,
     ExistingCheckoutAttemptOrder,
     RetryableOnlineOrderConflict,
     confirm_cod_order,
@@ -84,6 +85,7 @@ def shipping(request):
         if form.is_valid():
 
             request.session["checkout_shipping"] = form.cleaned_data
+            request.session["checkout_policy_version"] = checkout.policy_version
             _start_checkout_attempt(request)
 
             return redirect("orders:checkout_payment")
@@ -132,7 +134,7 @@ def shipping(request):
 @login_required
 def payment(request):
 
-    checkout = get_checkout_context(request)
+    checkout = get_checkout_context(request, include_addresses=False)
 
     if checkout.unavailable_variant_ids:
         messages.error(request, _("One or more cart items are no longer available in the current currency."))
@@ -197,7 +199,7 @@ def review(request):
         if existing:
             return _redirect_for_created_order(existing)
 
-    checkout = get_checkout_context(request)
+    checkout = get_checkout_context(request, include_addresses=False)
 
     if checkout.unavailable_variant_ids:
         messages.error(request, _("One or more cart items are no longer available in the current currency."))
@@ -254,6 +256,7 @@ def review(request):
                     checkout_attempt_token=checkout_attempt_token,
                     enforce_single_retryable_online_order=True,
                     communication_language=get_language() or "en",
+                    reviewed_policy_version=request.session.get("checkout_reviewed_policy_version"),
                 )
         except ExistingCheckoutAttemptOrder as replay:
             created = False
@@ -275,6 +278,10 @@ def review(request):
                 },
                 status=409,
             )
+        except CommercePolicyChanged:
+            messages.warning(request, _("Delivery or tax settings changed. Please review your updated total."))
+            request.session["checkout_reviewed_policy_version"] = checkout.policy_version
+            return redirect("orders:checkout_review")
         except IntegrityError:
             created = False
             order = Order.objects.filter(
@@ -299,6 +306,7 @@ def review(request):
         confirm_cod_order(order, actor=request.user)
         return redirect("orders:order_result", order_id=order.id)
 
+    request.session["checkout_reviewed_policy_version"] = checkout.policy_version
     return render(
         request,
         "orders/review.html",

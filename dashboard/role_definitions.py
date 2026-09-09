@@ -38,7 +38,11 @@ PRODUCT_MANAGER_PERMISSIONS = (
 )
 ORDER_MANAGER_PERMISSIONS = (
     _view("orders", "order", "orderitem", "orderstatushistory", "ordernote")
-    | frozenset({"orders.manage_fulfillment"})
+    | frozenset({
+        "orders.manage_fulfillment",
+        "orders.view_commercepolicy", "orders.change_commercepolicy",
+        "orders.view_deliverymethodpolicy", "orders.change_deliverymethodpolicy",
+    })
 )
 SUPPORT_MANAGER_PERMISSIONS = (
     _view("support", "ticket", "ticketreply", "ticketnote", "ticketcategory", "ticketattachment", "helparticle", "ticketactivity")

@@ -7,7 +7,9 @@
 
 {% for item in items %}{{ item.product_name }} — {{ item.quantity }} × {{ item.unit_price }} {{ order.currency }} = {{ item.subtotal }} {{ order.currency }}
 {% endfor %}
-{% trans "Shipping" %}: {{ order.shipping_cost }} {{ order.currency }}
+{% trans "Shipping" %}: {% if order.shipping_pay_on_delivery %}{% trans "Pay on delivery" %}
+{% trans "Delivery charge is paid separately when you receive the order." %}{% elif order.shipping_free_by_threshold %}{% trans "Free — order threshold reached" %}{% else %}{{ order.shipping_cost }} {{ order.currency }}{% endif %}
+{% trans "Tax" %}: {{ order.tax_amount }} {{ order.currency }}
 {% trans "Total" %}: {{ order.total_amount }} {{ order.currency }}
 
 {% if delivery.kind == "cod_confirmation" %}{% trans "Payment is due on delivery." %}

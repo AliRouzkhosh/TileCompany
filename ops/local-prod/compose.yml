@@ -76,6 +76,7 @@ services:
       TRUST_PROXY_SSL_HEADER: "false"
       TRUST_PROXY_CLIENT_IP: "false"
       STATIC_ROOT: /app/staticfiles
+      PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT: /app/private_inventory_price_import_sources
     volumes:
       - staticfiles:/app/staticfiles
     networks:
@@ -134,6 +135,7 @@ services:
       SMS_BACKEND: accounts.sms.DisabledSmsBackend
       TRUST_PROXY_SSL_HEADER: "false"
       TRUST_PROXY_CLIENT_IP: "false"
+      PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT: /app/private_inventory_price_import_sources
     networks:
       - backend
     depends_on:
@@ -200,6 +202,7 @@ services:
       TRUST_PROXY_SSL_HEADER: "true"
       TRUST_PROXY_CLIENT_IP: "true"
       STATIC_ROOT: /app/staticfiles
+      PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT: /app/private_inventory_price_import_sources
     volumes:
       - staticfiles:/app/staticfiles:ro
       - media_data:/app/media

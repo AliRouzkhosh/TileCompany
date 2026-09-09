@@ -17,8 +17,8 @@ COPY --chown=tilecompany:tilecompany . /app/
 # These are the only writable application data directories.  /app itself stays
 # root-owned; the media directory is also initialized explicitly by the
 # Compose one-shot service for named-volume mounts.
-RUN mkdir -p /app/staticfiles /app/media \
-    && chown -R tilecompany:tilecompany /app/staticfiles /app/media \
-    && chmod 0755 /app/staticfiles /app/media
+RUN mkdir -p /app/staticfiles /app/media /app/private_inventory_price_import_sources \
+    && chown -R tilecompany:tilecompany /app/staticfiles /app/media /app/private_inventory_price_import_sources \
+    && chmod 0755 /app/staticfiles /app/media /app/private_inventory_price_import_sources
 
 USER tilecompany

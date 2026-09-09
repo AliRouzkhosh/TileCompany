@@ -14,5 +14,6 @@ urlpatterns = [
     path("blog/", include("dashboard.urls.blog")),
     path("support/", include("dashboard.urls.support")),
     path("storefront/", include("dashboard.urls.storefront")),
+    path("settings/commerce/", include("dashboard.urls.commerce")),
     path("staff-access/", include("dashboard.urls.staff_access")),
 ]

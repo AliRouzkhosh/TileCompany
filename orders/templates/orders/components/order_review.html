@@ -21,13 +21,14 @@
                 <dt class="text-xs font-medium text-text-muted">{% trans "Delivery method" %}</dt>
                 <dd class="mt-1 font-medium text-text-primary">{% if selected_shipping_method %}{{ selected_shipping_method.name }}{% else %}{{ shipping.shipping_method }}{% endif %}</dd>
                 {% if selected_shipping_method %}
+                    <dd class="mt-1 font-medium {% if selected_shipping_method.pay_on_delivery %}text-brand-active{% else %}text-success{% endif %}">{% if selected_shipping_method.pay_on_delivery %}{% trans "Pay on delivery" %}{% elif selected_shipping_method.free_by_threshold %}{% trans "Free — order threshold reached" %}{% elif not selected_shipping_method.amount %}{% trans "Free" %}{% else %}{{ selected_shipping_method.amount|money:checkout.currency }}{% endif %}</dd>
                     <dd class="mt-1 text-text-secondary">{{ selected_shipping_method.description }}</dd>
                     <dd class="mt-1 text-xs text-text-muted">{% trans "Estimated delivery:" %} {{ selected_shipping_method.estimated_days }}</dd>
                 {% endif %}
             </div>
             {% if shipping.delivery_slot %}
                 <div class="sm:col-span-2">
-                    <dt class="text-xs font-medium text-text-muted">{% trans "Delivery slot" %}</dt>
+                    <dt class="text-xs font-medium text-text-muted">{% trans "Preferred delivery time" %}</dt>
                     <dd class="mt-1 text-text-secondary">{{ shipping.delivery_slot }}</dd>
                 </div>
             {% endif %}

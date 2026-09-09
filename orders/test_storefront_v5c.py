@@ -296,9 +296,9 @@ class StorefrontV5CCheckoutStepTests(TestCase):
 
     def test_query_counts_remain_at_v5b_baseline_and_do_not_grow_with_addresses(self):
         self._set_checkout()
-        # Keep the V5B capability-eligibility allowance while proving that
-        # extra customer addresses do not increase the request budget.
-        expected = {"shipping": 24, "payment": 23, "review": 24}
+        # Keep the current capability and dynamic-policy allowance while proving
+        # that extra customer addresses do not increase the request budget.
+        expected = {"shipping": 28, "payment": 27, "review": 28}
         results = {}
         for step in expected:
             self.client.get(reverse(f"orders:checkout_{step}"))

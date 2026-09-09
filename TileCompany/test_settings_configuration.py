@@ -14,7 +14,7 @@ CONFIG_ENVIRONMENT_NAMES = {
     "POSTGRES_CONNECT_TIMEOUT", "POSTGRES_SSLMODE", "POSTGRES_SSLROOTCERT",
     "EMAIL_BACKEND", "EMAIL_HOST", "EMAIL_PORT", "EMAIL_HOST_USER", "EMAIL_HOST_PASSWORD",
     "EMAIL_USE_TLS", "EMAIL_USE_SSL", "DEFAULT_FROM_EMAIL", "SERVER_EMAIL", "SITE_URL",
-    "STATIC_ROOT",
+    "STATIC_ROOT", "PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT",
     "ZARINPAL_MERCHANT_ID", "ZARINPAL_SANDBOX", "ZARINPAL_DEVELOPMENT_AUTO_SUCCESS",
     "MOCK_PAYMENT_SIMULATION_ENABLED", "LOCAL_PAYMENT_SIMULATOR_ENABLED",
     "TRUST_PROXY_SSL_HEADER", "CSRF_TRUSTED_ORIGINS", "SECURE_HSTS_SECONDS",
@@ -25,6 +25,21 @@ CONFIG_ENVIRONMENT_NAMES = {
 
 
 class ProductionSettingsContractTests(SimpleTestCase):
+    def test_private_inventory_storage_root_is_explicit_and_absolute(self):
+        private_root = PROJECT_ROOT / "private-imports"
+        probe = self.settings_process(
+            "from TileCompany import settings; "
+            "assert settings.PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT.name == 'private-imports'",
+            APP_ENV="development",
+            PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT=str(private_root),
+        )
+        self.assertEqual(probe.returncode, 0, probe.stderr)
+        self.assert_settings_failure(
+            "PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT must be an absolute path.",
+            APP_ENV="development",
+            PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT="relative/imports",
+        )
+
     def test_local_production_compose_allowlists_simulator_for_django_services(self):
         compose = (PROJECT_ROOT / "ops" / "local-prod" / "compose.yml").read_text(encoding="utf-8")
         example = (PROJECT_ROOT / "ops" / "local-prod" / ".env.example").read_text(encoding="utf-8")

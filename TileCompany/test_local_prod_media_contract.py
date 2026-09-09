@@ -55,8 +55,12 @@ class LocalProductionMediaContractTests(SimpleTestCase):
         nginx_block = self.compose.split("\n  nginx:", 1)[1].split("\nnetworks:", 1)[0]
         self.assertNotIn("private_inventory_import_data", nginx_block)
         self.assertIn(
-            'location=settings.BASE_DIR / "private_inventory_price_import_sources"',
+            "location=settings.PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT",
             self.inventory_storage,
+        )
+        self.assertIn(
+            "PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT: /app/private_inventory_price_import_sources",
+            self.compose,
         )
         self.assertIn("base_url=None", self.inventory_storage)
         self.assertNotIn("location /private_inventory_price_import_sources", self.nginx)

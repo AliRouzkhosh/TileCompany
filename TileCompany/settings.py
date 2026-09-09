@@ -22,6 +22,20 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Private inventory import evidence is deliberately separate from MEDIA_ROOT.
+# Local-production Compose supplies the named-volume mount path; development
+# retains a project-local path without making the application tree writable.
+PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT = Path(
+    os.environ.get(
+        "PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT",
+        str(BASE_DIR / "private_inventory_price_import_sources"),
+    )
+).expanduser()
+if not PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT.is_absolute():
+    raise ImproperlyConfigured(
+        "PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT must be an absolute path."
+    )
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/

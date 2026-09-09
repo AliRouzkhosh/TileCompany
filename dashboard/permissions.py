@@ -64,4 +64,3 @@ def owner_required(view_func):
             raise PermissionDenied
         return view_func(request, *args, **kwargs)
     return wrapper
-

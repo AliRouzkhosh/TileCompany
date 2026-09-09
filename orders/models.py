@@ -9,10 +9,84 @@ from products.models import Product, ProductVariant
 from products.currency import Currency
 from accounts.models import Address
 from django.utils.translation import get_language, gettext, gettext_lazy as _, pgettext
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Q
 
 
 REFUND_WINDOW_HOURS = 72
 REFUND_WINDOW = timedelta(hours=REFUND_WINDOW_HOURS)
+DELIVERY_METHOD_CHOICES = (
+    ("standard", _("Standard Delivery")),
+    ("express", _("Express Delivery")),
+    ("pickup", _("Store Pickup")),
+)
+class CommercePolicy(models.Model):
+    """The single immediately-authoritative tax and threshold policy."""
+
+    singleton_key = models.PositiveSmallIntegerField(default=1, unique=True, editable=False)
+    tax_enabled = models.BooleanField(default=False)
+    tax_rate = models.DecimalField(
+        max_digits=5, decimal_places=2, default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
+    free_shipping_threshold_enabled = models.BooleanField(default=False)
+    free_shipping_threshold_irt = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    free_shipping_threshold_usd = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    version = models.PositiveBigIntegerField(default=1, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(condition=Q(tax_rate__gte=0) & Q(tax_rate__lte=100), name="commerce_tax_rate_0_100"),
+            models.CheckConstraint(condition=Q(free_shipping_threshold_irt__isnull=True) | Q(free_shipping_threshold_irt__gt=0), name="commerce_threshold_irt_positive"),
+            models.CheckConstraint(condition=Q(free_shipping_threshold_usd__isnull=True) | Q(free_shipping_threshold_usd__gt=0), name="commerce_threshold_usd_positive"),
+        ]
+
+    def clean(self):
+        super().clean()
+        if self.free_shipping_threshold_enabled:
+            errors = {}
+            if self.free_shipping_threshold_irt is None:
+                errors["free_shipping_threshold_irt"] = _("Enter the IRT threshold.")
+            if self.free_shipping_threshold_usd is None:
+                errors["free_shipping_threshold_usd"] = _("Enter the USD threshold.")
+            if errors:
+                from django.core.exceptions import ValidationError
+                raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        self.singleton_key = 1
+        return super().save(*args, **kwargs)
+
+
+class DeliveryMethodPolicy(models.Model):
+    class ChargeMode(models.TextChoices):
+        FIXED = "fixed", _("Fixed fee")
+        FREE = "free", _("Free")
+        PAY_ON_DELIVERY = "pay_on_delivery", _("Pay on delivery")
+
+    code = models.CharField(max_length=20, choices=DELIVERY_METHOD_CHOICES, unique=True, editable=False)
+    charge_mode = models.CharField(max_length=24, choices=ChargeMode.choices)
+    fixed_amount_irt = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    fixed_amount_usd = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    eligible_for_free_shipping_threshold = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(condition=Q(fixed_amount_irt__gte=0), name="delivery_amount_irt_nonnegative"),
+            models.CheckConstraint(condition=Q(fixed_amount_usd__gte=0), name="delivery_amount_usd_nonnegative"),
+        ]
+
+class CommercePolicyAudit(models.Model):
+    actor = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="commerce_policy_audits")
+    created_at = models.DateTimeField(auto_now_add=True)
+    section = models.CharField(max_length=80)
+    before_values = models.JSONField(default=dict)
+    after_values = models.JSONField(default=dict)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
 
 class Order(models.Model):
     """
@@ -115,6 +189,12 @@ class Order(models.Model):
         decimal_places=2,
         default=0,
     )
+    shipping_charge_mode = models.CharField(
+        max_length=24,
+        choices=DeliveryMethodPolicy.ChargeMode.choices,
+        default=DeliveryMethodPolicy.ChargeMode.FIXED,
+    )
+    shipping_free_by_threshold = models.BooleanField(default=False)
 
     delivery_slot = models.CharField(
         max_length=100,
@@ -146,6 +226,9 @@ class Order(models.Model):
         decimal_places=2,
         default=0,
     )
+    tax_rate_snapshot = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    tax_amount_snapshot = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    commerce_policy_version = models.PositiveBigIntegerField(default=1)
 
     checkout_attempt_token = models.UUIDField(
         null=True,
@@ -494,7 +577,15 @@ class Order(models.Model):
 
     @property
     def tax_amount(self):
-        return 0
+        return self.tax_amount_snapshot
+
+    @property
+    def shipping_pay_on_delivery(self):
+        return self.shipping_charge_mode == DeliveryMethodPolicy.ChargeMode.PAY_ON_DELIVERY
+
+    @property
+    def shipping_is_free(self):
+        return self.shipping_charge_mode == DeliveryMethodPolicy.ChargeMode.FREE
 
     class Meta:
         ordering = ["-created_at"]

@@ -1,0 +1,12 @@
+{% load i18n %}
+<article class="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm" data-delivery-policy-card>
+  <h3 class="font-semibold text-stone-900">{% if code == "standard" %}{% trans "Standard delivery" %}{% elif code == "express" %}{% trans "Express delivery" %}{% else %}{% trans "Store pickup" %}{% endif %}</h3>
+  <div class="mt-4 space-y-4">
+    <label class="block"><span class="mb-2 block text-sm font-medium">{{ mode.label }}</span>{{ mode }}<span class="mt-1 block text-sm text-red-700">{{ mode.errors|striptags }}</span></label>
+    <div class="grid gap-4" data-fixed-amounts>
+      <label class="block"><span class="mb-2 block text-sm font-medium">{{ irt.label }}</span>{{ irt }}<span class="mt-1 block text-sm text-red-700">{{ irt.errors|striptags }}</span></label>
+      <label class="block"><span class="mb-2 block text-sm font-medium">{{ usd.label }}</span>{{ usd }}<span class="mt-1 block text-sm text-red-700">{{ usd.errors|striptags }}</span></label>
+    </div>
+    <label class="flex min-h-11 items-start gap-3">{{ eligible }}<span class="text-sm leading-5">{{ eligible.label }}</span></label>
+  </div>
+</article>

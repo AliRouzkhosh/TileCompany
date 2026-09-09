@@ -25,7 +25,8 @@ from products.models import VariantPrice
 from products.commerce_presentation import quantity_breakdown
 from products.purchase_snapshot import prepare_purchase_snapshots
 from products.currency import Currency
-from .selectors import get_retryable_online_orders_for_user, get_shipping_methods
+from .selectors import get_retryable_online_orders_for_user
+from .pricing import calculate_pricing
 from notifications.models import Notification, NotificationEvent
 from notifications.services import create_notification, reverse_notification_target
 
@@ -123,6 +124,10 @@ class RetryableOnlineOrderConflict(Exception):
     def __init__(self, order):
         self.order = order
 
+
+class CommercePolicyChanged(Exception):
+    """The customer reviewed an older authoritative policy version."""
+
 @transaction.atomic
 def create_order(
     *,
@@ -133,6 +138,7 @@ def create_order(
     checkout_attempt_token=None,
     enforce_single_retryable_online_order=False,
     communication_language="en",
+    reviewed_policy_version=None,
 ):
     """
     Create a pending order and reserve inventory.
@@ -184,7 +190,6 @@ def create_order(
 
     currency = checkout.currency
     validate_payment_method(cleaned_data["payment_method"], currency)
-    shipping_cost = calculate_shipping(method=cleaned_data["shipping_method"], currency=currency)
 
     requested_variant_ids = {line.variant.pk for line in checkout.items}
     variants = {
@@ -241,7 +246,14 @@ def create_order(
         variant for variant, _unit_price, _reference_unit_price, _quantity in authoritative_lines
     )
 
-    order_total = subtotal + shipping_cost
+    pricing = calculate_pricing(
+        subtotal=subtotal, currency=currency,
+        delivery_method=cleaned_data["shipping_method"], for_update=True,
+    )
+    if reviewed_policy_version is not None and int(reviewed_policy_version) != pricing.policy_version:
+        raise CommercePolicyChanged
+    shipping_cost = pricing.delivery_amount
+    order_total = pricing.total_payable_now
     order = Order.objects.create(
 
         user=user,
@@ -255,6 +267,8 @@ def create_order(
             "standard",
         ),
         shipping_cost=shipping_cost,
+        shipping_charge_mode=pricing.effective_delivery_mode,
+        shipping_free_by_threshold=pricing.delivery_free_by_threshold,
 
         delivery_slot=cleaned_data.get(
             "delivery_slot",
@@ -276,6 +290,9 @@ def create_order(
         phone=snapshot["phone"],
 
         total_amount=order_total,
+        tax_rate_snapshot=pricing.tax_rate,
+        tax_amount_snapshot=pricing.tax_amount,
+        commerce_policy_version=pricing.policy_version,
         currency=currency,
         checkout_attempt_token=checkout_attempt_token or uuid.uuid4(),
     )
@@ -325,7 +342,7 @@ def copy_address_snapshot(address):
     }
 
 
-def calculate_shipping(method: str, currency: str) -> Decimal:
+def calculate_shipping(method: str, currency: str, subtotal=Decimal("0.00")) -> Decimal:
     """
     Calculate the shipping cost.
 
@@ -333,7 +350,7 @@ def calculate_shipping(method: str, currency: str) -> Decimal:
     distance calculations, or shipping rules.
     """
 
-    return next((item.amount for item in get_shipping_methods(currency) if item.code == method), Decimal("0.00"))
+    return calculate_pricing(subtotal=subtotal, currency=currency, delivery_method=method).delivery_amount
 
 
 def get_payment_choices(currency):

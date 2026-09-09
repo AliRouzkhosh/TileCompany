@@ -16,6 +16,6 @@ class PrivateInventoryImportStorage(FileSystemStorage):
 # Deliberately outside MEDIA_ROOT and without a URL. Production can replace this
 # instance with a private object-store backend without changing the import service.
 private_inventory_import_storage = PrivateInventoryImportStorage(
-    location=settings.BASE_DIR / "private_inventory_price_import_sources",
+    location=settings.PRIVATE_INVENTORY_IMPORT_STORAGE_ROOT,
     base_url=None,
 )
